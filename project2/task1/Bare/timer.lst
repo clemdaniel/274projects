@@ -1,0 +1,472 @@
+   1               		.file	"timer.c"
+   2               	__SP_H__ = 0x3e
+   3               	__SP_L__ = 0x3d
+   4               	__SREG__ = 0x3f
+   5               	__tmp_reg__ = 0
+   6               	__zero_reg__ = 1
+   7               		.text
+   8               	.Ltext0:
+   9               		.cfi_sections	.debug_frame
+  10               	.global	__vector_14
+  12               	__vector_14:
+  13               	.LFB1:
+  14               		.file 1 "timer.c"
+   1:timer.c       **** #include "timer.h"    // Declaration made available here
+   2:timer.c       **** #include "sensors.h"
+   3:timer.c       **** 
+   4:timer.c       **** 
+   5:timer.c       **** // Timer variables defined here
+   6:timer.c       **** volatile uint16_t delayTimerCount = 0;            // Definition checked against declaration
+   7:timer.c       **** volatile uint8_t  delayTimerRunning = 0;          // Definition checked against declaration
+   8:timer.c       **** 
+   9:timer.c       **** 
+  10:timer.c       **** // Timer 0 interrupt 
+  11:timer.c       **** // SIGNAL(SIG_OUTPUT_COMPARE0A)
+  12:timer.c       **** ISR(TIMER0_COMPA_vect) {
+  15               		.loc 1 12 0
+  16               		.cfi_startproc
+  17 0000 1F92      		push r1
+  18               	.LCFI0:
+  19               		.cfi_def_cfa_offset 3
+  20               		.cfi_offset 1, -2
+  21 0002 0F92      		push r0
+  22               	.LCFI1:
+  23               		.cfi_def_cfa_offset 4
+  24               		.cfi_offset 0, -3
+  25 0004 0FB6      		in r0,__SREG__
+  26 0006 0F92      		push r0
+  27 0008 1124      		clr __zero_reg__
+  28 000a 8F93      		push r24
+  29               	.LCFI2:
+  30               		.cfi_def_cfa_offset 5
+  31               		.cfi_offset 24, -4
+  32 000c 9F93      		push r25
+  33               	.LCFI3:
+  34               		.cfi_def_cfa_offset 6
+  35               		.cfi_offset 25, -5
+  36               	/* prologue: Signal */
+  37               	/* frame size = 0 */
+  38               	/* stack size = 5 */
+  39               	.L__stack_usage = 5
+  13:timer.c       ****   if(delayTimerCount)
+  40               		.loc 1 13 0
+  41 000e 8091 0000 		lds r24,delayTimerCount
+  42 0012 9091 0000 		lds r25,delayTimerCount+1
+  43 0016 892B      		or r24,r25
+  44 0018 01F0      		breq .L2
+  14:timer.c       ****     delayTimerCount--;
+  45               		.loc 1 14 0
+  46 001a 8091 0000 		lds r24,delayTimerCount
+  47 001e 9091 0000 		lds r25,delayTimerCount+1
+  48 0022 0197      		sbiw r24,1
+  49 0024 9093 0000 		sts delayTimerCount+1,r25
+  50 0028 8093 0000 		sts delayTimerCount,r24
+  51 002c 00C0      		rjmp .L1
+  52               	.L2:
+  15:timer.c       ****   else
+  16:timer.c       ****     delayTimerRunning = 0;
+  53               		.loc 1 16 0
+  54 002e 1092 0000 		sts delayTimerRunning,__zero_reg__
+  55               	.L1:
+  56               	/* epilogue start */
+  17:timer.c       **** }
+  57               		.loc 1 17 0
+  58 0032 9F91      		pop r25
+  59 0034 8F91      		pop r24
+  60 0036 0F90      		pop r0
+  61 0038 0FBE      		out __SREG__,r0
+  62 003a 0F90      		pop r0
+  63 003c 1F90      		pop r1
+  64 003e 1895      		reti
+  65               		.cfi_endproc
+  66               	.LFE1:
+  68               	.global	__vector_11
+  70               	__vector_11:
+  71               	.LFB2:
+  18:timer.c       **** 
+  19:timer.c       **** 
+  20:timer.c       **** //SIGNAL(SIG_OUTPUT_COMPARE1A)
+  21:timer.c       **** ISR(TIMER1_COMPA_vect) {
+  72               		.loc 1 21 0
+  73               		.cfi_startproc
+  74 0040 1F92      		push r1
+  75               	.LCFI4:
+  76               		.cfi_def_cfa_offset 3
+  77               		.cfi_offset 1, -2
+  78 0042 0F92      		push r0
+  79               	.LCFI5:
+  80               		.cfi_def_cfa_offset 4
+  81               		.cfi_offset 0, -3
+  82 0044 0FB6      		in r0,__SREG__
+  83 0046 0F92      		push r0
+  84 0048 1124      		clr __zero_reg__
+  85 004a 2F93      		push r18
+  86               	.LCFI6:
+  87               		.cfi_def_cfa_offset 5
+  88               		.cfi_offset 18, -4
+  89 004c 3F93      		push r19
+  90               	.LCFI7:
+  91               		.cfi_def_cfa_offset 6
+  92               		.cfi_offset 19, -5
+  93 004e 4F93      		push r20
+  94               	.LCFI8:
+  95               		.cfi_def_cfa_offset 7
+  96               		.cfi_offset 20, -6
+  97 0050 5F93      		push r21
+  98               	.LCFI9:
+  99               		.cfi_def_cfa_offset 8
+ 100               		.cfi_offset 21, -7
+ 101 0052 6F93      		push r22
+ 102               	.LCFI10:
+ 103               		.cfi_def_cfa_offset 9
+ 104               		.cfi_offset 22, -8
+ 105 0054 7F93      		push r23
+ 106               	.LCFI11:
+ 107               		.cfi_def_cfa_offset 10
+ 108               		.cfi_offset 23, -9
+ 109 0056 8F93      		push r24
+ 110               	.LCFI12:
+ 111               		.cfi_def_cfa_offset 11
+ 112               		.cfi_offset 24, -10
+ 113 0058 9F93      		push r25
+ 114               	.LCFI13:
+ 115               		.cfi_def_cfa_offset 12
+ 116               		.cfi_offset 25, -11
+ 117 005a AF93      		push r26
+ 118               	.LCFI14:
+ 119               		.cfi_def_cfa_offset 13
+ 120               		.cfi_offset 26, -12
+ 121 005c BF93      		push r27
+ 122               	.LCFI15:
+ 123               		.cfi_def_cfa_offset 14
+ 124               		.cfi_offset 27, -13
+ 125 005e EF93      		push r30
+ 126               	.LCFI16:
+ 127               		.cfi_def_cfa_offset 15
+ 128               		.cfi_offset 30, -14
+ 129 0060 FF93      		push r31
+ 130               	.LCFI17:
+ 131               		.cfi_def_cfa_offset 16
+ 132               		.cfi_offset 31, -15
+ 133               	/* prologue: Signal */
+ 134               	/* frame size = 0 */
+ 135               	/* stack size = 15 */
+ 136               	.L__stack_usage = 15
+  22:timer.c       ****   //Update and send sensor values
+  23:timer.c       ****   //transmit("01");
+  24:timer.c       ****   byteTx(139);  // leds
+ 137               		.loc 1 24 0
+ 138 0062 8BE8      		ldi r24,lo8(-117)
+ 139 0064 0E94 0000 		call byteTx
+ 140               	.LVL0:
+  25:timer.c       ****   byteTx(0);    // set advance and play to OFF
+ 141               		.loc 1 25 0
+ 142 0068 80E0      		ldi r24,0
+ 143 006a 0E94 0000 		call byteTx
+ 144               	.LVL1:
+  26:timer.c       ****   byteTx(255);  // red
+ 145               		.loc 1 26 0
+ 146 006e 8FEF      		ldi r24,lo8(-1)
+ 147 0070 0E94 0000 		call byteTx
+ 148               	.LVL2:
+  27:timer.c       ****   byteTx(255);  // full intensity 
+ 149               		.loc 1 27 0
+ 150 0074 8FEF      		ldi r24,lo8(-1)
+ 151 0076 0E94 0000 		call byteTx
+ 152               	.LVL3:
+  28:timer.c       ****   readSensors();
+ 153               		.loc 1 28 0
+ 154 007a 0E94 0000 		call readSensors
+ 155               	.LVL4:
+ 156               	/* epilogue start */
+  29:timer.c       **** }
+ 157               		.loc 1 29 0
+ 158 007e FF91      		pop r31
+ 159 0080 EF91      		pop r30
+ 160 0082 BF91      		pop r27
+ 161 0084 AF91      		pop r26
+ 162 0086 9F91      		pop r25
+ 163 0088 8F91      		pop r24
+ 164 008a 7F91      		pop r23
+ 165 008c 6F91      		pop r22
+ 166 008e 5F91      		pop r21
+ 167 0090 4F91      		pop r20
+ 168 0092 3F91      		pop r19
+ 169 0094 2F91      		pop r18
+ 170 0096 0F90      		pop r0
+ 171 0098 0FBE      		out __SREG__,r0
+ 172 009a 0F90      		pop r0
+ 173 009c 1F90      		pop r1
+ 174 009e 1895      		reti
+ 175               		.cfi_endproc
+ 176               	.LFE2:
+ 178               	.global	__vector_12
+ 180               	__vector_12:
+ 181               	.LFB3:
+  30:timer.c       **** 
+  31:timer.c       **** ISR(TIMER1_COMPB_vect) { 
+ 182               		.loc 1 31 0
+ 183               		.cfi_startproc
+ 184 00a0 1F92      		push r1
+ 185               	.LCFI18:
+ 186               		.cfi_def_cfa_offset 3
+ 187               		.cfi_offset 1, -2
+ 188 00a2 0F92      		push r0
+ 189               	.LCFI19:
+ 190               		.cfi_def_cfa_offset 4
+ 191               		.cfi_offset 0, -3
+ 192 00a4 0FB6      		in r0,__SREG__
+ 193 00a6 0F92      		push r0
+ 194 00a8 1124      		clr __zero_reg__
+ 195 00aa 2F93      		push r18
+ 196               	.LCFI20:
+ 197               		.cfi_def_cfa_offset 5
+ 198               		.cfi_offset 18, -4
+ 199 00ac 3F93      		push r19
+ 200               	.LCFI21:
+ 201               		.cfi_def_cfa_offset 6
+ 202               		.cfi_offset 19, -5
+ 203 00ae 4F93      		push r20
+ 204               	.LCFI22:
+ 205               		.cfi_def_cfa_offset 7
+ 206               		.cfi_offset 20, -6
+ 207 00b0 5F93      		push r21
+ 208               	.LCFI23:
+ 209               		.cfi_def_cfa_offset 8
+ 210               		.cfi_offset 21, -7
+ 211 00b2 6F93      		push r22
+ 212               	.LCFI24:
+ 213               		.cfi_def_cfa_offset 9
+ 214               		.cfi_offset 22, -8
+ 215 00b4 7F93      		push r23
+ 216               	.LCFI25:
+ 217               		.cfi_def_cfa_offset 10
+ 218               		.cfi_offset 23, -9
+ 219 00b6 8F93      		push r24
+ 220               	.LCFI26:
+ 221               		.cfi_def_cfa_offset 11
+ 222               		.cfi_offset 24, -10
+ 223 00b8 9F93      		push r25
+ 224               	.LCFI27:
+ 225               		.cfi_def_cfa_offset 12
+ 226               		.cfi_offset 25, -11
+ 227 00ba AF93      		push r26
+ 228               	.LCFI28:
+ 229               		.cfi_def_cfa_offset 13
+ 230               		.cfi_offset 26, -12
+ 231 00bc BF93      		push r27
+ 232               	.LCFI29:
+ 233               		.cfi_def_cfa_offset 14
+ 234               		.cfi_offset 27, -13
+ 235 00be EF93      		push r30
+ 236               	.LCFI30:
+ 237               		.cfi_def_cfa_offset 15
+ 238               		.cfi_offset 30, -14
+ 239 00c0 FF93      		push r31
+ 240               	.LCFI31:
+ 241               		.cfi_def_cfa_offset 16
+ 242               		.cfi_offset 31, -15
+ 243               	/* prologue: Signal */
+ 244               	/* frame size = 0 */
+ 245               	/* stack size = 15 */
+ 246               	.L__stack_usage = 15
+  32:timer.c       ****   //transmit("00");
+  33:timer.c       ****   byteTx(139);  // leds
+ 247               		.loc 1 33 0
+ 248 00c2 8BE8      		ldi r24,lo8(-117)
+ 249 00c4 0E94 0000 		call byteTx
+ 250               	.LVL5:
+  34:timer.c       ****   byteTx(0);    // set advance and play to OFF
+ 251               		.loc 1 34 0
+ 252 00c8 80E0      		ldi r24,0
+ 253 00ca 0E94 0000 		call byteTx
+ 254               	.LVL6:
+  35:timer.c       ****   byteTx(0);    // green
+ 255               		.loc 1 35 0
+ 256 00ce 80E0      		ldi r24,0
+ 257 00d0 0E94 0000 		call byteTx
+ 258               	.LVL7:
+  36:timer.c       ****   byteTx(255);  // full intensity 
+ 259               		.loc 1 36 0
+ 260 00d4 8FEF      		ldi r24,lo8(-1)
+ 261 00d6 0E94 0000 		call byteTx
+ 262               	.LVL8:
+  37:timer.c       ****   readSensors();
+ 263               		.loc 1 37 0
+ 264 00da 0E94 0000 		call readSensors
+ 265               	.LVL9:
+ 266               	/* epilogue start */
+  38:timer.c       **** }
+ 267               		.loc 1 38 0
+ 268 00de FF91      		pop r31
+ 269 00e0 EF91      		pop r30
+ 270 00e2 BF91      		pop r27
+ 271 00e4 AF91      		pop r26
+ 272 00e6 9F91      		pop r25
+ 273 00e8 8F91      		pop r24
+ 274 00ea 7F91      		pop r23
+ 275 00ec 6F91      		pop r22
+ 276 00ee 5F91      		pop r21
+ 277 00f0 4F91      		pop r20
+ 278 00f2 3F91      		pop r19
+ 279 00f4 2F91      		pop r18
+ 280 00f6 0F90      		pop r0
+ 281 00f8 0FBE      		out __SREG__,r0
+ 282 00fa 0F90      		pop r0
+ 283 00fc 1F90      		pop r1
+ 284 00fe 1895      		reti
+ 285               		.cfi_endproc
+ 286               	.LFE3:
+ 288               	.global	setupTimer
+ 290               	setupTimer:
+ 291               	.LFB4:
+  39:timer.c       **** 
+  40:timer.c       **** void setupTimer(void) {
+ 292               		.loc 1 40 0
+ 293               		.cfi_startproc
+ 294               	/* prologue: function */
+ 295               	/* frame size = 0 */
+ 296               	/* stack size = 0 */
+ 297               	.L__stack_usage = 0
+  41:timer.c       ****   // ---------------------------------------------------
+  42:timer.c       ****   //  Set up timer 0 to generate interrupts @ 1000Hz -- 1ms
+  43:timer.c       ****   // ---------------------------------------------------
+  44:timer.c       ****   TCCR0A = _BV(WGM01);              // Mode = CTC
+ 298               		.loc 1 44 0
+ 299 0100 82E0      		ldi r24,lo8(2)
+ 300 0102 84BD      		out 0x24,r24
+  45:timer.c       ****   TCCR0B = (_BV(CS00) | _BV(CS02)); // CS0 | CS2 = CLK/1024
+ 301               		.loc 1 45 0
+ 302 0104 95E0      		ldi r25,lo8(5)
+ 303 0106 95BD      		out 0x25,r25
+  46:timer.c       ****   OCR0A  = 17;                      // 18432000/(1024*1000) = 18
+ 304               		.loc 1 46 0
+ 305 0108 91E1      		ldi r25,lo8(17)
+ 306 010a 97BD      		out 0x27,r25
+  47:timer.c       ****   TIMSK0 = _BV(OCIE0A);             // Enable output compare A interrupt
+ 307               		.loc 1 47 0
+ 308 010c 8093 6E00 		sts 110,r24
+  48:timer.c       **** 
+  49:timer.c       **** 
+  50:timer.c       ****   // ---------------------------------------------------
+  51:timer.c       ****   //  Set up timer 1 to generate interrupts @ 1Hz -- 1 second
+  52:timer.c       ****   // ---------------------------------------------------
+  53:timer.c       ****   TCCR1A = 0x00;
+ 309               		.loc 1 53 0
+ 310 0110 1092 8000 		sts 128,__zero_reg__
+  54:timer.c       ****   TCCR1B = (_BV(WGM12) | _BV(CS10) | _BV(CS12));  // WGM12 | CS10 | CS12 = CTC Mode, CLK/1024
+ 311               		.loc 1 54 0
+ 312 0114 8DE0      		ldi r24,lo8(13)
+ 313 0116 8093 8100 		sts 129,r24
+  55:timer.c       ****   OCR1A  = 35999;                                 // 18432000/(1024*.5) = 36,000
+ 314               		.loc 1 55 0
+ 315 011a 8FE9      		ldi r24,lo8(-97)
+ 316 011c 9CE8      		ldi r25,lo8(-116)
+ 317 011e 9093 8900 		sts 136+1,r25
+ 318 0122 8093 8800 		sts 136,r24
+  56:timer.c       ****   OCR1B  = 17999;                                 // 18432000/(1024*1)  = 18,000
+ 319               		.loc 1 56 0
+ 320 0126 8FE4      		ldi r24,lo8(79)
+ 321 0128 96E4      		ldi r25,lo8(70)
+ 322 012a 9093 8B00 		sts 138+1,r25
+ 323 012e 8093 8A00 		sts 138,r24
+  57:timer.c       ****   TIMSK1 = _BV(OCIE1A) | _BV(OCIE1B);             // Enable output compare A and B interrupt
+ 324               		.loc 1 57 0
+ 325 0132 86E0      		ldi r24,lo8(6)
+ 326 0134 8093 6F00 		sts 111,r24
+ 327 0138 0895      		ret
+ 328               		.cfi_endproc
+ 329               	.LFE4:
+ 331               	.global	delayMs
+ 333               	delayMs:
+ 334               	.LFB5:
+  58:timer.c       **** 
+  59:timer.c       **** }
+  60:timer.c       **** 
+  61:timer.c       **** // Delay for the specified time in ms without updating sensor values
+  62:timer.c       **** void delayMs(uint16_t time_ms)
+  63:timer.c       **** {
+ 335               		.loc 1 63 0
+ 336               		.cfi_startproc
+ 337               	.LVL10:
+ 338               	/* prologue: function */
+ 339               	/* frame size = 0 */
+ 340               	/* stack size = 0 */
+ 341               	.L__stack_usage = 0
+  64:timer.c       ****   cli();
+ 342               		.loc 1 64 0
+ 343               	/* #APP */
+ 344               	 ;  64 "timer.c" 1
+ 345 013a F894      		cli
+ 346               	 ;  0 "" 2
+  65:timer.c       ****   delayTimerRunning = 1;
+ 347               		.loc 1 65 0
+ 348               	/* #NOAPP */
+ 349 013c 21E0      		ldi r18,lo8(1)
+ 350 013e 2093 0000 		sts delayTimerRunning,r18
+  66:timer.c       ****   delayTimerCount = time_ms;
+ 351               		.loc 1 66 0
+ 352 0142 9093 0000 		sts delayTimerCount+1,r25
+ 353 0146 8093 0000 		sts delayTimerCount,r24
+  67:timer.c       ****   sei();
+ 354               		.loc 1 67 0
+ 355               	/* #APP */
+ 356               	 ;  67 "timer.c" 1
+ 357 014a 7894      		sei
+ 358               	 ;  0 "" 2
+ 359               	.LVL11:
+ 360               	/* #NOAPP */
+ 361               	.L9:
+  68:timer.c       **** 
+  69:timer.c       ****   while(delayTimerRunning) {
+ 362               		.loc 1 69 0 discriminator 1
+ 363 014c 8091 0000 		lds r24,delayTimerRunning
+ 364 0150 8823      		tst r24
+ 365 0152 01F0      		breq .L11
+  70:timer.c       ****     asm("nop");
+ 366               		.loc 1 70 0
+ 367               	/* #APP */
+ 368               	 ;  70 "timer.c" 1
+ 369 0154 0000      		nop
+ 370               	 ;  0 "" 2
+ 371               	/* #NOAPP */
+ 372 0156 00C0      		rjmp .L9
+ 373               	.L11:
+ 374               	/* epilogue start */
+  71:timer.c       ****   }
+  72:timer.c       **** }...
+ 375               		.loc 1 72 0
+ 376 0158 0895      		ret
+ 377               		.cfi_endproc
+ 378               	.LFE5:
+ 380               	.global	delayTimerRunning
+ 381               		.section .bss
+ 384               	delayTimerRunning:
+ 385 0000 00        		.zero	1
+ 386               	.global	delayTimerCount
+ 389               	delayTimerCount:
+ 390 0001 0000      		.zero	2
+ 391               		.text
+ 392               	.Letext0:
+ 393               		.file 2 "/usr/lib/avr/include/stdint.h"
+ 394               		.file 3 "cmod.h"
+ 395               		.file 4 "sensors.h"
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 timer.c
+     /tmp/cci6BYcm.s:2      *ABS*:000000000000003e __SP_H__
+     /tmp/cci6BYcm.s:3      *ABS*:000000000000003d __SP_L__
+     /tmp/cci6BYcm.s:4      *ABS*:000000000000003f __SREG__
+     /tmp/cci6BYcm.s:5      *ABS*:0000000000000000 __tmp_reg__
+     /tmp/cci6BYcm.s:6      *ABS*:0000000000000001 __zero_reg__
+     /tmp/cci6BYcm.s:12     .text:0000000000000000 __vector_14
+     /tmp/cci6BYcm.s:389    .bss:0000000000000001 delayTimerCount
+     /tmp/cci6BYcm.s:384    .bss:0000000000000000 delayTimerRunning
+     /tmp/cci6BYcm.s:70     .text:0000000000000040 __vector_11
+     /tmp/cci6BYcm.s:180    .text:00000000000000a0 __vector_12
+     /tmp/cci6BYcm.s:290    .text:0000000000000100 setupTimer
+     /tmp/cci6BYcm.s:333    .text:000000000000013a delayMs
+
+UNDEFINED SYMBOLS
+byteTx
+readSensors
+__do_clear_bss

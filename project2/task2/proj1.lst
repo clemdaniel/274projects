@@ -1,0 +1,223 @@
+   1               		.file	"proj1.c"
+   2               	__SP_H__ = 0x3e
+   3               	__SP_L__ = 0x3d
+   4               	__SREG__ = 0x3f
+   5               	__tmp_reg__ = 0
+   6               	__zero_reg__ = 1
+   7               		.text
+   8               	.Ltext0:
+   9               		.cfi_sections	.debug_frame
+  10               		.section	.text.startup,"ax",@progbits
+  11               	.global	main
+  13               	main:
+  14               	.LFB1:
+  15               		.file 1 "proj1.c"
+   1:proj1.c       **** /**
+   2:proj1.c       ****  * CSCE 274 Project 1 Task 2
+   3:proj1.c       ****  *		This program causes the robot to drive in a clockwise
+   4:proj1.c       ****  *		pentagon when the play button is pressed and a counter-
+   5:proj1.c       ****  *		clockwise pentagon when the advance button is pressed.
+   6:proj1.c       ****  *
+   7:proj1.c       ****  *	Edited by: Daniel Clements, Conor Campbell, Cory Novotny
+   8:proj1.c       ****  */
+   9:proj1.c       **** 
+  10:proj1.c       **** #include "timer.h"
+  11:proj1.c       **** #include "cmod.h"
+  12:proj1.c       **** #include "iroblib.h"
+  13:proj1.c       **** #include "oi.h"
+  14:proj1.c       **** #include "steering.h"
+  15:proj1.c       **** #include "lights.h"
+  16:proj1.c       **** #include <stdlib.h>
+  17:proj1.c       **** #include "sensors.h"
+  18:proj1.c       **** 
+  19:proj1.c       **** // Declare Global variables 
+  20:proj1.c       **** int main() {
+  16               		.loc 1 20 0
+  17               		.cfi_startproc
+  18               	/* prologue: function */
+  19               	/* frame size = 0 */
+  20               	/* stack size = 0 */
+  21               	.L__stack_usage = 0
+  21:proj1.c       ****   // Set up Create and module
+  22:proj1.c       ****   initializeCommandModule();
+  22               		.loc 1 22 0
+  23 0000 0E94 0000 		call initializeCommandModule
+  24               	.LVL0:
+  23:proj1.c       ****     
+  24:proj1.c       ****   powerOnRobot();
+  25               		.loc 1 24 0
+  26 0004 0E94 0000 		call powerOnRobot
+  27               	.LVL1:
+  25:proj1.c       ****     // Is the Robot on
+  26:proj1.c       ****   byteTx(CmdStart);
+  28               		.loc 1 26 0
+  29 0008 80E8      		ldi r24,lo8(-128)
+  30 000a 0E94 0000 		call byteTx
+  31               	.LVL2:
+  27:proj1.c       ****     // Start the create
+  28:proj1.c       ****   baud(Baud57600);
+  32               		.loc 1 28 0
+  33 000e 8AE0      		ldi r24,lo8(10)
+  34 0010 0E94 0000 		call baud
+  35               	.LVL3:
+  29:proj1.c       ****     // Set the baud rate for the Create and Command Module
+  30:proj1.c       ****   defineSongs();
+  36               		.loc 1 30 0
+  37 0014 0E94 0000 		call defineSongs
+  38               	.LVL4:
+  31:proj1.c       ****     // Define some songs so that we know the robot is on.
+  32:proj1.c       ****   byteTx(CmdControl);
+  39               		.loc 1 32 0
+  40 0018 82E8      		ldi r24,lo8(-126)
+  41 001a 0E94 0000 		call byteTx
+  42               	.LVL5:
+  33:proj1.c       ****     // Deprecated form of safe mode. I use it because it will
+  34:proj1.c       ****     // turn of all LEDs, so it's essentially a reset.
+  35:proj1.c       ****   byteTx(CmdFull);
+  43               		.loc 1 35 0
+  44 001e 84E8      		ldi r24,lo8(-124)
+  45 0020 0E94 0000 		call byteTx
+  46               	.LVL6:
+  36:proj1.c       ****     // We are operating in FULL mode.
+  37:proj1.c       **** 
+  38:proj1.c       ****   // CSCE 274 students: I would make sure the robot stops. 
+  39:proj1.c       ****   //                    As a precaution for the robot and your grade.
+  40:proj1.c       ****   stop();
+  47               		.loc 1 40 0
+  48 0024 0E94 0000 		call stop
+  49               	.LVL7:
+  41:proj1.c       **** 
+  42:proj1.c       ****   // Play the reset song and wait while it plays.
+  43:proj1.c       ****   byteTx(CmdPlay);
+  50               		.loc 1 43 0
+  51 0028 8DE8      		ldi r24,lo8(-115)
+  52 002a 0E94 0000 		call byteTx
+  53               	.LVL8:
+  44:proj1.c       ****   byteTx(RESET_SONG);
+  54               		.loc 1 44 0
+  55 002e 80E0      		ldi r24,0
+  56 0030 0E94 0000 		call byteTx
+  57               	.LVL9:
+  45:proj1.c       ****   delayMs(750);
+  58               		.loc 1 45 0
+  59 0034 8EEE      		ldi r24,lo8(-18)
+  60 0036 92E0      		ldi r25,lo8(2)
+  61 0038 0E94 0000 		call delayMs
+  62               	.LVL10:
+  46:proj1.c       **** 
+  47:proj1.c       ****   //Turn power button on
+  48:proj1.c       ****   changePowerLightRed();
+  63               		.loc 1 48 0
+  64 003c 0E94 0000 		call changePowerLightRed
+  65               	.LVL11:
+  66               	.L7:
+  49:proj1.c       **** 
+  50:proj1.c       ****   //LED1On;
+  51:proj1.c       **** 
+  52:proj1.c       **** 
+  53:proj1.c       ****   // Infinite operation loop
+  54:proj1.c       ****   for(;;) {
+  55:proj1.c       ****     if (IR == 0xFF) {
+  67               		.loc 1 55 0
+  68 0040 8091 0000 		lds r24,IR
+  69 0044 8F3F      		cpi r24,lo8(-1)
+  70 0046 01F4      		brne .L2
+  56:proj1.c       ****       stop();
+  71               		.loc 1 56 0
+  72 0048 0E94 0000 		call stop
+  73               	.LVL12:
+  74 004c 00C0      		rjmp .L3
+  75               	.L2:
+  57:proj1.c       ****     } else {
+  58:proj1.c       ****       byteTx(RESET_SONG);
+  76               		.loc 1 58 0
+  77 004e 80E0      		ldi r24,0
+  78 0050 0E94 0000 		call byteTx
+  79               	.LVL13:
+  59:proj1.c       ****       if (IR == 0x81) { //left
+  80               		.loc 1 59 0
+  81 0054 8091 0000 		lds r24,IR
+  82 0058 8138      		cpi r24,lo8(-127)
+  83 005a 01F4      		brne .L4
+  60:proj1.c       ****         turn(523); //pi/6 * 1000
+  84               		.loc 1 60 0
+  85 005c 8BE0      		ldi r24,lo8(11)
+  86 005e 92E0      		ldi r25,lo8(2)
+  87 0060 00C0      		rjmp .L8
+  88               	.L4:
+  61:proj1.c       ****       } else if (IR == 0x83) { //right
+  89               		.loc 1 61 0
+  90 0062 8338      		cpi r24,lo8(-125)
+  91 0064 01F4      		brne .L5
+  62:proj1.c       ****         turn(-523);
+  92               		.loc 1 62 0
+  93 0066 85EF      		ldi r24,lo8(-11)
+  94 0068 9DEF      		ldi r25,lo8(-3)
+  95               	.L8:
+  96 006a 0E94 0000 		call turn
+  97               	.LVL14:
+  98 006e 00C0      		rjmp .L3
+  99               	.L5:
+  63:proj1.c       ****       } else if (IR == 0x82) { //forward
+ 100               		.loc 1 63 0
+ 101 0070 8238      		cpi r24,lo8(-126)
+ 102 0072 01F4      		brne .L3
+  64:proj1.c       ****         drive(100);
+ 103               		.loc 1 64 0
+ 104 0074 84E6      		ldi r24,lo8(100)
+ 105 0076 90E0      		ldi r25,0
+ 106 0078 0E94 0000 		call drive
+ 107               	.LVL15:
+ 108               	.L3:
+  65:proj1.c       ****       }
+  66:proj1.c       ****     }
+  67:proj1.c       ****     if(UserButtonPressed) {
+ 109               		.loc 1 67 0
+ 110 007c 4C99      		sbic 0x9,4
+ 111 007e 00C0      		rjmp .L7
+  68:proj1.c       ****       powerOffRobot();
+ 112               		.loc 1 68 0
+ 113 0080 0E94 0000 		call powerOffRobot
+ 114               	.LVL16:
+  69:proj1.c       ****       exit(1);
+ 115               		.loc 1 69 0
+ 116 0084 81E0      		ldi r24,lo8(1)
+ 117 0086 90E0      		ldi r25,0
+ 118 0088 0E94 0000 		call exit
+ 119               	.LVL17:
+ 120               		.cfi_endproc
+ 121               	.LFE1:
+ 123               		.comm	IR,1,1
+ 124               		.text
+ 125               	.Letext0:
+ 126               		.file 2 "/usr/lib/avr/include/stdint.h"
+ 127               		.file 3 "cmod.h"
+ 128               		.file 4 "iroblib.h"
+ 129               		.file 5 "steering.h"
+ 130               		.file 6 "timer.h"
+ 131               		.file 7 "lights.h"
+ 132               		.file 8 "/usr/lib/avr/include/stdlib.h"
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 proj1.c
+     /tmp/ccNfcLwZ.s:2      *ABS*:000000000000003e __SP_H__
+     /tmp/ccNfcLwZ.s:3      *ABS*:000000000000003d __SP_L__
+     /tmp/ccNfcLwZ.s:4      *ABS*:000000000000003f __SREG__
+     /tmp/ccNfcLwZ.s:5      *ABS*:0000000000000000 __tmp_reg__
+     /tmp/ccNfcLwZ.s:6      *ABS*:0000000000000001 __zero_reg__
+     /tmp/ccNfcLwZ.s:13     .text.startup:0000000000000000 main
+                            *COM*:0000000000000001 IR
+
+UNDEFINED SYMBOLS
+initializeCommandModule
+powerOnRobot
+byteTx
+baud
+defineSongs
+stop
+delayMs
+changePowerLightRed
+turn
+drive
+powerOffRobot
+exit
+__do_clear_bss
