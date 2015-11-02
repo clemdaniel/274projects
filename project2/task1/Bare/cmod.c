@@ -42,6 +42,22 @@ void setupSerialPort(void) {
   sei();
 }
 
+void setSerialDestination(uint8_t dest) {
+	//set serial port for byteTx/Rx
+	//make sure pending bytes have been set
+	delayMs(10);
+
+	//configure the port
+	if (dest == SERIAL_CREATE) {
+		PORTB &= ~0x10;
+	} else {
+		PORTB |= 0x10;
+	}
+
+	//wait again to make sure the change has occured properly
+	delayMs(10);
+}
+
 // void byteTx(uint8_t value) {
 //   // Transmit one byte to the robot.
 //   // Wait for the buffer to be empty.

@@ -156,3 +156,7 @@
 #define CliffFrontLeftPID   29
 #define CliffFrontRightPID	30
 #define CliffRightPID			  31
+
+//Serial Port destinations
+#define SERIAL_CREATE		1
+#define SERIAL_USB			2
