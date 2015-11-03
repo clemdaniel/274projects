@@ -6,35 +6,30 @@
 volatile uint16_t delayTimerCount = 0;            // Definition checked against declaration
 volatile uint8_t  delayTimerRunning = 0;          // Definition checked against declaration
 
+volatile uint8_t senseCount = 1;
+volatile uint8_t canSense = 0;
+volatile uint8_t canPrint = 0;
+
 
 // Timer 0 interrupt 
 // SIGNAL(SIG_OUTPUT_COMPARE0A)
 ISR(TIMER0_COMPA_vect) {
-  if(delayTimerCount)
-    delayTimerCount--;
-  else
-    delayTimerRunning = 0;
+    if(delayTimerCount) {
+        delayTimerCount--;
+    } else {
+        delayTimerRunning = 0;
+    }
+    
+    if (senseCount != 0) {
+        senseCount--;
+    } else {
+        canSense = 1;
+    }
 }
-
 
 //SIGNAL(SIG_OUTPUT_COMPARE1A)
 ISR(TIMER1_COMPA_vect) {
-  //Update and send sensor values
-  //transmit("01");
-  byteTx(139);  // leds
-  byteTx(0);    // set advance and play to OFF
-  byteTx(255);  // red
-  byteTx(255);  // full intensity 
-  readSensors();
-}
-
-ISR(TIMER1_COMPB_vect) { 
-  //transmit("00");
-  byteTx(139);  // leds
-  byteTx(0);    // set advance and play to OFF
-  byteTx(0);    // green
-  byteTx(255);  // full intensity 
-  readSensors();
+    canPrint = 1;
 }
 
 void setupTimer(void) {
@@ -52,9 +47,10 @@ void setupTimer(void) {
   // ---------------------------------------------------
   TCCR1A = 0x00;
   TCCR1B = (_BV(WGM12) | _BV(CS10) | _BV(CS12));  // WGM12 | CS10 | CS12 = CTC Mode, CLK/1024
-  OCR1A  = 35999;                                 // 18432000/(1024*.5) = 36,000
-  OCR1B  = 17999;                                 // 18432000/(1024*1)  = 18,000
-  TIMSK1 = _BV(OCIE1A) | _BV(OCIE1B);             // Enable output compare A and B interrupt
+  OCR1A = 17999;
+  //OCR1A  = 35999;                                 // 18432000/(1024*.5) = 36,000
+  //OCR1B  = 17999;                                 // 18432000/(1024*1)  = 18,000
+  TIMSK1 = _BV(OCIE1A); // | _BV(OCIE1B);             // Enable output compare A and B interrupt
 
 }
 

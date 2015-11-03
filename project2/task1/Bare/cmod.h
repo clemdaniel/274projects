@@ -19,6 +19,7 @@
   void initializeCommandModule(void);
 
   // Send and receive data from the Command Module
+  void flushRx(void);
   void byteTx(uint8_t value);
   uint8_t byteRx(void);
 

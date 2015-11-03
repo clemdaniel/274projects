@@ -14,4 +14,9 @@
   // Declaration of timer variables
   extern volatile uint16_t delayTimerCount;
   extern volatile uint8_t  delayTimerRunning;
+  
+  // Maintain state
+  extern volatile uint8_t senseCount;
+  extern volatile uint8_t canSense;
+  extern volatile uint8_t canPrint;
 #endif

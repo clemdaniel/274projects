@@ -67,6 +67,14 @@ void setSerialDestination(uint8_t dest) {
 //   UDR0 = value;
 // }
 
+// Flush serial buffer
+void flushRx() {
+  uint8_t i;
+  while (USCR0A & 0x80) {
+    i = UDR0;
+  }
+}
+
 // Transmit a byte over the serial port
 void byteTx(uint8_t value) {
   while(!(UCSR0A & _BV(UDRE0))) ;

@@ -45,9 +45,9 @@ int main() {
   delayMs(750);
 
   //Turn power button on
-  // changePowerLightRed();
+  changePowerLightRed();
 
-  LED1On;
+  //LED1On;
 
 
   // Infinite operation loop
@@ -55,6 +55,19 @@ int main() {
     if(UserButtonPressed) {
       powerOffRobot();
       exit(1);
+    }
+    
+    if (canSense) {
+        readSensors();
+    }
+    if (canPrint) {
+        char buffer[50];
+        sprintf(buffer, "WALL: %u\n",
+            (uint16_t)((sensorList[SenWallSig1] << 8 | (sensorList[SenWallSig0])));
+            
+        transmit(buffer);
+        
+        canPrint = 0;
     }
   }
 }
