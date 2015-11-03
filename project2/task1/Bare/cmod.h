@@ -11,7 +11,6 @@
   void setupSerialPort(void);
 	
   // Set destination for serial transfers
-
   void setSerialDestination(uint8_t dest);
 
   // Contains a collection of commands that allows me to "start" immediately

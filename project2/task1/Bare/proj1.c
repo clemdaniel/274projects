@@ -63,7 +63,7 @@ int main() {
     if (canPrint) {
         char buffer[50];
         sprintf(buffer, "WALL: %u\n",
-            (uint16_t)((sensorList[SenWallSig1] << 8 | (sensorList[SenWallSig0])));
+            (uint16_t)((sensorList[SenWallSig1] << 8) | (sensorList[SenWallSig0])));
             
         transmit(buffer);
         

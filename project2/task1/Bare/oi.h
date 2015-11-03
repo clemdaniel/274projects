@@ -159,4 +159,4 @@
 
 //Serial Port destinations
 #define SERIAL_CREATE		1
-#define SERIAL_USB			2
+#define SERIAL_USB		2

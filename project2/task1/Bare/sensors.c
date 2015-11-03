@@ -1,9 +1,11 @@
 #include "cmod.h"
 #include "timer.h"
+#include "oi.h"
 #include "sensors.h"
 
 void readSensors(void) {
     int i;
+    
     //flushRx();
     
     transmit("1 ");
@@ -22,7 +24,6 @@ void readSensors(void) {
     
     senseCount = 75;
     canSense = 0;
-    
 }
 
 int transmit(char* string) {
