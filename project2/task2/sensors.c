@@ -49,10 +49,10 @@ int transmit(char* string) {
 }
 
 //Evaluate surroundings for safety during movement or
-//when ordered to move by the removte
+//when ordered to move by the remote
 int checkSurroundings(int movementType) {
     
-    //Don't go forward if bumpers are pressed
+    //Don't go forward if bumpers are pressed or a cliff is sensed
     if (movementType == CHECK_FORWARD) {
         if (bumpLeft || bumpRight || cliffL || cliffR || cliffFL || cliffFR) {
             return UNSAFE_DIRECTION;
