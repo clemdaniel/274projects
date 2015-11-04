@@ -1,62 +1,44 @@
 #include "timer.h"    // Declaration made available here
 #include "sensors.h"
-#include "steering.h"
 
 
 // Timer variables defined here
 volatile uint16_t delayTimerCount = 0;            // Definition checked against declaration
 volatile uint8_t  delayTimerRunning = 0;          // Definition checked against declaration
+volatile uint8_t senseCount = 1;
+volatile uint8_t canSense = 0;
+volatile uint8_t canPrint = 0;
 
+ISR(USART_RX_vect) {  //SIGNAL(SIG_USART_RECV)
+  // Serial receive interrupt to store sensor values
+ 
+  // CSCE 274 students, I have only ever used this method
+  // when retrieving/storing a large amount of sensor data.
+  // You DO NOT need it for this assignment. If i feel it
+  // becomes relevant, I will show you how/when to use it.
+}
 
 // Timer 0 interrupt 
 // SIGNAL(SIG_OUTPUT_COMPARE0A)
 ISR(TIMER0_COMPA_vect) {
-  if(delayTimerCount) {
-    delayTimerCount--;
-  } else {
-    delayTimerRunning = 0;
-  }
-  // byteTx(140);
-  // byteTx(17);
-  // uint8_t IR = byteRx();
-  // if (IR == 0xFF) {
-  //   stop();
-  // } else {
-  //   if (IR == 0x81) { //left
-  //     turn(523); //pi/6 * 1000
-  //   } else if (IR == 0x83) { //right
-  //     turn(-523);
-  //   } else if (IR == 0x82) { //forward
-  //     drive(100);
-  //   }
-  // }
+    if(delayTimerCount) {
+        delayTimerCount--;
+    } else {
+        delayTimerRunning = 0;
+    }
+    //decrement sensor counter
+    if (senseCount != 0) {
+        senseCount--;
+    } else {
+        //go sense values
+        canSense = 1;
+    }
 }
-
 
 //SIGNAL(SIG_OUTPUT_COMPARE1A)
 ISR(TIMER1_COMPA_vect) {
-  //Update and send sensor values
-  //transmit("01");
-  byteTx(142);
-  byteTx(17);
-  IR = byteRx();
-  // byteTx(139);  // leds
-  // byteTx(0);    // set advance and play to OFF
-  // byteTx(255);  // red
-  // byteTx(255);  // full intensity 
-  //readSensors();
-}
-
-ISR(TIMER1_COMPB_vect) { 
-  //transmit("00");
-  byteTx(142);
-  byteTx(17);
-  IR = byteRx();
-  // byteTx(139);  // leds
-  // byteTx(0);    // set advance and play to OFF
-  // byteTx(0);    // green
-  // byteTx(255);  // full intensity 
-  //readSensors();
+    //go print
+    canPrint = 1;
 }
 
 void setupTimer(void) {
@@ -74,9 +56,10 @@ void setupTimer(void) {
   // ---------------------------------------------------
   TCCR1A = 0x00;
   TCCR1B = (_BV(WGM12) | _BV(CS10) | _BV(CS12));  // WGM12 | CS10 | CS12 = CTC Mode, CLK/1024
-  OCR1A  = 35999;                                 // 18432000/(1024*.5) = 36,000
-  OCR1B  = 17999;                                 // 18432000/(1024*1)  = 18,000
-  TIMSK1 = _BV(OCIE1A) | _BV(OCIE1B);             // Enable output compare A and B interrupt
+  OCR1A = 17999;
+  //OCR1A  = 35999;                                 // 18432000/(1024*.5) = 36,000
+  //OCR1B  = 17999;                                 // 18432000/(1024*1)  = 18,000
+  TIMSK1 = _BV(OCIE1A); // | _BV(OCIE1B);             // Enable output compare A and B interrupt
 
 }
 

@@ -52,21 +52,28 @@ int main() {
 
   // Infinite operation loop
   for(;;) {
-    if (IR == 0xFF) {
-      stop();
-    } else {
-      byteTx(RESET_SONG);
-      if (IR == 0x81) { //left
-        turn(523); //pi/6 * 1000
-      } else if (IR == 0x83) { //right
-        turn(-523);
-      } else if (IR == 0x82) { //forward
-        drive(100);
-      }
-    }
     if(UserButtonPressed) {
       powerOffRobot();
       exit(1);
+    }
+    
+    if (canSense) {
+        readSensors();
+    }
+    
+    byteTx(142);
+    byteTx(17); //packet for IR
+    uint8_t irSensor = byteRx();
+    if (irSensor != NO_SIGNAL) {
+      if (irSensor == 0x82) {
+        drive(100);
+      } else if (irSensor == LEFT_SIGNAL) {
+        turn(523);
+      } else if (irSensor == RIGHT_SIGNAL) {
+        turn(-523);
+      }
+    } else {
+      stop();
     }
   }
 }

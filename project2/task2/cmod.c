@@ -42,18 +42,34 @@ void setupSerialPort(void) {
   sei();
 }
 
-// void byteTx(uint8_t value) {
-//   // Transmit one byte to the robot.
-//   // Wait for the buffer to be empty.
-//   while(!(UCSR0A & 0x20)) ;
+void setSerialDestination(uint8_t dest) {
+	//set serial port for byteTx/Rx
+	//make sure pending bytes have been set
+	delayMs(10);
 
-//   // Send the byte.
-//   UDR0 = value;
-// }
+	//configure the port
+	if (dest == SERIAL_CREATE) {
+		PORTB &= ~0x10;
+	} else {
+		PORTB |= 0x10;
+	}
+
+	//wait again to make sure the change has occured properly
+	delayMs(10);
+}
+
+// Flush serial buffer
+void flushRx() {
+  uint8_t i;
+  while (UCSR0A & 0x80) {
+    i = UDR0;
+  }
+}
 
 // Transmit a byte over the serial port
 void byteTx(uint8_t value) {
-  while(!(UCSR0A & _BV(UDRE0))) ;
+  //while(!(UCSR0A & _BV(UDRE0))) ;
+  while(!(UCSR0A & 0x20)) ;
   UDR0 = value;
 }
 

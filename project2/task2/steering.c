@@ -45,8 +45,8 @@ void drive(int rate) {
 	uint8_t hi = 0x00;
 	uint8_t lo = 0x00;
   
-  //skeleton left here for future use when driving backward may
-  //be necessary
+	//skeleton left here for future use when driving backward may
+	//be necessary
 	//if (rate > 0) {
 		hi |= rate >> 8;
 		lo |= rate; 
@@ -75,13 +75,13 @@ void stop(void) {
 void pentagon(int direction) {
 	int i;
 	for (i=0; i<5; i++) {
-				//drive at 100mm/s        
-				drive(100);
+		//drive at 100mm/s        
+		drive(100);
         //drive for 8000ms = 8s, 8s * 100 mm/s = 800 mm = 80cm
-				delayMs(8000); 
+		delayMs(8000); 
         stop();
-				//turn at angle 3*pi/5 radians
-				//(don't turn after the last leg)
+		//turn at angle 3*pi/5 radians
+		//(don't turn after the last leg)
         if (i != 4) turn((int)(direction*3*PI/5) * 1000);
     } 
 }

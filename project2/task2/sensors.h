@@ -7,13 +7,11 @@
 #include <stdio.h>
 #include "cmod.h"
 
-void readSensors(void);
-void readGroupPacket3(void);
-void readWallSignal(void);
-void readCliffSensors(void);
-int transmit(char* string);
-uint16_t twoUBytesIntoInt(uint8_t hi, uint8_t lo);
-int16_t twoBytesIntoInt(uint8_t hi, uint8_t lo);
+uint8_t sensorList[52];
+uint8_t wheelLeft, wheelRight, bumpLeft, bumpRight;
+uint16_t cliffL, cliffFL, cliffFR, cliffR;
 
+void readSensors(void);
+int transmit(char* string);
 
 #endif

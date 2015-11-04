@@ -156,3 +156,13 @@
 #define CliffFrontLeftPID   29
 #define CliffFrontRightPID	30
 #define CliffRightPID			  31
+
+//Serial Port destinations
+#define SERIAL_CREATE		1
+#define SERIAL_USB		2
+
+ //IR sensor stuff
+#define NO_SIGNAL    0xFF
+#define DRIVE_SIGNAL 0x82
+#define LEFT_SIGNAL  0x81
+#define RIGHT_SIGNAL 0x83

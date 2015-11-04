@@ -9,12 +9,16 @@
 
   // Setup the serial port: Baud rate, transmit/recieve, packet size.
   void setupSerialPort(void);
+	
+  // Set destination for serial transfers
+  void setSerialDestination(uint8_t dest);
 
   // Contains a collection of commands that allows me to "start" immediately
   // after calling this command.
   void initializeCommandModule(void);
 
   // Send and receive data from the Command Module
+  void flushRx(void);
   void byteTx(uint8_t value);
   uint8_t byteRx(void);
 

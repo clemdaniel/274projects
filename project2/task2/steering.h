@@ -16,7 +16,7 @@
 #define vHiNeg 		0xff
 #define vLoNeg		0x5b
 
-#define PI				3 //fine Stiffler 3.1415926
+#define PI				3.1415926
 
 void turn(int theta);
 
