@@ -68,15 +68,21 @@ int main() {
       if (irSensor == 0x82) {
         if (checkSurroundings(CHECK_FORWARD) == SAFE_DIRECTION) {
           drive(100);
-        }
+        } else {
+          stop();
+		}
       } else if (irSensor == LEFT_SIGNAL) {
         if (checkSurroundings(CHECK_TURN) == SAFE_DIRECTION) {
           turn(523);
-        }
+        } else {
+          stop();
+		}
       } else if (irSensor == RIGHT_SIGNAL) {
         if (checkSurroundings(CHECK_TURN) == SAFE_DIRECTION) {
           turn(-523);
-        }
+        } else {
+          stop();
+		}
       }
     } else {
       stop();
