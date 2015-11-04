@@ -14,4 +14,12 @@ uint16_t cliffL, cliffFL, cliffFR, cliffR;
 void readSensors(void);
 int transmit(char* string);
 
+int checkSurroundings(int movementType);
+
+//defines for clarity in checkSurroundings
+#define CHECK_FORWARD     0
+#define CHECK_TURN        1
+#define SAFE_DIRECTION    0
+#define UNSAFE_DIRECTION  1
+
 #endif

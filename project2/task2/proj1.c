@@ -66,11 +66,17 @@ int main() {
     uint8_t irSensor = byteRx();
     if (irSensor != NO_SIGNAL) {
       if (irSensor == 0x82) {
-        drive(100);
+        if (checkSurroudings(CHECK_FORWARD) == SAFE_DIRECTION) {
+          drive(100);
+        }
       } else if (irSensor == LEFT_SIGNAL) {
-        turn(523);
+        if (checkSurroudings(CHECK_TURN) == SAFE_DIRECTION) {
+          turn(523);
+        }
       } else if (irSensor == RIGHT_SIGNAL) {
-        turn(-523);
+        if (checkSurroudings(CHECK_TURN) == SAFE_DIRECTION) {
+          turn(-523);
+        }
       }
     } else {
       stop();
