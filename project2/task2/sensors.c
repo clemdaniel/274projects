@@ -51,21 +51,10 @@ int transmit(char* string) {
 //Evaluate surroundings for safety during movement or
 //when ordered to move by the removte
 int checkSurroundings(int movementType) {
-    uint8_t wheelsAndBump = (uint8_t)(sensorList[SenBumpDrop]);
-    uint8_t wheelLeft = (wheelsAndBump & 0x08) >> 3;
-    uint8_t wheelRight = (wheelsAndBump & 0x04) >> 2;
     
     //Don't go forward if bumpers are pressed
     if (movementType == CHECK_FORWARD) {
-        uint8_t bumpLeft = (wheelsAndBump & 0x02) >> 1;
-        uint8_t bumpRight = (wheelsAndBump & 0x01);
-        uint16_t cliffLeft = (uint16_t)((sensorList[SenCliffLSig1] << 8) | (sensorList[SenCliffLSig0]));
-        uint16_t cliffFrontLeft = (uint16_t)((sensorList[SenCliffFLSig1] << 8) | (sensorList[SenCliffFLSig0]));
-        uint16_t cliffFrontRight = (uint16_t)((sensorList[SenCliffFRSig1] << 8) | (sensorList[SenCliffFRSig0]));
-        uint16_t cliffRight = (uint16_t)((sensorList[SenCliffRSig1] << 8) | (sensorList[SenCliffRSig0]));
-
-        if (bumpLeft || bumpRight || cliffLeft || cliffRight ||
-                cliffFrontLeft || cliffFrontRight) {
+        if (bumpLeft || bumpRight || cliffL || cliffR || cliffFL || cliffFR) {
             return UNSAFE_DIRECTION;
         }
     }
