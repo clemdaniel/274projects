@@ -61,12 +61,75 @@ int main() {
         readSensors();
     }
     if (canPrint) {
+        //buffer to store strings
         char buffer[50];
-        sprintf(buffer, "WALL: %u\n",
+        //begin printing the read sensors
+        sprintf(buffer, "Wall Signal: %u\n",
             (uint16_t)((sensorList[SenWallSig1] << 8) | (sensorList[SenWallSig0])));
-            
         transmit(buffer);
+
+        sprintf(buffer, "Cliff Left Signal: %u\n",
+            (uint16_t)((sensorList[SenCliffLSig1] << 8) | (sensorList[SenCliffLSig0])));
+        transmit(buffer);
+
+        sprintf(buffer, "Cliff Front Left Signal: %u\n",
+            (uint16_t)((sensorList[SenCliffFLSig1] << 8) | (sensorList[SenCliffFLSig0])));
+        transmit(buffer);
+
+        sprintf(buffer, "Cliff Front Right Signal: %u\n",
+            (uint16_t)((sensorList[SenCliffFRSig1] << 8) | (sensorList[SenCliffFRSig0])));
+        transmit(buffer);
+
+        sprintf(buffer, "Cliff Right Signal: %u\n",
+            (uint16_t)((sensorList[SenCliffRSig1] << 8) | (sensorList[SenCliffRSig0])));
+        transmit(buffer);
+
+        sprintf(buffer, "Charging State: %u\n",
+            (uint8_t)(sensorList[SenChargeState]));
+        transmit(buffer);
+
+        sprintf(buffer, "Voltage: %u\n",
+            (uint16_t)((sensorList[SenVolt1] << 8) | (sensorList[SenVolt0])));
+        transmit(buffer);
+
+        sprintf(buffer, "Current: %i\n",
+            (int16_t)((sensorList[SenCurr1] << 8) | (sensorList[SenCurr0])));
+        transmit(buffer);
+
+        sprintf(buffer, "Battery Temperature: %i\n",
+            (int8_t)(sensorList[SenTemp]));
+        transmit(buffer);
+
+        sprintf(buffer, "Battery Charge: %u\n",
+            (uint16_t)((sensorList[SenCharge1] << 8) | (sensorList[SenCharge0])));
+        transmit(buffer);
+
+        sprintf(buffer, "Battery Capacity: %u\n",
+            (uint16_t)((sensorList[SenCap1] << 8) | (sensorList[SenCap0])));
+        transmit(buffer);
+
+        uint8_t wheelsAndBump = (uint8_t)(sensorList[SenBumpDrop]);
+        uint8_t wheelLeft = (wheelsAndBump & 0x08) >> 3;
+        uint8_t wheelRight = (wheelsAndBump & 0x04) >> 2;
+        uint8_t bumpLeft = (wheelsAndBump & 0x02) >> 1;
+        uint8_t bumpRight = (wheelsAndBump & 0x01);
         
+        sprintf(buffer, "Wheel Left Drop: %u\n",
+            wheelLeft);
+        transmit(buffer);
+
+        sprintf(buffer, "Wheel Right Drop: %u\n",
+            wheelRight);
+        transmit(buffer);
+
+        sprintf(buffer, "Bump Left Drop: %u\n",
+            bumpLeft);
+        transmit(buffer);
+
+        sprintf(buffer, "Bump Right Drop: %u\n\n",
+            bumpRight);
+        transmit(buffer);
+        //reset print flag
         canPrint = 0;
     }
   }

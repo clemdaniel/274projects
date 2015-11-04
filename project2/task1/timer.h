@@ -5,6 +5,8 @@
   #include <avr/interrupt.h>
 
   // Interrupts.
+  ISR(USART_RX_vect);
+  ISR(TIMER0_COMPA_vect);
   ISR(TIMER1_COMPA_vect);
 
   // Timer functions

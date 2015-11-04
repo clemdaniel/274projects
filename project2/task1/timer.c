@@ -5,11 +5,18 @@
 // Timer variables defined here
 volatile uint16_t delayTimerCount = 0;            // Definition checked against declaration
 volatile uint8_t  delayTimerRunning = 0;          // Definition checked against declaration
-
 volatile uint8_t senseCount = 1;
 volatile uint8_t canSense = 0;
 volatile uint8_t canPrint = 0;
 
+ISR(USART_RX_vect) {  //SIGNAL(SIG_USART_RECV)
+  // Serial receive interrupt to store sensor values
+ 
+  // CSCE 274 students, I have only ever used this method
+  // when retrieving/storing a large amount of sensor data.
+  // You DO NOT need it for this assignment. If i feel it
+  // becomes relevant, I will show you how/when to use it.
+}
 
 // Timer 0 interrupt 
 // SIGNAL(SIG_OUTPUT_COMPARE0A)
@@ -19,16 +26,18 @@ ISR(TIMER0_COMPA_vect) {
     } else {
         delayTimerRunning = 0;
     }
-    
+    //decrement sensor counter
     if (senseCount != 0) {
         senseCount--;
     } else {
+        //go sense values
         canSense = 1;
     }
 }
 
 //SIGNAL(SIG_OUTPUT_COMPARE1A)
 ISR(TIMER1_COMPA_vect) {
+    //go print
     canPrint = 1;
 }
 

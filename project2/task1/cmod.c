@@ -58,15 +58,6 @@ void setSerialDestination(uint8_t dest) {
 	delayMs(10);
 }
 
-// void byteTx(uint8_t value) {
-//   // Transmit one byte to the robot.
-//   // Wait for the buffer to be empty.
-//   while(!(UCSR0A & 0x20)) ;
-
-//   // Send the byte.
-//   UDR0 = value;
-// }
-
 // Flush serial buffer
 void flushRx() {
   uint8_t i;
