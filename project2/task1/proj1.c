@@ -1,8 +1,7 @@
 /**
- * CSCE 274 Project 1 Task 2
- *		This program causes the robot to drive in a clockwise
- *		pentagon when the play button is pressed and a counter-
- *		clockwise pentagon when the advance button is pressed.
+ * CSCE 274 Project 2 Task 1
+ *		This program is designed to output sensor data to the serial.
+ *    This will use ISRs to accomplish this task.
  *
  *	Edited by: Daniel Clements, Conor Campbell, Cory Novotny
  */

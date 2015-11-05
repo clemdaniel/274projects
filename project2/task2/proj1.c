@@ -1,8 +1,8 @@
 /**
- * CSCE 274 Project 1 Task 2
- *		This program causes the robot to drive in a clockwise
- *		pentagon when the play button is pressed and a counter-
- *		clockwise pentagon when the advance button is pressed.
+ * CSCE 274 Project 2 Task 2
+ *		This program is designed to read sensors and store these values consistently.
+ *    Then it will take the values and make decisions on when to stop driving or
+ *    continue driving or turning. The drive and turn commands are given by the remote.
  *
  *	Edited by: Daniel Clements, Conor Campbell, Cory Novotny
  */
