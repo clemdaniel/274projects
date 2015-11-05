@@ -19,10 +19,12 @@ void readSensors(void) {
     //wheel drop and bump sensors read
     uint8_t wheelsAndBump = (uint8_t)(sensorList[SenBumpDrop]);
     //seperate sensor values accordingly
+    castorWheel = (wheelsAndBump & 0x10) >> 4;
     wheelLeft = (wheelsAndBump & 0x08) >> 3;
     wheelRight = (wheelsAndBump & 0x04) >> 2;
     bumpLeft = (wheelsAndBump & 0x02) >> 1;
     bumpRight = (wheelsAndBump & 0x01);
+
     wall = (uint16_t)((sensorList[SenWallSig1]) << 8) | (sensorList[SenWallSig0]);
     cliffL = (uint16_t)((sensorList[SenCliffLSig1] << 8) | (sensorList[SenCliffLSig0]));
     cliffFL = (uint16_t)((sensorList[SenCliffFLSig1] << 8) | (sensorList[SenCliffFLSig0]));
@@ -62,6 +64,6 @@ int checkSurroundings(int movementType) {
         }
     }
     //Never move at all when wheels are dropped
-    if (wheelLeft || wheelRight) return UNSAFE_DIRECTION;    
+    if (wheelLeft || wheelRight || castorWheel) return UNSAFE_DIRECTION;    
     return SAFE_DIRECTION;
 }

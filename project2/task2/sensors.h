@@ -8,7 +8,7 @@
 #include "cmod.h"
 
 uint8_t sensorList[52];
-uint8_t wheelLeft, wheelRight, bumpLeft, bumpRight;
+uint8_t castorWheel, wheelLeft, wheelRight, bumpLeft, bumpRight;
 uint16_t wall, cliffL, cliffFL, cliffFR, cliffR;
 
 void readSensors(void);
