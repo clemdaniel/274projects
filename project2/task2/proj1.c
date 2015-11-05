@@ -43,13 +43,8 @@ int main() {
   byteTx(CmdPlay);
   byteTx(RESET_SONG);
   delayMs(750);
-
   //Turn power button on
   changePowerLightRed();
-
-  //LED1On;
-
-
   // Infinite operation loop
   for(;;) {
     if(UserButtonPressed) {
@@ -61,25 +56,27 @@ int main() {
         readSensors();
     }
     
-    byteTx(142);
-    byteTx(17); //packet for IR
+    byteTx(CmdSensors);
+    byteTx(IRsensorPacket); //packet for IR control
     uint8_t irSensor = byteRx();
+    //if no signal from remote, do not do anything
     if (irSensor != NO_SIGNAL) {
-      if (irSensor == 0x82) {
+      //check to see which remote signal
+      if (irSensor == DRIVE_SIGNAL) {
         if (checkSurroundings(CHECK_FORWARD) == SAFE_DIRECTION) {
-          drive(100);
+          drive(DRIVE_SPEED);
         } else {
           stop();
-		}
+		    }
       } else if (irSensor == LEFT_SIGNAL) {
         if (checkSurroundings(CHECK_TURN) == SAFE_DIRECTION) {
-          turn(523);
+          turn(TURN_30_DEGREES);
         } else {
           stop();
 		}
       } else if (irSensor == RIGHT_SIGNAL) {
         if (checkSurroundings(CHECK_TURN) == SAFE_DIRECTION) {
-          turn(-523);
+          turn(-TURN_30_DEGREES);
         } else {
           stop();
 		}

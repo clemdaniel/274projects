@@ -9,11 +9,10 @@
 
 uint8_t sensorList[52];
 uint8_t wheelLeft, wheelRight, bumpLeft, bumpRight;
-uint16_t cliffL, cliffFL, cliffFR, cliffR;
+uint16_t wall, cliffL, cliffFL, cliffFR, cliffR;
 
 void readSensors(void);
 int transmit(char* string);
-
 int checkSurroundings(int movementType);
 
 //defines for clarity in checkSurroundings

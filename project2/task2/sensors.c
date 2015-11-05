@@ -16,16 +16,19 @@ void readSensors(void) {
     for (i=0; i<52; i++) {
         sensorList[i] = byteRx();
     }
-
+    //wheel drop and bump sensors read
     uint8_t wheelsAndBump = (uint8_t)(sensorList[SenBumpDrop]);
+    //seperate sensor values accordingly
     wheelLeft = (wheelsAndBump & 0x08) >> 3;
     wheelRight = (wheelsAndBump & 0x04) >> 2;
     bumpLeft = (wheelsAndBump & 0x02) >> 1;
     bumpRight = (wheelsAndBump & 0x01);
+    wall = (uint16_t)((sensorList[SenWallSig1]) << 8) | (sensorList[SenWallSig0]);
     cliffL = (uint16_t)((sensorList[SenCliffLSig1] << 8) | (sensorList[SenCliffLSig0]));
     cliffFL = (uint16_t)((sensorList[SenCliffFLSig1] << 8) | (sensorList[SenCliffFLSig0]));
     cliffFR = (uint16_t)((sensorList[SenCliffFRSig1] << 8) | (sensorList[SenCliffFRSig0]));
     cliffR = (uint16_t)((sensorList[SenCliffRSig1] << 8) | (sensorList[SenCliffRSig0]));
+
     //reset sense counter back to 75ms
     senseCount = 75;
     //reset sense flag to not sense
@@ -51,16 +54,14 @@ int transmit(char* string) {
 //Evaluate surroundings for safety during movement or
 //when ordered to move by the remote
 int checkSurroundings(int movementType) {
-    
-    //Don't go forward if bumpers are pressed or a cliff is sensed
+    //if moving foward, check according values to determine to move
     if (movementType == CHECK_FORWARD) {
-        if (bumpLeft || bumpRight || cliffL || cliffR || cliffFL || cliffFR) {
+        if ((wall > 5) || (cliffL == 0) || (cliffFL == 0) || (cliffFR == 0) || (cliffR == 0) ||
+             (bumpRight == 1) || (bumpLeft == 1))  {
             return UNSAFE_DIRECTION;
         }
     }
-    
-    //Never move when wheels are dropped
+    //Never move at all when wheels are dropped
     if (wheelLeft || wheelRight) return UNSAFE_DIRECTION;    
-
     return SAFE_DIRECTION;
 }

@@ -20,7 +20,6 @@
 int main() {
   // Set up Create and module
   initializeCommandModule();
-    
   powerOnRobot();
     // Is the Robot on
   byteTx(CmdStart);
@@ -34,22 +33,15 @@ int main() {
     // turn of all LEDs, so it's essentially a reset.
   byteTx(CmdFull);
     // We are operating in FULL mode.
-
   // CSCE 274 students: I would make sure the robot stops. 
   //                    As a precaution for the robot and your grade.
   stop();
-
   // Play the reset song and wait while it plays.
   byteTx(CmdPlay);
   byteTx(RESET_SONG);
   delayMs(750);
-
   //Turn power button on
   changePowerLightRed();
-
-  //LED1On;
-
-
   // Infinite operation loop
   for(;;) {
     if(UserButtonPressed) {
@@ -58,11 +50,12 @@ int main() {
     }
     
     if (canSense) {
+        //read and update sensors
         readSensors();
     }
     if (canPrint) {
         //buffer to store strings
-        char buffer[50];
+        char buffer[TEMP_BUFFER_SIZE];
         //begin printing the read sensors
         sprintf(buffer, "Wall Signal: %u\n",
             (uint16_t)((sensorList[SenWallSig1] << 8) | (sensorList[SenWallSig0])));
@@ -108,12 +101,14 @@ int main() {
             (uint16_t)((sensorList[SenCap1] << 8) | (sensorList[SenCap0])));
         transmit(buffer);
 
+        //Read sensors into variables
         uint8_t wheelsAndBump = (uint8_t)(sensorList[SenBumpDrop]);
         uint8_t wheelLeft = (wheelsAndBump & 0x08) >> 3;
         uint8_t wheelRight = (wheelsAndBump & 0x04) >> 2;
         uint8_t bumpLeft = (wheelsAndBump & 0x02) >> 1;
         uint8_t bumpRight = (wheelsAndBump & 0x01);
         
+        //print sensors
         sprintf(buffer, "Wheel Left Drop: %u\n",
             wheelLeft);
         transmit(buffer);

@@ -48,6 +48,7 @@
 #define SenAng0         15
 #define SenChargeState  16
 #define SenVolt1        17
+#define IRsensorPacket  17
 #define SenVolt0        18
 #define SenCurr1        19
 #define SenCurr0        20
@@ -166,3 +167,8 @@
 #define DRIVE_SIGNAL 0x82
 #define LEFT_SIGNAL  0x81
 #define RIGHT_SIGNAL 0x83
+
+ //DRIVE STUFF
+ #define DRIVE_SPEED   150
+ #define TURN_30_DEGREES  520
+

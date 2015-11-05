@@ -158,5 +158,6 @@
 #define CliffRightPID			  31
 
 //Serial Port destinations
-#define SERIAL_CREATE		1
-#define SERIAL_USB		2
+#define SERIAL_CREATE		 1
+#define SERIAL_USB		   2
+#define TEMP_BUFFER_SIZE 50
