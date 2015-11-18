@@ -16,14 +16,16 @@
 #define vHiNeg 		0xff
 #define vLoNeg		0x5b
 
-#define PI				3.1415926
+#define PI		3  //3.1415926 Truncated just for you, Stiffler
 
 void turn(int theta);
 
 void drive(int rate);
 
+void driveLR(int rateLeft, int rateRight);
+
 void stop(void);
 
-void pentagon(int direction);
+void alignToWall(void);
 
 #endif

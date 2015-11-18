@@ -42,8 +42,9 @@ int main() {
   byteTx(CmdPlay);
   byteTx(RESET_SONG);
   delayMs(750);
-  //Turn power button on
+  //Turn power light on
   changePowerLightRed();
+
   // Infinite operation loop
   for(;;) {
     if(UserButtonPressed) {
@@ -51,38 +52,27 @@ int main() {
       exit(1);
     }
     
-    if (canSense) {
-        readSensors();
-    }
+    //check bump sensor -- sensors.c: getBumps
+
+    //if bump occurs
+    //realign robot to wall -- steering.c: alignToWall
+
+    //TODO implement timing for when to calculate PID output
+    //if (time to calculate PID output)
+        //check wall distance -- sensors.c: getWallDistance
     
-    byteTx(CmdSensors);
-    byteTx(IRsensorPacket); //packet for IR control
-    uint8_t irSensor = byteRx();
-    //if no signal from remote, do not do anything
-    if (irSensor != NO_SIGNAL) {
-      //check to see which remote signal
-      if (irSensor == DRIVE_SIGNAL) {
-        if (checkSurroundings(CHECK_FORWARD) == SAFE_DIRECTION) {
-          drive(DRIVE_SPEED);
-        } else {
-          stop();
-		    }
-      } else if (irSensor == LEFT_SIGNAL) {
-        if (checkSurroundings(CHECK_TURN) == SAFE_DIRECTION) {
-          turn(TURN_30_DEGREES);
-        } else {
-          stop();
-		}
-      } else if (irSensor == RIGHT_SIGNAL) {
-        if (checkSurroundings(CHECK_TURN) == SAFE_DIRECTION) {
-          turn(-TURN_30_DEGREES);
-        } else {
-          stop();
-		}
-      }
-    } else {
-      stop();
-    }
+        //PID Controller 
+        //calculate error
+        //add error to history
+
+        //calculate integral and derivative of error
+
+        //calculate uk i.e. PID output
+
+        //set wheel velocities based on uk --steering.c: driveLR
+        // (Make sure to check velocities for validity before setting)  
+   
+        //reset PID timer
   }
 }
 

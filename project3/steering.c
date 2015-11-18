@@ -62,27 +62,15 @@ void drive(int rate) {
 	byteTx(lo);
 }
 
+void driveLR(int rateLeft, int rateRight) {
+
+}
+
 /** Stop the robot	*/
 void stop(void) {
 	drive(0);
 }
 
-/** Make the robot drive in a pentagon shape
- *		direction only -1 or 1
- *			1 indicates counter-clockwise
- * 	  	-1 indicates clockwise
- */
-void pentagon(int direction) {
-	int i;
-	for (i=0; i<5; i++) {
-		//drive at 100mm/s        
-		drive(100);
-        //drive for 8000ms = 8s, 8s * 100 mm/s = 800 mm = 80cm
-		delayMs(8000); 
-        stop();
-		//turn at angle 3*pi/5 radians
-		//(don't turn after the last leg)
-        if (i != 4) turn((int)(direction*3*PI/5) * 1000);
-    } 
-}
- 
+void alignToWall {
+
+} 
