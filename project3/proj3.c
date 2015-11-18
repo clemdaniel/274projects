@@ -1,8 +1,7 @@
 /**
  * CSCE 274 Project 3
- *		This program is designed to read sensors and store these values consistently.
- *    Then it will take the values and make decisions on when to stop driving or
- *    continue driving or turning. The drive and turn commands are given by the remote.
+ *		This program implements a PID controller with the objective  
+ * following along a wall or other obstacle while maintaining a set distance.
  *
  *	Edited by: Daniel Clements, Conor Campbell, Cory Novotny
  */
