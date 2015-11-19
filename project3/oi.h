@@ -177,4 +177,4 @@
  #define KP_GAIN
  #define KI_GAIN
  #define KD_GAIN
- #define CHANGE_TIME	
+ #define CHANGE_TIME	  50

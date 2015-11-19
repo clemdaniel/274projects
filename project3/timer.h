@@ -21,4 +21,6 @@
   extern volatile uint8_t senseCount;
   extern volatile uint8_t canSense;
   extern volatile uint8_t canPrint;
+  extern volatile uint8_t canPID;
+  extern volatile uint8_t PIDCount;
 #endif

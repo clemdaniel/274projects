@@ -1,4 +1,4 @@
-#include "oi.h"
+//#include "oi.h"
 #ifndef INCLUDE_HISTORY_H
 #define INCLUDE_HISTORY_H
 
@@ -7,9 +7,10 @@
 
 void addElement(uint16_t currentError);
 int sum(void);
-int slope(time);
+int slope(int currentTime);
 
-uint16_t history[100];
-int size = 0;
+
+ uint16_t historyArray[100];
+extern volatile int currentSize;
 
 #endif

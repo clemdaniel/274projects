@@ -60,7 +60,7 @@ TARGET = proj3
 
 
 # List C source files here. (C dependencies are automatically generated.)
-SRC = $(TARGET).c iroblib.c timer.c cmod.c steering.c lights.c sensors.c
+SRC = $(TARGET).c iroblib.c timer.c cmod.c steering.c lights.c sensors.c history.c
 
 
 # List Assembler source files here.

@@ -49,6 +49,15 @@ int main() {
 
   uint8_t* bumps;
   uint16_t wall, currentError;
+  uint8_t kp_gain = 1;
+  uint8_t ki_gain = 1;
+  uint8_t kd_gain = 1;
+  uint8_t ki_error, kd_error, uk;
+  int rightVel = 0;
+  int leftVel = 0;
+  int defaultVel = 100;
+  int maxVel = 200;
+
   // Infinite operation loop
   for(;;) {
     if(UserButtonPressed) {
@@ -67,27 +76,51 @@ int main() {
 
     //TODO implement timing for when to calculate PID output
     //if (time to calculate PID output)
-        //check wall distance -- sensors.c: getWallDistance
-        wall = getWallDistance();
+    if (canPID) {
+      //check wall distance -- sensors.c: getWallDistance
+      wall = getWallDistance();
 
-        //PID Controller 
-        //calculate error
-        currentError = wall - SET_POINT;
+      //PID Controller 
+      //calculate error
+      currentError = wall - SET_POINT;
 
-        //add error to history
-        addElement(currentError);
+      //add error to history
+      addElement(currentError);
 
-        //calculate integral and derivative of error
-        ki_error = sum() * CHANGE_TIME;
-        kd_error = slope(CHANGE_TIME);
+      //calculate integral and derivative of error
+      ki_error = sum() * CHANGE_TIME;
+      kd_error = slope(CHANGE_TIME);
 
-        //calculate uk i.e. PID output
-        uk = ((KP_GAIN * (currentError >> 2)) + (KI_GAIN * (ki_error >> 4)) + 
-          (KD_GAIN * (kd_error >> 2))) >> 2;
-        //set wheel velocities based on uk --steering.c: driveLR
-        // (Make sure to check velocities for validity before setting)  
-   
-        //reset PID timer
+      //calculate uk i.e. PID output
+      uk = ((kp_gain * (currentError >> 2)) + (ki_gain * (ki_error >> 4)) + 
+        (kd_gain * (kd_error >> 2))) >> 2;
+      //set wheel velocities based on uk --steering.c: driveLR
+      // (Make sure to check velocities for validity before setting) 
+      rightVel = defaultVel + uk;
+      leftVel = defaultVel - uk;
+
+      if (leftVel < 0) {
+        leftVel = 0;
+      } else if (leftVel > maxVel) {
+        leftVel = maxVel;
+      }
+       
+      if (rightVel < 0) {
+        rightVel = 0;
+      } else if (rightVel > maxVel) {
+        rightVel = maxVel;
+      } 
+
+      driveLR(leftVel, rightVel);
+ 
+      //reset PID timer
+      PIDCount = 50;
+      canPID = 0;
+    }
+        
   }
+
+
+  return 0;
 }
 
