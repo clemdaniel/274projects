@@ -48,11 +48,12 @@ int main() {
 
 
   uint8_t* bumps;
-  uint16_t wall, currentError;
-  uint8_t kp_gain = 1;
+  uint16_t wall;
+  int currentError;
+  uint8_t kp_gain = 100;
   uint8_t ki_gain = 1;
-  uint8_t kd_gain = 1;
-  uint8_t ki_error, kd_error, uk;
+  uint8_t kd_gain = 100;
+  int ki_error, kd_error, uk;
   int rightVel = 0;
   int leftVel = 0;
   int defaultVel = 100;
@@ -66,12 +67,16 @@ int main() {
     }
     
     //check bump sensor -- sensors.c: getBumps
-    bumps = getBumps();
+    //bumps = getBumps();
+    readSensors();
 
     //if bump occurs
-    if (bumps[0] || bumps[1]) {
-        //realign robot to wall -- steering.c: alignToWall
-        //alignToWall();
+    if (bumpLeft && bumpRight) { //both bumps
+      turn(1047); //about 60 degrees
+    } else if (bumpLeft) {
+      turn(1570); //90 degrees
+    } else if (bumpRight) {
+      turn(TURN_30_DEGREES);
     }
 
     //TODO implement timing for when to calculate PID output
@@ -99,16 +104,15 @@ int main() {
       rightVel = defaultVel + uk;
       leftVel = defaultVel - uk;
 
-      if (leftVel < 0) {
-        leftVel = 0;
-      } else if (leftVel > maxVel) {
-        leftVel = maxVel;
-      }
-       
       if (rightVel < 0) {
         rightVel = 0;
       } else if (rightVel > maxVel) {
         rightVel = maxVel;
+      } 
+      if (leftVel < 0) {
+        leftVel = 0;
+      } else if (leftVel > maxVel) {
+        leftVel = maxVel;
       } 
 
       driveLR(leftVel, rightVel);

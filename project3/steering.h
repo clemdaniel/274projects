@@ -26,6 +26,6 @@ void driveLR(int rateLeft, int rateRight);
 
 void stop(void);
 
-void alignToWall(void);
+void alignToWall(uint8_t bumpLeft, uint8_t bumpRight);
 
 #endif
