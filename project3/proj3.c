@@ -49,10 +49,10 @@ int main() {
 
   uint8_t* bumps;
   uint16_t wall;
-  int currentError;
-  uint8_t kp_gain = 70; //100
-  uint8_t kd_gain = 30; //45
-  uint8_t ki_gain = 1; //1
+  int currentError; 
+  uint8_t kp_gain = 30; //70; 
+  uint8_t kd_gain = 5; //30; 
+  uint8_t ki_gain = 1; //1;
   int ki_error, kd_error, uk;
   int rightVel = 0;
   int leftVel = 0;
@@ -97,7 +97,7 @@ int main() {
       kd_error = slope(CHANGE_TIME);
 
       //calculate uk i.e. PID output
-      uk = ((kp_gain * (currentError >> 2)) + (ki_gain * (ki_error >> 4)) + 
+      uk = ((kp_gain * (currentError >> 2)) + (ki_gain * (ki_error >> 6)) + 
         (kd_gain * (kd_error >> 2))) >> 2;
       //set wheel velocities based on uk --steering.c: driveLR
       // (Make sure to check velocities for validity before setting) 

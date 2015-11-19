@@ -173,7 +173,7 @@
  #define TURN_30_DEGREES	520
 
  //PID VALUES
- #define SET_POINT			50
+ #define SET_POINT		80	//50
  #define KP_GAIN
  #define KI_GAIN
  #define KD_GAIN
