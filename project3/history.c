@@ -19,8 +19,8 @@ int sum() {
 
 int slope(int currentTime) {
 	uint16_t currentElement = history[size];
-	uint16_t previousElement = history[size -1];
+	uint16_t previousElement = history[size - 1];
 	int difference = currentElement - previousElement;
-	int final = difference/currentTime;
+	int final = difference / currentTime;
 	return final;
 }

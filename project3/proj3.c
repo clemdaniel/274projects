@@ -6,14 +6,15 @@
  *	Edited by: Daniel Clements, Conor Campbell, Cory Novotny
  */
 
-#include "timer.h"
-#include "cmod.h"
-#include "iroblib.h"
-#include "oi.h"
-#include "steering.h"
-#include "lights.h"
-#include <stdlib.h>
-#include "sensors.h"
+ #include "timer.h"
+ #include "cmod.h"
+ #include "iroblib.h"
+ #include "oi.h"
+ #include "steering.h"
+ #include "lights.h"
+ #include "sensors.h"
+ #include "history.h"
+ #include <stdlib.h>
 
 // Declare Global variables 
 int main() {
@@ -47,7 +48,7 @@ int main() {
 
 
   uint8_t* bumps;
-  uint16_t wall;
+  uint16_t wall, currentError;
   // Infinite operation loop
   for(;;) {
     if(UserButtonPressed) {
@@ -67,15 +68,22 @@ int main() {
     //TODO implement timing for when to calculate PID output
     //if (time to calculate PID output)
         //check wall distance -- sensors.c: getWallDistance
-        wall = getWallDistance(); 
+        wall = getWallDistance();
+
         //PID Controller 
         //calculate error
+        currentError = wall - SET_POINT;
+
         //add error to history
+        addElement(currentError);
 
         //calculate integral and derivative of error
+        ki_error = sum() * CHANGE_TIME;
+        kd_error = slope(CHANGE_TIME);
 
         //calculate uk i.e. PID output
-
+        uk = ((KP_GAIN * (currentError >> 2)) + (KI_GAIN * (ki_error >> 4)) + 
+          (KD_GAIN * (kd_error >> 2))) >> 2;
         //set wheel velocities based on uk --steering.c: driveLR
         // (Make sure to check velocities for validity before setting)  
    
