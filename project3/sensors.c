@@ -13,7 +13,7 @@ uint16_t getWallDistance(void) {
     hi = byteRx();
     lo = byteRx();
 
-    return hi << 8 | lo;
+    return (hi << 8) | lo;
 }
 
 //determines whether bumps sensor is active
