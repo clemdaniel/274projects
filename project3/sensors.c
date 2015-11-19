@@ -20,9 +20,9 @@ uint16_t getWallDistance(void) {
 // returns array of binary results for
 // left followed by right e.g. [0,0]
 // 1 - bump : 0 - no bump
-uint16_t* getBumps(void) {
-    uint16_t bumps;
-    uint16_t ret[2];
+uint8_t* getBumps(void) {
+    uint8_t bumps;
+    uint8_t ret[2];
     byteTx(CmdSensors);
     byteTx(BumpAndWheeldropPID);
     bumps = byteRx(); 

@@ -45,15 +45,8 @@ void drive(int rate) {
 	uint8_t hi = 0x00;
 	uint8_t lo = 0x00;
   
-	//skeleton left here for future use when driving backward may
-	//be necessary
-	//if (rate > 0) {
-		hi |= rate >> 8;
-		lo |= rate; 
-	//} else if (rate < 0) {
-		//use two compliment
-		//not currently necessary
-	//}
+	hi |= rate >> 8;
+	lo |= rate; 
 
 	byteTx(CmdDriveWheels);
 	byteTx(hi);
@@ -62,8 +55,24 @@ void drive(int rate) {
 	byteTx(lo);
 }
 
+/**  Specify velocities of wheels separately
+ *          rate in mm/s 
+ */
 void driveLR(int rateLeft, int rateRight) {
+	//rates to hi/lo
+	uint8_t rHi = 0x00, rLo = 0x00, lHi = 0x00, lLo = 0x00;
+  
+	lHi |= rateLeft >> 8;
+	lLo |= rateLeft; 
 
+	rHi |= rateRight >> 8;
+	rLo |= rateRight; 
+
+	byteTx(CmdDriveWheels);
+	byteTx(rHi);
+	byteTx(rLo);
+	byteTx(lHi);
+	byteTx(lLo);
 }
 
 /** Stop the robot	*/

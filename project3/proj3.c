@@ -45,6 +45,9 @@ int main() {
   //Turn power light on
   changePowerLightRed();
 
+
+  uint8_t* bumps;
+  uint16_t wall;
   // Infinite operation loop
   for(;;) {
     if(UserButtonPressed) {
@@ -53,14 +56,18 @@ int main() {
     }
     
     //check bump sensor -- sensors.c: getBumps
+    bumps = getBumps();
 
     //if bump occurs
-    //realign robot to wall -- steering.c: alignToWall
+    if (bumps[0] || bumps[1]) {
+        //realign robot to wall -- steering.c: alignToWall
+        //alignToWall();
+    }
 
     //TODO implement timing for when to calculate PID output
     //if (time to calculate PID output)
         //check wall distance -- sensors.c: getWallDistance
-    
+        wall = getWallDistance(); 
         //PID Controller 
         //calculate error
         //add error to history
