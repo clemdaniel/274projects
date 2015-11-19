@@ -20,13 +20,17 @@ uint16_t getWallDistance(void) {
 // returns array of binary results for
 // left followed by right e.g. [0,0]
 // 1 - bump : 0 - no bump
-uint16_t[] getBumps(void) {
+uint16_t* getBumps(void) {
     uint16_t bumps;
+    uint16_t ret[2];
     byteTx(CmdSensors);
-    byteTx(BumpAndWheelDropPID);
+    byteTx(BumpAndWheeldropPID);
     bumps = byteRx(); 
     
-    return {bumps & (1 << 1), bumps & (1 << 0)};
+    ret[0] = bumps & (1 << 1);
+    ret[1] = bumps & (1 << 0);
+
+    return ret;
 }
 
 //print characters containing in char array 

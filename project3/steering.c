@@ -71,6 +71,6 @@ void stop(void) {
 	drive(0);
 }
 
-void alignToWall {
+void alignToWall(void) {
 
 } 
