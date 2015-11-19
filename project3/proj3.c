@@ -50,9 +50,9 @@ int main() {
   uint8_t* bumps;
   uint16_t wall;
   int currentError;
-  uint8_t kp_gain = 100;
-  uint8_t ki_gain = 1;
-  uint8_t kd_gain = 100;
+  uint8_t kp_gain = 70; //100
+  uint8_t kd_gain = 30; //45
+  uint8_t ki_gain = 1; //1
   int ki_error, kd_error, uk;
   int rightVel = 0;
   int leftVel = 0;

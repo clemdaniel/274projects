@@ -6,7 +6,7 @@
 volatile int currentSize = 0;
 
 void addElement(uint16_t currentError) {
-	if (currentSize == 100) {
+	if (currentSize == MAX_SIZE) {
 		currentSize = 0;
 	}
 	historyArray[currentSize] = currentError;
