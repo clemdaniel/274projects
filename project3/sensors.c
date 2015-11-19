@@ -3,20 +3,30 @@
 #include "oi.h"
 #include "sensors.h"
 
+//determines the wall sensor strength
+// value from 0-4095,
+// 4095 => as close to wall as possible 
 uint16_t getWallDistance(void) {
+    uint8_t hi, lo;
+    byteTx(CmdSensors);
+    byteTx(WallPID);
+    hi = byteRx();
+    lo = byteRx();
 
+    return hi << 8 | lo;
 }
 
-//whether bumps sensor is active
+//determines whether bumps sensor is active
 // returns array of binary results for
 // left followed by right e.g. [0,0]
 // 1 - bump : 0 - no bump
 uint16_t[] getBumps(void) {
     uint16_t bumps;
+    byteTx(CmdSensors);
     byteTx(BumpAndWheelDropPID);
     bumps = byteRx(); 
     
-    return [bumps && (1 << 1), bumps && (1 << 0)];
+    return {bumps & (1 << 1), bumps & (1 << 0)};
 }
 
 //print characters containing in char array 
