@@ -8,6 +8,9 @@ volatile uint8_t  delayTimerRunning = 0;          // Definition checked against 
 volatile uint8_t senseCount = 1;
 volatile uint8_t canSense = 0;
 volatile uint8_t canPrint = 0;
+//PID controller
+volatile uint8_t PIDCount = 1;
+volatile uint8_t canPID = 0;
 
 ISR(USART_RX_vect) {  //SIGNAL(SIG_USART_RECV)
   // Serial receive interrupt to store sensor values
@@ -32,6 +35,13 @@ ISR(TIMER0_COMPA_vect) {
     } else {
         //go sense values
         canSense = 1;
+    }
+    //decrement sensor counter
+    if (PIDCount != 0) {
+        PIDCount--;
+    } else {
+        //go sense values
+        canPID = 1;
     }
 }
 
@@ -60,7 +70,6 @@ void setupTimer(void) {
   //OCR1A  = 35999;                                 // 18432000/(1024*.5) = 36,000
   //OCR1B  = 17999;                                 // 18432000/(1024*1)  = 18,000
   TIMSK1 = _BV(OCIE1A); // | _BV(OCIE1B);             // Enable output compare A and B interrupt
-
 }
 
 // Delay for the specified time in ms without updating sensor values
