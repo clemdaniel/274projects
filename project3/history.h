@@ -12,5 +12,4 @@ int slope(time);
 uint16_t history[100];
 int size = 0;
 
-
 #endif

@@ -148,27 +148,33 @@
 #define RobotIsOff         !(PINB & RobotPowerSense)
 
 // PID Controls
-#define ButtonPID		18
+#define ButtonPID			18
 #define BumpAndWheeldropPID	7
 
 //Controls
-#define WallPID						  27
-#define CliffLeftPID				28
+#define WallPID				27
+#define CliffLeftPID		28
 #define CliffFrontLeftPID   29
 #define CliffFrontRightPID	30
-#define CliffRightPID			  31
+#define CliffRightPID		31
 
 //Serial Port destinations
 #define SERIAL_CREATE		1
-#define SERIAL_USB		2
+#define SERIAL_USB			2
 
  //IR sensor stuff
-#define NO_SIGNAL    0xFF
-#define DRIVE_SIGNAL 0x82
-#define LEFT_SIGNAL  0x81
-#define RIGHT_SIGNAL 0x83
+#define NO_SIGNAL    		0xFF
+#define DRIVE_SIGNAL 		0x82
+#define LEFT_SIGNAL  		0x81
+#define RIGHT_SIGNAL 		0x83
 
  //DRIVE STUFF
- #define DRIVE_SPEED   150
- #define TURN_30_DEGREES  520
+ #define DRIVE_SPEED		150
+ #define TURN_30_DEGREES	520
 
+ //PID VALUES
+ #define SET_POINT			25
+ #define KP_GAIN
+ #define KI_GAIN
+ #define KD_GAIN
+ #define CHANGE_TIME	
