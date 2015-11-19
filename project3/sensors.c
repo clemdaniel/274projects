@@ -7,8 +7,16 @@ uint16_t getWallDistance(void) {
 
 }
 
-uint16_t getBumps(void) {
-
+//whether bumps sensor is active
+// returns array of binary results for
+// left followed by right e.g. [0,0]
+// 1 - bump : 0 - no bump
+uint16_t[] getBumps(void) {
+    uint16_t bumps;
+    byteTx(BumpAndWheelDropPID);
+    bumps = byteRx(); 
+    
+    return [bumps && (1 << 1), bumps && (1 << 0)];
 }
 
 //print characters containing in char array 

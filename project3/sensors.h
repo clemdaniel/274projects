@@ -8,7 +8,7 @@
 #include "cmod.h"
 
 uint16_t getWallDistance(void);
-uint16_t getBumps(void);
+uint16_t[] getBumps(void);
 int transmit(char* string);
 
 #endif
