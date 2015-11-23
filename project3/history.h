@@ -5,7 +5,7 @@
 #include <avr/io.h>
 #include <stdio.h>
 
-#define MAX_SIZE 10 //25
+#define MAX_SIZE 10 //25 -- Window size
 
 void addElement(uint16_t currentError);
 int sum(void);

@@ -30,6 +30,7 @@ int sum(void) {
 int slope(int currentTime) {
 	uint16_t current = historyArray[currentElement];
 	uint16_t previous;
+	//account for window going back to beginning
 	if (currentElement == 0) {
 		previous = historyArray[currentSize - 1];
 	}	else {

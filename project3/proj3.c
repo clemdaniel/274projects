@@ -73,10 +73,10 @@ int main() {
     
 		//if bump occurs
     if (bumpLeft && bumpRight) { //both bumps
-      turn(1047); //about 60 degrees
+      turn(TURN_60_DEGREES);
 			clearHistory();
     } else if (bumpLeft) {
-      turn(1570); //90 degrees
+      turn(TURN_90_DEGREES); 
 			clearHistory();
     } else if (bumpRight) {
       turn(TURN_30_DEGREES);
@@ -107,6 +107,7 @@ int main() {
 		  rightVel = defaultVel + uk;
 		  leftVel = defaultVel - uk;
 
+      //check for negative or max velocities
 		  if (rightVel < 0) {
 		    rightVel = 0;
 		  } else if (rightVel > maxVel) {
@@ -121,13 +122,11 @@ int main() {
 		  driveLR(leftVel, rightVel);
 
       //reset PID timer
-      PIDCount = 50;
+      PIDCount = CHANGE_TIME;
       canPID = 0;
     }
         
   }
-
-
   return 0;
 }
 

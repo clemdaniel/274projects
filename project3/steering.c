@@ -80,11 +80,12 @@ void stop(void) {
 	drive(0);
 }
 
+//check bump sensors and act accordingly -- not used currently
 void alignToWall(uint8_t bumpLeft, uint8_t bumpRight) {
 	if (bumpLeft && bumpRight) { //both bumps
-		turn(1047); //about 60 degrees
+		turn(TURN_60_DEGREES);
 	} else if (bumpLeft) {
-		turn(1570); //90 degrees
+		turn(TURN_90_DEGREES);
 	} else if (bumpRight) {
 		turn(TURN_30_DEGREES);
 	}
