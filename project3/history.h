@@ -10,9 +10,10 @@
 void addElement(uint16_t currentError);
 int sum(void);
 int slope(int currentTime);
-
+void clearHistory(void);
 
 uint16_t historyArray[MAX_SIZE];
 extern volatile int currentSize;
+int currentElement;
 
 #endif

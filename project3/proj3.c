@@ -46,18 +46,20 @@ int main() {
   //Turn power light on
   changePowerLightRed();
 
-
-  uint8_t* bumps;
   uint16_t wall;
   int currentError; 
-  uint8_t kp_gain = 30; //70; 
-  uint8_t kd_gain = 5; //30; 
+  uint8_t kp_gain = 30; //30; //70; 
+  uint8_t kd_gain = 5; //5; //30; 
   uint8_t ki_gain = 1; //1;
   int ki_error, kd_error, uk;
   int rightVel = 0;
   int leftVel = 0;
   int defaultVel = 100;
   int maxVel = 200;
+	int wallZeros = 0;
+	
+	//go straight until you hit something
+	findWall();	
 
   // Infinite operation loop
   for(;;) {
@@ -66,57 +68,58 @@ int main() {
       exit(1);
     }
     
-    //check bump sensor -- sensors.c: getBumps
-    //bumps = getBumps();
-    readSensors();
-
-    //if bump occurs
+    //check bump sensor
+    getBumps();		
+    
+		//if bump occurs
     if (bumpLeft && bumpRight) { //both bumps
       turn(1047); //about 60 degrees
+			clearHistory();
     } else if (bumpLeft) {
       turn(1570); //90 degrees
+			clearHistory();
     } else if (bumpRight) {
       turn(TURN_30_DEGREES);
+			clearHistory();
     }
 
-    //TODO implement timing for when to calculate PID output
-    //if (time to calculate PID output)
+    //if time to calculate PID output
     if (canPID) {
-      //check wall distance -- sensors.c: getWallDistance
+      //check wall distance
       wall = getWallDistance();
+				
+		  //PID Controller 
+		  //calculate error
+		  currentError = wall - SET_POINT;
 
-      //PID Controller 
-      //calculate error
-      currentError = wall - SET_POINT;
+		  //add error to history
+		  addElement(currentError);
 
-      //add error to history
-      addElement(currentError);
+		  //calculate integral and derivative of error
+		  ki_error = sum() * CHANGE_TIME;
+		  kd_error = slope(CHANGE_TIME);
 
-      //calculate integral and derivative of error
-      ki_error = sum() * CHANGE_TIME;
-      kd_error = slope(CHANGE_TIME);
+		  //calculate uk i.e. PID output
+		  uk = ((kp_gain * (currentError >> 2)) + (ki_gain * (ki_error >> 6)) + 
+		    (kd_gain * (kd_error >> 2))) >> 2;
+		  //set wheel velocities based on uk
+		  // (Make sure to check velocities for validity before setting) 
+		  rightVel = defaultVel + uk;
+		  leftVel = defaultVel - uk;
 
-      //calculate uk i.e. PID output
-      uk = ((kp_gain * (currentError >> 2)) + (ki_gain * (ki_error >> 6)) + 
-        (kd_gain * (kd_error >> 2))) >> 2;
-      //set wheel velocities based on uk --steering.c: driveLR
-      // (Make sure to check velocities for validity before setting) 
-      rightVel = defaultVel + uk;
-      leftVel = defaultVel - uk;
+		  if (rightVel < 0) {
+		    rightVel = 0;
+		  } else if (rightVel > maxVel) {
+		    rightVel = maxVel;
+		  } 
+		  if (leftVel < 0) {
+		    leftVel = 0;
+		  } else if (leftVel > maxVel) {
+		    leftVel = maxVel;
+		  } 
 
-      if (rightVel < 0) {
-        rightVel = 0;
-      } else if (rightVel > maxVel) {
-        rightVel = maxVel;
-      } 
-      if (leftVel < 0) {
-        leftVel = 0;
-      } else if (leftVel > maxVel) {
-        leftVel = maxVel;
-      } 
+		  driveLR(leftVel, rightVel);
 
-      driveLR(leftVel, rightVel);
- 
       //reset PID timer
       PIDCount = 50;
       canPID = 0;
