@@ -1,7 +1,8 @@
 /**
  * CSCE 274 Project 3
  *		This program implements a PID controller with the objective  
- * following along a wall or other obstacle while maintaining a set distance.
+ * following along a wall or other obstacle while maintaining a set distance
+ * and correcting for any errors.
  *
  *	Edited by: Daniel Clements, Conor Campbell, Cory Novotny
  */
