@@ -3,6 +3,7 @@
 #define INCLUDE_STEERING_H
 
 #include <avr/io.h>
+#include "sensors.h"
 
 /*
  *	Constants for turning velocities to achieve an angular
@@ -26,6 +27,6 @@ void driveLR(int rateLeft, int rateRight);
 
 void stop(void);
 
-void alignToWall(uint8_t bumpLeft, uint8_t bumpRight);
+void alignToWall();
 
 #endif

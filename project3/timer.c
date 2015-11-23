@@ -36,11 +36,11 @@ ISR(TIMER0_COMPA_vect) {
         //go sense values
         canSense = 1;
     }
-    //decrement sensor counter
+    //decrement PID
     if (PIDCount != 0) {
         PIDCount--;
     } else {
-        //go sense values
+        //go calc PID
         canPID = 1;
     }
 }

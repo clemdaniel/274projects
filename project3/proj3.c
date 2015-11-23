@@ -72,17 +72,8 @@ int main() {
     //check bump sensor
     getBumps();		
     
-		//if bump occurs
-    if (bumpLeft && bumpRight) { //both bumps
-      turn(TURN_60_DEGREES);
-			clearHistory();
-    } else if (bumpLeft) {
-      turn(TURN_90_DEGREES); 
-			clearHistory();
-    } else if (bumpRight) {
-      turn(TURN_30_DEGREES);
-			clearHistory();
-    }
+		//if bump occurs -- align back to wall
+    alignToWall();
 
     //if time to calculate PID output
     if (canPID) {

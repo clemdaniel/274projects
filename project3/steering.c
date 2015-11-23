@@ -81,7 +81,7 @@ void stop(void) {
 }
 
 //check bump sensors and act accordingly -- not used currently
-void alignToWall(uint8_t bumpLeft, uint8_t bumpRight) {
+void alignToWall() {
 	if (bumpLeft && bumpRight) { //both bumps
 		turn(TURN_60_DEGREES);
 	} else if (bumpLeft) {

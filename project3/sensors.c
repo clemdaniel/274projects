@@ -11,7 +11,7 @@ void findWall(void) {
 		getBumps();
 		if (bumpLeft || bumpRight) {
 			stop();			
-			break;
+			break; //escape for loop
 		}
 	}
 }
@@ -25,7 +25,6 @@ uint16_t getWallDistance(void) {
     byteTx(WallPID);
     hi = byteRx();
     lo = byteRx();
-
     return (hi << 8) | lo;
 }
 
@@ -35,7 +34,6 @@ void getBumps(void) {
 		byteTx(CmdSensors);
     byteTx(BumpAndWheeldropPID);
     bumps = byteRx(); 
-    
     bumpLeft = bumps & (1 << 1);
     bumpRight = bumps & (1 << 0);
 }

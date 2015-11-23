@@ -12,6 +12,7 @@ int sum(void);
 int slope(int currentTime);
 void clearHistory(void);
 
+//private variables
 uint16_t historyArray[MAX_SIZE];
 extern volatile int currentSize;
 int currentElement;
