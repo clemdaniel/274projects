@@ -82,11 +82,12 @@ void stop(void) {
 
 //check bump sensors and act accordingly -- not used currently
 void alignToWall() {
-	if (bumpLeft && bumpRight) { //both bumps
+	if (bumpLeft && bumpRight) { //both bumps -- clear history after bump
 		turn(TURN_60_DEGREES);
 	} else if (bumpLeft) {
 		turn(TURN_90_DEGREES);
 	} else if (bumpRight) {
 		turn(TURN_30_DEGREES);
 	}
+	clearHistory();
 } 
