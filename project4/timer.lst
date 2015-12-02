@@ -1,0 +1,400 @@
+   1               		.file	"timer.c"
+   2               	__SP_H__ = 0x3e
+   3               	__SP_L__ = 0x3d
+   4               	__SREG__ = 0x3f
+   5               	__tmp_reg__ = 0
+   6               	__zero_reg__ = 1
+   7               		.text
+   8               	.Ltext0:
+   9               		.cfi_sections	.debug_frame
+  10               	.global	__vector_18
+  12               	__vector_18:
+  13               	.LFB1:
+  14               		.file 1 "timer.c"
+   1:timer.c       **** #include "timer.h"    // Declaration made available here
+   2:timer.c       **** #include "sensors.h"
+   3:timer.c       **** 
+   4:timer.c       **** 
+   5:timer.c       **** // Timer variables defined here
+   6:timer.c       **** volatile uint16_t delayTimerCount = 0;            // Definition checked against declaration
+   7:timer.c       **** volatile uint8_t  delayTimerRunning = 0;          // Definition checked against declaration
+   8:timer.c       **** volatile uint8_t senseCount = 1;
+   9:timer.c       **** volatile uint8_t canSense = 0;
+  10:timer.c       **** volatile uint8_t canPrint = 0;
+  11:timer.c       **** //PID controller
+  12:timer.c       **** volatile uint8_t PIDCount = 1;
+  13:timer.c       **** volatile uint8_t canPID = 0;
+  14:timer.c       **** 
+  15:timer.c       **** ISR(USART_RX_vect) {  //SIGNAL(SIG_USART_RECV)
+  15               		.loc 1 15 0
+  16               		.cfi_startproc
+  17 0000 1F92      		push r1
+  18               	.LCFI0:
+  19               		.cfi_def_cfa_offset 3
+  20               		.cfi_offset 1, -2
+  21 0002 0F92      		push r0
+  22               	.LCFI1:
+  23               		.cfi_def_cfa_offset 4
+  24               		.cfi_offset 0, -3
+  25 0004 0FB6      		in r0,__SREG__
+  26 0006 0F92      		push r0
+  27 0008 1124      		clr __zero_reg__
+  28               	/* prologue: Signal */
+  29               	/* frame size = 0 */
+  30               	/* stack size = 3 */
+  31               	.L__stack_usage = 3
+  32               	/* epilogue start */
+  16:timer.c       ****   // Serial receive interrupt to store sensor values
+  17:timer.c       ****  
+  18:timer.c       ****   // CSCE 274 students, I have only ever used this method
+  19:timer.c       ****   // when retrieving/storing a large amount of sensor data.
+  20:timer.c       ****   // You DO NOT need it for this assignment. If i feel it
+  21:timer.c       ****   // becomes relevant, I will show you how/when to use it.
+  22:timer.c       **** }
+  33               		.loc 1 22 0
+  34 000a 0F90      		pop r0
+  35 000c 0FBE      		out __SREG__,r0
+  36 000e 0F90      		pop r0
+  37 0010 1F90      		pop r1
+  38 0012 1895      		reti
+  39               		.cfi_endproc
+  40               	.LFE1:
+  42               	.global	__vector_14
+  44               	__vector_14:
+  45               	.LFB2:
+  23:timer.c       **** 
+  24:timer.c       **** // Timer 0 interrupt 
+  25:timer.c       **** // SIGNAL(SIG_OUTPUT_COMPARE0A)
+  26:timer.c       **** ISR(TIMER0_COMPA_vect) {
+  46               		.loc 1 26 0
+  47               		.cfi_startproc
+  48 0014 1F92      		push r1
+  49               	.LCFI2:
+  50               		.cfi_def_cfa_offset 3
+  51               		.cfi_offset 1, -2
+  52 0016 0F92      		push r0
+  53               	.LCFI3:
+  54               		.cfi_def_cfa_offset 4
+  55               		.cfi_offset 0, -3
+  56 0018 0FB6      		in r0,__SREG__
+  57 001a 0F92      		push r0
+  58 001c 1124      		clr __zero_reg__
+  59 001e 8F93      		push r24
+  60               	.LCFI4:
+  61               		.cfi_def_cfa_offset 5
+  62               		.cfi_offset 24, -4
+  63 0020 9F93      		push r25
+  64               	.LCFI5:
+  65               		.cfi_def_cfa_offset 6
+  66               		.cfi_offset 25, -5
+  67               	/* prologue: Signal */
+  68               	/* frame size = 0 */
+  69               	/* stack size = 5 */
+  70               	.L__stack_usage = 5
+  27:timer.c       ****     if(delayTimerCount) {
+  71               		.loc 1 27 0
+  72 0022 8091 0000 		lds r24,delayTimerCount
+  73 0026 9091 0000 		lds r25,delayTimerCount+1
+  74 002a 892B      		or r24,r25
+  75 002c 01F0      		breq .L3
+  28:timer.c       ****         delayTimerCount--;
+  76               		.loc 1 28 0
+  77 002e 8091 0000 		lds r24,delayTimerCount
+  78 0032 9091 0000 		lds r25,delayTimerCount+1
+  79 0036 0197      		sbiw r24,1
+  80 0038 9093 0000 		sts delayTimerCount+1,r25
+  81 003c 8093 0000 		sts delayTimerCount,r24
+  82 0040 00C0      		rjmp .L4
+  83               	.L3:
+  29:timer.c       ****     } else {
+  30:timer.c       ****         delayTimerRunning = 0;
+  84               		.loc 1 30 0
+  85 0042 1092 0000 		sts delayTimerRunning,__zero_reg__
+  86               	.L4:
+  31:timer.c       ****     }
+  32:timer.c       ****     //decrement sensor counter
+  33:timer.c       ****     if (senseCount != 0) {
+  87               		.loc 1 33 0
+  88 0046 8091 0000 		lds r24,senseCount
+  89 004a 8823      		tst r24
+  90 004c 01F0      		breq .L5
+  34:timer.c       ****         senseCount--;
+  91               		.loc 1 34 0
+  92 004e 8091 0000 		lds r24,senseCount
+  93 0052 8150      		subi r24,lo8(-(-1))
+  94 0054 8093 0000 		sts senseCount,r24
+  95 0058 00C0      		rjmp .L6
+  96               	.L5:
+  35:timer.c       ****     } else {
+  36:timer.c       ****         //go sense values
+  37:timer.c       ****         canSense = 1;
+  97               		.loc 1 37 0
+  98 005a 81E0      		ldi r24,lo8(1)
+  99 005c 8093 0000 		sts canSense,r24
+ 100               	.L6:
+  38:timer.c       ****     }
+  39:timer.c       ****     //decrement PID
+  40:timer.c       ****     if (PIDCount != 0) {
+ 101               		.loc 1 40 0
+ 102 0060 8091 0000 		lds r24,PIDCount
+ 103 0064 8823      		tst r24
+ 104 0066 01F0      		breq .L7
+  41:timer.c       ****         PIDCount--;
+ 105               		.loc 1 41 0
+ 106 0068 8091 0000 		lds r24,PIDCount
+ 107 006c 8150      		subi r24,lo8(-(-1))
+ 108 006e 8093 0000 		sts PIDCount,r24
+ 109 0072 00C0      		rjmp .L2
+ 110               	.L7:
+  42:timer.c       ****     } else {
+  43:timer.c       ****         //go calc PID
+  44:timer.c       ****         canPID = 1;
+ 111               		.loc 1 44 0
+ 112 0074 81E0      		ldi r24,lo8(1)
+ 113 0076 8093 0000 		sts canPID,r24
+ 114               	.L2:
+ 115               	/* epilogue start */
+  45:timer.c       ****     }
+  46:timer.c       **** }
+ 116               		.loc 1 46 0
+ 117 007a 9F91      		pop r25
+ 118 007c 8F91      		pop r24
+ 119 007e 0F90      		pop r0
+ 120 0080 0FBE      		out __SREG__,r0
+ 121 0082 0F90      		pop r0
+ 122 0084 1F90      		pop r1
+ 123 0086 1895      		reti
+ 124               		.cfi_endproc
+ 125               	.LFE2:
+ 127               	.global	__vector_11
+ 129               	__vector_11:
+ 130               	.LFB3:
+  47:timer.c       **** 
+  48:timer.c       **** //SIGNAL(SIG_OUTPUT_COMPARE1A)
+  49:timer.c       **** ISR(TIMER1_COMPA_vect) {
+ 131               		.loc 1 49 0
+ 132               		.cfi_startproc
+ 133 0088 1F92      		push r1
+ 134               	.LCFI6:
+ 135               		.cfi_def_cfa_offset 3
+ 136               		.cfi_offset 1, -2
+ 137 008a 0F92      		push r0
+ 138               	.LCFI7:
+ 139               		.cfi_def_cfa_offset 4
+ 140               		.cfi_offset 0, -3
+ 141 008c 0FB6      		in r0,__SREG__
+ 142 008e 0F92      		push r0
+ 143 0090 1124      		clr __zero_reg__
+ 144 0092 8F93      		push r24
+ 145               	.LCFI8:
+ 146               		.cfi_def_cfa_offset 5
+ 147               		.cfi_offset 24, -4
+ 148               	/* prologue: Signal */
+ 149               	/* frame size = 0 */
+ 150               	/* stack size = 4 */
+ 151               	.L__stack_usage = 4
+  50:timer.c       ****     //go print
+  51:timer.c       ****     canPrint = 1;
+ 152               		.loc 1 51 0
+ 153 0094 81E0      		ldi r24,lo8(1)
+ 154 0096 8093 0000 		sts canPrint,r24
+ 155               	/* epilogue start */
+  52:timer.c       **** }
+ 156               		.loc 1 52 0
+ 157 009a 8F91      		pop r24
+ 158 009c 0F90      		pop r0
+ 159 009e 0FBE      		out __SREG__,r0
+ 160 00a0 0F90      		pop r0
+ 161 00a2 1F90      		pop r1
+ 162 00a4 1895      		reti
+ 163               		.cfi_endproc
+ 164               	.LFE3:
+ 166               	.global	setupTimer
+ 168               	setupTimer:
+ 169               	.LFB4:
+  53:timer.c       **** 
+  54:timer.c       **** void setupTimer(void) {
+ 170               		.loc 1 54 0
+ 171               		.cfi_startproc
+ 172               	/* prologue: function */
+ 173               	/* frame size = 0 */
+ 174               	/* stack size = 0 */
+ 175               	.L__stack_usage = 0
+  55:timer.c       ****   // ---------------------------------------------------
+  56:timer.c       ****   //  Set up timer 0 to generate interrupts @ 1000Hz -- 1ms
+  57:timer.c       ****   // ---------------------------------------------------
+  58:timer.c       ****   TCCR0A = _BV(WGM01);              // Mode = CTC
+ 176               		.loc 1 58 0
+ 177 00a6 22E0      		ldi r18,lo8(2)
+ 178 00a8 24BD      		out 0x24,r18
+  59:timer.c       ****   TCCR0B = (_BV(CS00) | _BV(CS02)); // CS0 | CS2 = CLK/1024
+ 179               		.loc 1 59 0
+ 180 00aa 85E0      		ldi r24,lo8(5)
+ 181 00ac 85BD      		out 0x25,r24
+  60:timer.c       ****   OCR0A  = 17;                      // 18432000/(1024*1000) = 18
+ 182               		.loc 1 60 0
+ 183 00ae 81E1      		ldi r24,lo8(17)
+ 184 00b0 87BD      		out 0x27,r24
+  61:timer.c       ****   TIMSK0 = _BV(OCIE0A);             // Enable output compare A interrupt
+ 185               		.loc 1 61 0
+ 186 00b2 2093 6E00 		sts 110,r18
+  62:timer.c       **** 
+  63:timer.c       **** 
+  64:timer.c       ****   // ---------------------------------------------------
+  65:timer.c       ****   //  Set up timer 1 to generate interrupts @ 1Hz -- 1 second
+  66:timer.c       ****   // ---------------------------------------------------
+  67:timer.c       ****   TCCR1A = 0x00;
+ 187               		.loc 1 67 0
+ 188 00b6 1092 8000 		sts 128,__zero_reg__
+  68:timer.c       ****   TCCR1B = (_BV(WGM12) | _BV(CS10) | _BV(CS12));  // WGM12 | CS10 | CS12 = CTC Mode, CLK/1024
+ 189               		.loc 1 68 0
+ 190 00ba 8DE0      		ldi r24,lo8(13)
+ 191 00bc 8093 8100 		sts 129,r24
+  69:timer.c       ****   OCR1A = 17999;
+ 192               		.loc 1 69 0
+ 193 00c0 8FE4      		ldi r24,lo8(79)
+ 194 00c2 96E4      		ldi r25,lo8(70)
+ 195 00c4 9093 8900 		sts 136+1,r25
+ 196 00c8 8093 8800 		sts 136,r24
+  70:timer.c       ****   //OCR1A  = 35999;                                 // 18432000/(1024*.5) = 36,000
+  71:timer.c       ****   //OCR1B  = 17999;                                 // 18432000/(1024*1)  = 18,000
+  72:timer.c       ****   TIMSK1 = _BV(OCIE1A); // | _BV(OCIE1B);             // Enable output compare A and B interrupt
+ 197               		.loc 1 72 0
+ 198 00cc 2093 6F00 		sts 111,r18
+ 199 00d0 0895      		ret
+ 200               		.cfi_endproc
+ 201               	.LFE4:
+ 203               	.global	delayMs
+ 205               	delayMs:
+ 206               	.LFB5:
+  73:timer.c       **** }
+  74:timer.c       **** 
+  75:timer.c       **** // Delay for the specified time in ms without updating sensor values
+  76:timer.c       **** void delayMs(uint16_t time_ms)
+  77:timer.c       **** {
+ 207               		.loc 1 77 0
+ 208               		.cfi_startproc
+ 209               	.LVL0:
+ 210               	/* prologue: function */
+ 211               	/* frame size = 0 */
+ 212               	/* stack size = 0 */
+ 213               	.L__stack_usage = 0
+  78:timer.c       ****   cli();
+ 214               		.loc 1 78 0
+ 215               	/* #APP */
+ 216               	 ;  78 "timer.c" 1
+ 217 00d2 F894      		cli
+ 218               	 ;  0 "" 2
+  79:timer.c       ****   delayTimerRunning = 1;
+ 219               		.loc 1 79 0
+ 220               	/* #NOAPP */
+ 221 00d4 21E0      		ldi r18,lo8(1)
+ 222 00d6 2093 0000 		sts delayTimerRunning,r18
+  80:timer.c       ****   delayTimerCount = time_ms;
+ 223               		.loc 1 80 0
+ 224 00da 9093 0000 		sts delayTimerCount+1,r25
+ 225 00de 8093 0000 		sts delayTimerCount,r24
+  81:timer.c       ****   sei();
+ 226               		.loc 1 81 0
+ 227               	/* #APP */
+ 228               	 ;  81 "timer.c" 1
+ 229 00e2 7894      		sei
+ 230               	 ;  0 "" 2
+ 231               	.LVL1:
+ 232               	/* #NOAPP */
+ 233               	.L13:
+  82:timer.c       **** 
+  83:timer.c       ****   while(delayTimerRunning) {
+ 234               		.loc 1 83 0 discriminator 1
+ 235 00e4 8091 0000 		lds r24,delayTimerRunning
+ 236 00e8 8823      		tst r24
+ 237 00ea 01F0      		breq .L15
+  84:timer.c       ****     asm("nop");
+ 238               		.loc 1 84 0
+ 239               	/* #APP */
+ 240               	 ;  84 "timer.c" 1
+ 241 00ec 0000      		nop
+ 242               	 ;  0 "" 2
+ 243               	/* #NOAPP */
+ 244 00ee 00C0      		rjmp .L13
+ 245               	.L15:
+ 246               	/* epilogue start */
+  85:timer.c       ****   }
+  86:timer.c       **** }
+ 247               		.loc 1 86 0
+ 248 00f0 0895      		ret
+ 249               		.cfi_endproc
+ 250               	.LFE5:
+ 252               	.global	canPID
+ 253               		.section .bss
+ 256               	canPID:
+ 257 0000 00        		.zero	1
+ 258               	.global	PIDCount
+ 259               		.data
+ 262               	PIDCount:
+ 263 0000 01        		.byte	1
+ 264               	.global	canPrint
+ 265               		.section .bss
+ 268               	canPrint:
+ 269 0001 00        		.zero	1
+ 270               	.global	canSense
+ 273               	canSense:
+ 274 0002 00        		.zero	1
+ 275               	.global	senseCount
+ 276               		.data
+ 279               	senseCount:
+ 280 0001 01        		.byte	1
+ 281               	.global	delayTimerRunning
+ 282               		.section .bss
+ 285               	delayTimerRunning:
+ 286 0003 00        		.zero	1
+ 287               	.global	delayTimerCount
+ 290               	delayTimerCount:
+ 291 0004 0000      		.zero	2
+ 292               	.global	forceField
+ 295               	forceField:
+ 296 0006 0000      		.zero	2
+ 297               	.global	green
+ 300               	green:
+ 301 0008 0000      		.zero	2
+ 302               	.global	red
+ 305               	red:
+ 306 000a 0000      		.zero	2
+ 307               		.comm	wall,2,1
+ 308               		.comm	irSensor,1,1
+ 309               		.comm	bumpRight,1,1
+ 310               		.comm	bumpLeft,1,1
+ 311               		.text
+ 312               	.Letext0:
+ 313               		.file 2 "/usr/lib/avr/include/stdint.h"
+ 314               		.file 3 "sensors.h"
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 timer.c
+     /tmp/ccy2GoNY.s:2      *ABS*:000000000000003e __SP_H__
+     /tmp/ccy2GoNY.s:3      *ABS*:000000000000003d __SP_L__
+     /tmp/ccy2GoNY.s:4      *ABS*:000000000000003f __SREG__
+     /tmp/ccy2GoNY.s:5      *ABS*:0000000000000000 __tmp_reg__
+     /tmp/ccy2GoNY.s:6      *ABS*:0000000000000001 __zero_reg__
+     /tmp/ccy2GoNY.s:12     .text:0000000000000000 __vector_18
+     /tmp/ccy2GoNY.s:44     .text:0000000000000014 __vector_14
+     /tmp/ccy2GoNY.s:290    .bss:0000000000000004 delayTimerCount
+     /tmp/ccy2GoNY.s:285    .bss:0000000000000003 delayTimerRunning
+     /tmp/ccy2GoNY.s:279    .data:0000000000000001 senseCount
+     /tmp/ccy2GoNY.s:273    .bss:0000000000000002 canSense
+     /tmp/ccy2GoNY.s:262    .data:0000000000000000 PIDCount
+     /tmp/ccy2GoNY.s:256    .bss:0000000000000000 canPID
+     /tmp/ccy2GoNY.s:129    .text:0000000000000088 __vector_11
+     /tmp/ccy2GoNY.s:268    .bss:0000000000000001 canPrint
+     /tmp/ccy2GoNY.s:168    .text:00000000000000a6 setupTimer
+     /tmp/ccy2GoNY.s:205    .text:00000000000000d2 delayMs
+     /tmp/ccy2GoNY.s:295    .bss:0000000000000006 forceField
+     /tmp/ccy2GoNY.s:300    .bss:0000000000000008 green
+     /tmp/ccy2GoNY.s:305    .bss:000000000000000a red
+                            *COM*:0000000000000002 wall
+                            *COM*:0000000000000001 irSensor
+                            *COM*:0000000000000001 bumpRight
+                            *COM*:0000000000000001 bumpLeft
+
+UNDEFINED SYMBOLS
+__do_copy_data
+__do_clear_bss

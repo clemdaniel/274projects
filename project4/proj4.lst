@@ -1,0 +1,421 @@
+   1               		.file	"proj4.c"
+   2               	__SP_H__ = 0x3e
+   3               	__SP_L__ = 0x3d
+   4               	__SREG__ = 0x3f
+   5               	__tmp_reg__ = 0
+   6               	__zero_reg__ = 1
+   7               		.text
+   8               	.Ltext0:
+   9               		.cfi_sections	.debug_frame
+  10               		.section	.text.startup,"ax",@progbits
+  11               	.global	main
+  13               	main:
+  14               	.LFB1:
+  15               		.file 1 "proj4.c"
+   1:proj4.c       **** /**
+   2:proj4.c       ****  * CSCE 274 Project 3
+   3:proj4.c       ****  *		This program implements a PID controller with the objective  
+   4:proj4.c       ****  * following along a wall or other obstacle while maintaining a set distance
+   5:proj4.c       ****  * and correcting for any errors.
+   6:proj4.c       ****  *
+   7:proj4.c       ****  *	Edited by: Daniel Clements, Conor Campbell, Cory Novotny
+   8:proj4.c       ****  */
+   9:proj4.c       **** 
+  10:proj4.c       ****  #include "timer.h"
+  11:proj4.c       ****  #include "cmod.h"
+  12:proj4.c       ****  #include "iroblib.h"
+  13:proj4.c       ****  #include "oi.h"
+  14:proj4.c       ****  #include "steering.h"
+  15:proj4.c       ****  #include "lights.h"
+  16:proj4.c       ****  #include "sensors.h"
+  17:proj4.c       ****  #include "history.h"
+  18:proj4.c       ****  #include <stdlib.h>
+  19:proj4.c       **** 
+  20:proj4.c       **** // Declare Global variables 
+  21:proj4.c       **** int main() {
+  16               		.loc 1 21 0
+  17               		.cfi_startproc
+  18               	/* prologue: function */
+  19               	/* frame size = 0 */
+  20               	/* stack size = 0 */
+  21               	.L__stack_usage = 0
+  22:proj4.c       ****   // Set up Create and module
+  23:proj4.c       ****   initializeCommandModule();
+  22               		.loc 1 23 0
+  23 0000 0E94 0000 		call initializeCommandModule
+  24               	.LVL0:
+  24:proj4.c       ****     
+  25:proj4.c       ****   powerOnRobot();
+  25               		.loc 1 25 0
+  26 0004 0E94 0000 		call powerOnRobot
+  27               	.LVL1:
+  26:proj4.c       ****     // Is the Robot on
+  27:proj4.c       ****   byteTx(CmdStart);
+  28               		.loc 1 27 0
+  29 0008 80E8      		ldi r24,lo8(-128)
+  30 000a 0E94 0000 		call byteTx
+  31               	.LVL2:
+  28:proj4.c       ****     // Start the create
+  29:proj4.c       ****   baud(Baud57600);
+  32               		.loc 1 29 0
+  33 000e 8AE0      		ldi r24,lo8(10)
+  34 0010 0E94 0000 		call baud
+  35               	.LVL3:
+  30:proj4.c       ****     // Set the baud rate for the Create and Command Module
+  31:proj4.c       ****   defineSongs();
+  36               		.loc 1 31 0
+  37 0014 0E94 0000 		call defineSongs
+  38               	.LVL4:
+  32:proj4.c       ****     // Define some songs so that we know the robot is on.
+  33:proj4.c       ****   byteTx(CmdControl);
+  39               		.loc 1 33 0
+  40 0018 82E8      		ldi r24,lo8(-126)
+  41 001a 0E94 0000 		call byteTx
+  42               	.LVL5:
+  34:proj4.c       ****     // Deprecated form of safe mode. I use it because it will
+  35:proj4.c       ****     // turn of all LEDs, so it's essentially a reset.
+  36:proj4.c       ****   byteTx(CmdFull);
+  43               		.loc 1 36 0
+  44 001e 84E8      		ldi r24,lo8(-124)
+  45 0020 0E94 0000 		call byteTx
+  46               	.LVL6:
+  37:proj4.c       ****     // We are operating in FULL mode.
+  38:proj4.c       **** 
+  39:proj4.c       ****   // CSCE 274 students: I would make sure the robot stops. 
+  40:proj4.c       ****   //                    As a precaution for the robot and your grade.
+  41:proj4.c       ****   stop();
+  47               		.loc 1 41 0
+  48 0024 0E94 0000 		call stop
+  49               	.LVL7:
+  42:proj4.c       **** 
+  43:proj4.c       ****   // Play the reset song and wait while it plays.
+  44:proj4.c       ****   byteTx(CmdPlay);
+  50               		.loc 1 44 0
+  51 0028 8DE8      		ldi r24,lo8(-115)
+  52 002a 0E94 0000 		call byteTx
+  53               	.LVL8:
+  45:proj4.c       ****   byteTx(RESET_SONG);
+  54               		.loc 1 45 0
+  55 002e 80E0      		ldi r24,0
+  56 0030 0E94 0000 		call byteTx
+  57               	.LVL9:
+  46:proj4.c       ****   delayMs(750);
+  58               		.loc 1 46 0
+  59 0034 8EEE      		ldi r24,lo8(-18)
+  60 0036 92E0      		ldi r25,lo8(2)
+  61 0038 0E94 0000 		call delayMs
+  62               	.LVL10:
+  47:proj4.c       ****   //Turn power light on
+  48:proj4.c       ****   changePowerLightRed();
+  63               		.loc 1 48 0
+  64 003c 0E94 0000 		call changePowerLightRed
+  65               	.LVL11:
+  49:proj4.c       **** 
+  50:proj4.c       ****   uint16_t wall;
+  51:proj4.c       ****   int currentError; 
+  52:proj4.c       ****   uint8_t kp_gain = 30; //30; //70; 
+  53:proj4.c       ****   uint8_t kd_gain = 5; //5; //30; 
+  54:proj4.c       ****   uint8_t ki_gain = 1; //1;
+  55:proj4.c       ****   int ki_error, kd_error, uk;
+  56:proj4.c       ****   int rightVel = 0;
+  57:proj4.c       ****   int leftVel = 0;
+  58:proj4.c       ****   int defaultVel = 100;
+  59:proj4.c       ****   int maxVel = 200;
+  60:proj4.c       **** 	int wallZeros = 0;
+  61:proj4.c       **** 	
+  62:proj4.c       **** 	//go straight until you hit something
+  63:proj4.c       **** 	findWall();	
+  66               		.loc 1 63 0
+  67 0040 0E94 0000 		call findWall
+  68               	.LVL12:
+  64:proj4.c       **** 
+  65:proj4.c       ****   // Infinite operation loop
+  66:proj4.c       ****   for(;;) {
+  67:proj4.c       ****     if(UserButtonPressed) {
+  68:proj4.c       ****       powerOffRobot();
+  69:proj4.c       ****       exit(1);
+  70:proj4.c       ****     }
+  71:proj4.c       ****     
+  72:proj4.c       ****     //check bump sensor
+  73:proj4.c       ****     getBumps();		
+  74:proj4.c       ****     
+  75:proj4.c       **** 		//if bump occurs -- align back to wall
+  76:proj4.c       ****     alignToWall();
+  77:proj4.c       **** 
+  78:proj4.c       ****     //if time to calculate PID output
+  79:proj4.c       ****     if (canPID) {
+  80:proj4.c       ****       //update sensor 
+  81:proj4.c       ****       getDockSenses();
+  82:proj4.c       ****       //check wall distance
+  83:proj4.c       ****       wall = getWallDistance();
+  84:proj4.c       **** 				
+  85:proj4.c       **** 		  //PID Controller 
+  86:proj4.c       **** 		  //calculate error
+  87:proj4.c       **** 		  currentError = wall - SET_POINT;
+  88:proj4.c       **** 
+  89:proj4.c       **** 		  //add error to history
+  90:proj4.c       **** 		  addElement(currentError);
+  91:proj4.c       **** 
+  92:proj4.c       **** 		  //calculate integral and derivative of error
+  93:proj4.c       **** 		  ki_error = sum() * CHANGE_TIME;
+  94:proj4.c       **** 		  kd_error = slope(CHANGE_TIME);
+  95:proj4.c       **** 
+  96:proj4.c       **** 		  //calculate uk i.e. PID output
+  97:proj4.c       **** 		  uk = ((kp_gain * (currentError >> 2)) + (ki_gain * (ki_error >> 6)) + 
+  69               		.loc 1 97 0
+  70 0044 0EE1      		ldi r16,lo8(30)
+  93:proj4.c       **** 		  ki_error = sum() * CHANGE_TIME;
+  71               		.loc 1 93 0
+  72 0046 12E3      		ldi r17,lo8(50)
+  98:proj4.c       **** 		    (kd_gain * (kd_error >> 2))) >> 2;
+  73               		.loc 1 98 0
+  74 0048 F5E0      		ldi r31,lo8(5)
+  75 004a FF2E      		mov r15,r31
+  99:proj4.c       **** 		  //set wheel velocities based on uk
+ 100:proj4.c       **** 		  // (Make sure to check velocities for validity before setting) 
+ 101:proj4.c       **** 		  rightVel = defaultVel + uk;
+ 102:proj4.c       **** 		  leftVel = defaultVel - uk;
+  76               		.loc 1 102 0
+  77 004c C4E6      		ldi r28,lo8(100)
+  78 004e D0E0      		ldi r29,0
+  79               	.LVL13:
+  80               	.L4:
+  67:proj4.c       ****     if(UserButtonPressed) {
+  81               		.loc 1 67 0
+  82 0050 4C99      		sbic 0x9,4
+  83 0052 00C0      		rjmp .L2
+  68:proj4.c       ****       powerOffRobot();
+  84               		.loc 1 68 0
+  85 0054 0E94 0000 		call powerOffRobot
+  86               	.LVL14:
+  69:proj4.c       ****       exit(1);
+  87               		.loc 1 69 0
+  88 0058 81E0      		ldi r24,lo8(1)
+  89 005a 90E0      		ldi r25,0
+  90 005c 0E94 0000 		call exit
+  91               	.LVL15:
+  92               	.L2:
+  73:proj4.c       ****     getBumps();		
+  93               		.loc 1 73 0
+  94 0060 0E94 0000 		call getBumps
+  95               	.LVL16:
+  76:proj4.c       ****     alignToWall();
+  96               		.loc 1 76 0
+  97 0064 0E94 0000 		call alignToWall
+  98               	.LVL17:
+  79:proj4.c       ****     if (canPID) {
+  99               		.loc 1 79 0
+ 100 0068 8091 0000 		lds r24,canPID
+ 101 006c 8823      		tst r24
+ 102 006e 01F0      		breq .L4
+  81:proj4.c       ****       getDockSenses();
+ 103               		.loc 1 81 0
+ 104 0070 0E94 0000 		call getDockSenses
+ 105               	.LVL18:
+  83:proj4.c       ****       wall = getWallDistance();
+ 106               		.loc 1 83 0
+ 107 0074 0E94 0000 		call getWallDistance
+ 108               	.LVL19:
+  87:proj4.c       **** 		  currentError = wall - SET_POINT;
+ 109               		.loc 1 87 0
+ 110 0078 8055      		subi r24,80
+ 111 007a 9109      		sbc r25,__zero_reg__
+ 112               	.LVL20:
+ 113 007c 6C01      		movw r12,r24
+ 114               	.LVL21:
+  90:proj4.c       **** 		  addElement(currentError);
+ 115               		.loc 1 90 0
+ 116 007e 0E94 0000 		call addElement
+ 117               	.LVL22:
+  93:proj4.c       **** 		  ki_error = sum() * CHANGE_TIME;
+ 118               		.loc 1 93 0
+ 119 0082 0E94 0000 		call sum
+ 120               	.LVL23:
+ 121 0086 5C01      		movw r10,r24
+ 122               	.LVL24:
+  94:proj4.c       **** 		  kd_error = slope(CHANGE_TIME);
+ 123               		.loc 1 94 0
+ 124 0088 82E3      		ldi r24,lo8(50)
+ 125 008a 90E0      		ldi r25,0
+ 126 008c 0E94 0000 		call slope
+ 127               	.LVL25:
+  97:proj4.c       **** 		  uk = ((kp_gain * (currentError >> 2)) + (ki_gain * (ki_error >> 6)) + 
+ 128               		.loc 1 97 0
+ 129 0090 D594      		asr r13
+ 130 0092 C794      		ror r12
+ 131 0094 D594      		asr r13
+ 132 0096 C794      		ror r12
+ 133               	.LVL26:
+ 134 0098 0C9D      		mul r16,r12
+ 135 009a B001      		movw r22,r0
+ 136 009c 0D9D      		mul r16,r13
+ 137 009e 700D      		add r23,r0
+ 138 00a0 1124      		clr __zero_reg__
+  93:proj4.c       **** 		  ki_error = sum() * CHANGE_TIME;
+ 139               		.loc 1 93 0
+ 140 00a2 1A9D      		mul r17,r10
+ 141 00a4 9001      		movw r18,r0
+ 142 00a6 1B9D      		mul r17,r11
+ 143 00a8 300D      		add r19,r0
+ 144 00aa 1124      		clr __zero_reg__
+  97:proj4.c       **** 		  uk = ((kp_gain * (currentError >> 2)) + (ki_gain * (ki_error >> 6)) + 
+ 145               		.loc 1 97 0
+ 146 00ac 46E0      		ldi r20,6
+ 147               		1:
+ 148 00ae 3595      		asr r19
+ 149 00b0 2795      		ror r18
+ 150 00b2 4A95      		dec r20
+ 151 00b4 01F4      		brne 1b
+ 152 00b6 620F      		add r22,r18
+ 153 00b8 731F      		adc r23,r19
+  98:proj4.c       **** 		    (kd_gain * (kd_error >> 2))) >> 2;
+ 154               		.loc 1 98 0
+ 155 00ba 9595      		asr r25
+ 156 00bc 8795      		ror r24
+ 157 00be 9595      		asr r25
+ 158 00c0 8795      		ror r24
+ 159               	.LVL27:
+ 160 00c2 F89E      		mul r15,r24
+ 161 00c4 9001      		movw r18,r0
+ 162 00c6 F99E      		mul r15,r25
+ 163 00c8 300D      		add r19,r0
+ 164 00ca 1124      		clr __zero_reg__
+  97:proj4.c       **** 		  uk = ((kp_gain * (currentError >> 2)) + (ki_gain * (ki_error >> 6)) + 
+ 165               		.loc 1 97 0
+ 166 00cc 620F      		add r22,r18
+ 167 00ce 731F      		adc r23,r19
+ 168 00d0 7595      		asr r23
+ 169 00d2 6795      		ror r22
+ 170 00d4 7595      		asr r23
+ 171 00d6 6795      		ror r22
+ 172               	.LVL28:
+ 173               		.loc 1 102 0
+ 174 00d8 CE01      		movw r24,r28
+ 175 00da 861B      		sub r24,r22
+ 176 00dc 970B      		sbc r25,r23
+ 177               	.LVL29:
+ 178 00de 6C59      		subi r22,-100
+ 179 00e0 7F4F      		sbci r23,-1
+ 180               	.LVL30:
+ 181 00e2 693C      		cpi r22,-55
+ 182 00e4 7105      		cpc r23,__zero_reg__
+ 183 00e6 04F0      		brlt .L5
+ 184 00e8 68EC      		ldi r22,lo8(-56)
+ 185 00ea 70E0      		ldi r23,0
+ 186               	.LVL31:
+ 187               	.L5:
+ 188 00ec 893C      		cpi r24,-55
+ 189 00ee 9105      		cpc r25,__zero_reg__
+ 190 00f0 04F0      		brlt .L6
+ 191 00f2 88EC      		ldi r24,lo8(-56)
+ 192 00f4 90E0      		ldi r25,0
+ 193               	.LVL32:
+ 194               	.L6:
+ 195 00f6 77FF      		sbrs r23,7
+ 196 00f8 00C0      		rjmp .L7
+ 197 00fa 60E0      		ldi r22,0
+ 198 00fc 70E0      		ldi r23,0
+ 199               	.LVL33:
+ 200               	.L7:
+ 201 00fe 97FF      		sbrs r25,7
+ 202 0100 00C0      		rjmp .L8
+ 203 0102 80E0      		ldi r24,0
+ 204 0104 90E0      		ldi r25,0
+ 205               	.LVL34:
+ 206               	.L8:
+ 103:proj4.c       **** 
+ 104:proj4.c       ****       //check for negative or max velocities
+ 105:proj4.c       **** 		  if (rightVel < 0) {
+ 106:proj4.c       **** 		    rightVel = 0;
+ 107:proj4.c       **** 		  } else if (rightVel > maxVel) {
+ 108:proj4.c       **** 		    rightVel = maxVel;
+ 109:proj4.c       **** 		  } 
+ 110:proj4.c       **** 		  if (leftVel < 0) {
+ 111:proj4.c       **** 		    leftVel = 0;
+ 112:proj4.c       **** 		  } else if (leftVel > maxVel) {
+ 113:proj4.c       **** 		    leftVel = maxVel;
+ 114:proj4.c       **** 		  } 
+ 115:proj4.c       **** 
+ 116:proj4.c       **** 		  driveLR(leftVel, rightVel);
+ 207               		.loc 1 116 0
+ 208 0106 0E94 0000 		call driveLR
+ 209               	.LVL35:
+ 117:proj4.c       **** 
+ 118:proj4.c       ****       //reset PID timer
+ 119:proj4.c       ****       PIDCount = CHANGE_TIME;
+ 210               		.loc 1 119 0
+ 211 010a 1093 0000 		sts PIDCount,r17
+ 120:proj4.c       ****       canPID = 0;
+ 212               		.loc 1 120 0
+ 213 010e 1092 0000 		sts canPID,__zero_reg__
+ 214 0112 00C0      		rjmp .L4
+ 215               		.cfi_endproc
+ 216               	.LFE1:
+ 218               		.comm	currentElement,2,1
+ 219               		.comm	historyArray,20,1
+ 220               	.global	forceField
+ 221               		.section .bss
+ 224               	forceField:
+ 225 0000 0000      		.zero	2
+ 226               	.global	green
+ 229               	green:
+ 230 0002 0000      		.zero	2
+ 231               	.global	red
+ 234               	red:
+ 235 0004 0000      		.zero	2
+ 236               		.comm	wall,2,1
+ 237               		.comm	irSensor,1,1
+ 238               		.comm	bumpRight,1,1
+ 239               		.comm	bumpLeft,1,1
+ 240               		.text
+ 241               	.Letext0:
+ 242               		.file 2 "/usr/lib/avr/include/stdint.h"
+ 243               		.file 3 "timer.h"
+ 244               		.file 4 "sensors.h"
+ 245               		.file 5 "history.h"
+ 246               		.file 6 "cmod.h"
+ 247               		.file 7 "iroblib.h"
+ 248               		.file 8 "steering.h"
+ 249               		.file 9 "lights.h"
+ 250               		.file 10 "/usr/lib/avr/include/stdlib.h"
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 proj4.c
+     /tmp/ccDyu95K.s:2      *ABS*:000000000000003e __SP_H__
+     /tmp/ccDyu95K.s:3      *ABS*:000000000000003d __SP_L__
+     /tmp/ccDyu95K.s:4      *ABS*:000000000000003f __SREG__
+     /tmp/ccDyu95K.s:5      *ABS*:0000000000000000 __tmp_reg__
+     /tmp/ccDyu95K.s:6      *ABS*:0000000000000001 __zero_reg__
+     /tmp/ccDyu95K.s:13     .text.startup:0000000000000000 main
+                            *COM*:0000000000000002 currentElement
+                            *COM*:0000000000000014 historyArray
+     /tmp/ccDyu95K.s:224    .bss:0000000000000000 forceField
+     /tmp/ccDyu95K.s:229    .bss:0000000000000002 green
+     /tmp/ccDyu95K.s:234    .bss:0000000000000004 red
+                            *COM*:0000000000000002 wall
+                            *COM*:0000000000000001 irSensor
+                            *COM*:0000000000000001 bumpRight
+                            *COM*:0000000000000001 bumpLeft
+
+UNDEFINED SYMBOLS
+initializeCommandModule
+powerOnRobot
+byteTx
+baud
+defineSongs
+stop
+delayMs
+changePowerLightRed
+findWall
+powerOffRobot
+exit
+getBumps
+alignToWall
+canPID
+getDockSenses
+getWallDistance
+addElement
+sum
+slope
+driveLR
+PIDCount
+__do_clear_bss

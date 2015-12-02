@@ -1,0 +1,470 @@
+   1               		.file	"steering.c"
+   2               	__SP_H__ = 0x3e
+   3               	__SP_L__ = 0x3d
+   4               	__SREG__ = 0x3f
+   5               	__tmp_reg__ = 0
+   6               	__zero_reg__ = 1
+   7               		.text
+   8               	.Ltext0:
+   9               		.cfi_sections	.debug_frame
+  10               	.global	drive
+  12               	drive:
+  13               	.LFB2:
+  14               		.file 1 "steering.c"
+   1:steering.c    **** #include "timer.h"
+   2:steering.c    **** #include "cmod.h"
+   3:steering.c    **** #include "oi.h"
+   4:steering.c    **** #include "steering.h"
+   5:steering.c    **** 
+   6:steering.c    **** /**	Turn the robot angle theta
+   7:steering.c    ****  *		theta in radians (theta * 1000)
+   8:steering.c    ****  *		positive angles indicate counter-clockwise turns
+   9:steering.c    ****  *		negative angles indicate clockwise turns
+  10:steering.c    ****  */
+  11:steering.c    **** void turn(int theta) {
+  12:steering.c    **** 	uint8_t rHi;
+  13:steering.c    **** 	uint8_t rLo;
+  14:steering.c    **** 	uint8_t lHi;
+  15:steering.c    **** 	uint8_t lLo;
+  16:steering.c    **** 
+  17:steering.c    **** 	if (theta > 0) {
+  18:steering.c    **** 		rHi = vHiPos;
+  19:steering.c    **** 		rLo = vLoPos;
+  20:steering.c    **** 		lHi = vHiNeg;
+  21:steering.c    **** 		lLo = vLoNeg;
+  22:steering.c    **** 	} else {
+  23:steering.c    **** 		rHi = vHiNeg;
+  24:steering.c    **** 		rLo = vLoNeg;
+  25:steering.c    **** 		lHi = vHiPos;
+  26:steering.c    **** 		lLo = vLoPos;
+  27:steering.c    **** 		theta *= -1;
+  28:steering.c    **** 	}
+  29:steering.c    **** 
+  30:steering.c    **** 	byteTx(CmdDriveWheels);
+  31:steering.c    **** 	byteTx(rHi);
+  32:steering.c    **** 	byteTx(rLo);
+  33:steering.c    **** 	byteTx(lHi);
+  34:steering.c    **** 	byteTx(lLo);
+  35:steering.c    **** 
+  36:steering.c    **** 	delayMs(theta);
+  37:steering.c    **** 	stop();
+  38:steering.c    **** }
+  39:steering.c    **** 
+  40:steering.c    **** /**	Drive the robot at rate 'rate' until stopped
+  41:steering.c    ****  *		rate in mm/s
+  42:steering.c    ****  */
+  43:steering.c    **** void drive(int rate) {
+  15               		.loc 1 43 0
+  16               		.cfi_startproc
+  17               	.LVL0:
+  18 0000 CF93      		push r28
+  19               	.LCFI0:
+  20               		.cfi_def_cfa_offset 3
+  21               		.cfi_offset 28, -2
+  22 0002 DF93      		push r29
+  23               	.LCFI1:
+  24               		.cfi_def_cfa_offset 4
+  25               		.cfi_offset 29, -3
+  26               	/* prologue: function */
+  27               	/* frame size = 0 */
+  28               	/* stack size = 2 */
+  29               	.L__stack_usage = 2
+  30 0004 EC01      		movw r28,r24
+  31               	.LVL1:
+  44:steering.c    **** 	//rate to hi/lo
+  45:steering.c    **** 	uint8_t hi = 0x00;
+  46:steering.c    **** 	uint8_t lo = 0x00;
+  47:steering.c    ****   
+  48:steering.c    **** 	hi |= rate >> 8;
+  49:steering.c    **** 	lo |= rate; 
+  50:steering.c    **** 
+  51:steering.c    **** 	byteTx(CmdDriveWheels);
+  32               		.loc 1 51 0
+  33 0006 81E9      		ldi r24,lo8(-111)
+  34               	.LVL2:
+  35 0008 0E94 0000 		call byteTx
+  36               	.LVL3:
+  52:steering.c    **** 	byteTx(hi);
+  37               		.loc 1 52 0
+  38 000c 8D2F      		mov r24,r29
+  39 000e 0E94 0000 		call byteTx
+  40               	.LVL4:
+  53:steering.c    **** 	byteTx(lo);
+  41               		.loc 1 53 0
+  42 0012 8C2F      		mov r24,r28
+  43 0014 0E94 0000 		call byteTx
+  44               	.LVL5:
+  54:steering.c    **** 	byteTx(hi);
+  45               		.loc 1 54 0
+  46 0018 8D2F      		mov r24,r29
+  47 001a 0E94 0000 		call byteTx
+  48               	.LVL6:
+  55:steering.c    **** 	byteTx(lo);
+  49               		.loc 1 55 0
+  50 001e 8C2F      		mov r24,r28
+  51               	/* epilogue start */
+  56:steering.c    **** }
+  52               		.loc 1 56 0
+  53 0020 DF91      		pop r29
+  54               	.LVL7:
+  55 0022 CF91      		pop r28
+  56               	.LVL8:
+  55:steering.c    **** 	byteTx(lo);
+  57               		.loc 1 55 0
+  58 0024 0C94 0000 		jmp byteTx
+  59               	.LVL9:
+  60               		.cfi_endproc
+  61               	.LFE2:
+  63               	.global	driveLR
+  65               	driveLR:
+  66               	.LFB3:
+  57:steering.c    **** 
+  58:steering.c    **** /**  Specify velocities of wheels separately
+  59:steering.c    ****  *          rate in mm/s 
+  60:steering.c    ****  */
+  61:steering.c    **** void driveLR(int rateLeft, int rateRight) {
+  67               		.loc 1 61 0
+  68               		.cfi_startproc
+  69               	.LVL10:
+  70 0028 1F93      		push r17
+  71               	.LCFI2:
+  72               		.cfi_def_cfa_offset 3
+  73               		.cfi_offset 17, -2
+  74 002a CF93      		push r28
+  75               	.LCFI3:
+  76               		.cfi_def_cfa_offset 4
+  77               		.cfi_offset 28, -3
+  78 002c DF93      		push r29
+  79               	.LCFI4:
+  80               		.cfi_def_cfa_offset 5
+  81               		.cfi_offset 29, -4
+  82 002e 00D0      		rcall .
+  83 0030 1F92      		push __zero_reg__
+  84               	.LCFI5:
+  85               		.cfi_def_cfa_offset 8
+  86 0032 CDB7      		in r28,__SP_L__
+  87 0034 DEB7      		in r29,__SP_H__
+  88               	.LCFI6:
+  89               		.cfi_def_cfa_register 28
+  90               	/* prologue: function */
+  91               	/* frame size = 3 */
+  92               	/* stack size = 6 */
+  93               	.L__stack_usage = 6
+  94 0036 182F      		mov r17,r24
+  95               	.LVL11:
+  62:steering.c    **** 	//rates to hi/lo
+  63:steering.c    **** 	uint8_t rHi = 0x00, rLo = 0x00, lHi = 0x00, lLo = 0x00;
+  64:steering.c    ****   
+  65:steering.c    **** 	lHi |= rateLeft >> 8;
+  66:steering.c    **** 	lLo |= rateLeft; 
+  67:steering.c    **** 
+  68:steering.c    **** 	rHi |= rateRight >> 8;
+  69:steering.c    **** 	rLo |= rateRight; 
+  70:steering.c    **** 
+  71:steering.c    **** 	byteTx(CmdDriveWheels);
+  96               		.loc 1 71 0
+  97 0038 81E9      		ldi r24,lo8(-111)
+  98               	.LVL12:
+  99 003a 6A83      		std Y+2,r22
+ 100 003c 7983      		std Y+1,r23
+ 101 003e 9B83      		std Y+3,r25
+ 102 0040 0E94 0000 		call byteTx
+ 103               	.LVL13:
+  72:steering.c    **** 	byteTx(rHi);
+ 104               		.loc 1 72 0
+ 105 0044 7981      		ldd r23,Y+1
+ 106 0046 872F      		mov r24,r23
+ 107 0048 0E94 0000 		call byteTx
+ 108               	.LVL14:
+  73:steering.c    **** 	byteTx(rLo);
+ 109               		.loc 1 73 0
+ 110 004c 6A81      		ldd r22,Y+2
+ 111 004e 862F      		mov r24,r22
+ 112 0050 0E94 0000 		call byteTx
+ 113               	.LVL15:
+  74:steering.c    **** 	byteTx(lHi);
+ 114               		.loc 1 74 0
+ 115 0054 9B81      		ldd r25,Y+3
+ 116 0056 892F      		mov r24,r25
+ 117 0058 0E94 0000 		call byteTx
+ 118               	.LVL16:
+  75:steering.c    **** 	byteTx(lLo);
+ 119               		.loc 1 75 0
+ 120 005c 812F      		mov r24,r17
+ 121               	/* epilogue start */
+  76:steering.c    **** }
+ 122               		.loc 1 76 0
+ 123 005e 0F90      		pop __tmp_reg__
+ 124 0060 0F90      		pop __tmp_reg__
+ 125 0062 0F90      		pop __tmp_reg__
+ 126 0064 DF91      		pop r29
+ 127 0066 CF91      		pop r28
+ 128 0068 1F91      		pop r17
+ 129               	.LVL17:
+  75:steering.c    **** 	byteTx(lLo);
+ 130               		.loc 1 75 0
+ 131 006a 0C94 0000 		jmp byteTx
+ 132               	.LVL18:
+ 133               		.cfi_endproc
+ 134               	.LFE3:
+ 136               	.global	stop
+ 138               	stop:
+ 139               	.LFB4:
+  77:steering.c    **** 
+  78:steering.c    **** /** Stop the robot	*/
+  79:steering.c    **** void stop(void) {
+ 140               		.loc 1 79 0
+ 141               		.cfi_startproc
+ 142               	/* prologue: function */
+ 143               	/* frame size = 0 */
+ 144               	/* stack size = 0 */
+ 145               	.L__stack_usage = 0
+  80:steering.c    **** 	drive(0);
+ 146               		.loc 1 80 0
+ 147 006e 80E0      		ldi r24,0
+ 148 0070 90E0      		ldi r25,0
+ 149 0072 0C94 0000 		jmp drive
+ 150               	.LVL19:
+ 151               		.cfi_endproc
+ 152               	.LFE4:
+ 154               	.global	turn
+ 156               	turn:
+ 157               	.LFB1:
+  11:steering.c    **** void turn(int theta) {
+ 158               		.loc 1 11 0
+ 159               		.cfi_startproc
+ 160               	.LVL20:
+ 161 0076 CF92      		push r12
+ 162               	.LCFI7:
+ 163               		.cfi_def_cfa_offset 3
+ 164               		.cfi_offset 12, -2
+ 165 0078 DF92      		push r13
+ 166               	.LCFI8:
+ 167               		.cfi_def_cfa_offset 4
+ 168               		.cfi_offset 13, -3
+ 169 007a FF92      		push r15
+ 170               	.LCFI9:
+ 171               		.cfi_def_cfa_offset 5
+ 172               		.cfi_offset 15, -4
+ 173 007c 0F93      		push r16
+ 174               	.LCFI10:
+ 175               		.cfi_def_cfa_offset 6
+ 176               		.cfi_offset 16, -5
+ 177 007e 1F93      		push r17
+ 178               	.LCFI11:
+ 179               		.cfi_def_cfa_offset 7
+ 180               		.cfi_offset 17, -6
+ 181 0080 CF93      		push r28
+ 182               	.LCFI12:
+ 183               		.cfi_def_cfa_offset 8
+ 184               		.cfi_offset 28, -7
+ 185 0082 DF93      		push r29
+ 186               	.LCFI13:
+ 187               		.cfi_def_cfa_offset 9
+ 188               		.cfi_offset 29, -8
+ 189 0084 1F92      		push __zero_reg__
+ 190               	.LCFI14:
+ 191               		.cfi_def_cfa_offset 10
+ 192 0086 CDB7      		in r28,__SP_L__
+ 193 0088 DEB7      		in r29,__SP_H__
+ 194               	.LCFI15:
+ 195               		.cfi_def_cfa_register 28
+ 196               	/* prologue: function */
+ 197               	/* frame size = 1 */
+ 198               	/* stack size = 8 */
+ 199               	.L__stack_usage = 8
+ 200 008a 6C01      		movw r12,r24
+  17:steering.c    **** 	if (theta > 0) {
+ 201               		.loc 1 17 0
+ 202 008c 1816      		cp __zero_reg__,r24
+ 203 008e 1906      		cpc __zero_reg__,r25
+ 204 0090 04F0      		brlt .L6
+ 205               	.LVL21:
+  27:steering.c    **** 		theta *= -1;
+ 206               		.loc 1 27 0
+ 207 0092 D194      		neg r13
+ 208 0094 C194      		neg r12
+ 209 0096 D108      		sbc r13,__zero_reg__
+ 210               	.LVL22:
+  26:steering.c    **** 		lLo = vLoPos;
+ 211               		.loc 1 26 0
+ 212 0098 15EA      		ldi r17,lo8(-91)
+  25:steering.c    **** 		lHi = vHiPos;
+ 213               		.loc 1 25 0
+ 214 009a 00E0      		ldi r16,0
+  24:steering.c    **** 		rLo = vLoNeg;
+ 215               		.loc 1 24 0
+ 216 009c 9BE5      		ldi r25,lo8(91)
+  23:steering.c    **** 		rHi = vHiNeg;
+ 217               		.loc 1 23 0
+ 218 009e FF24      		clr r15
+ 219 00a0 FA94      		dec r15
+ 220 00a2 00C0      		rjmp .L5
+ 221               	.LVL23:
+ 222               	.L6:
+  21:steering.c    **** 		lLo = vLoNeg;
+ 223               		.loc 1 21 0
+ 224 00a4 1BE5      		ldi r17,lo8(91)
+  20:steering.c    **** 		lHi = vHiNeg;
+ 225               		.loc 1 20 0
+ 226 00a6 0FEF      		ldi r16,lo8(-1)
+  19:steering.c    **** 		rLo = vLoPos;
+ 227               		.loc 1 19 0
+ 228 00a8 95EA      		ldi r25,lo8(-91)
+  18:steering.c    **** 		rHi = vHiPos;
+ 229               		.loc 1 18 0
+ 230 00aa F12C      		mov r15,__zero_reg__
+ 231               	.L5:
+ 232               	.LVL24:
+  30:steering.c    **** 	byteTx(CmdDriveWheels);
+ 233               		.loc 1 30 0
+ 234 00ac 81E9      		ldi r24,lo8(-111)
+ 235 00ae 9983      		std Y+1,r25
+ 236 00b0 0E94 0000 		call byteTx
+ 237               	.LVL25:
+  31:steering.c    **** 	byteTx(rHi);
+ 238               		.loc 1 31 0
+ 239 00b4 8F2D      		mov r24,r15
+ 240 00b6 0E94 0000 		call byteTx
+ 241               	.LVL26:
+  32:steering.c    **** 	byteTx(rLo);
+ 242               		.loc 1 32 0
+ 243 00ba 9981      		ldd r25,Y+1
+ 244 00bc 892F      		mov r24,r25
+ 245 00be 0E94 0000 		call byteTx
+ 246               	.LVL27:
+  33:steering.c    **** 	byteTx(lHi);
+ 247               		.loc 1 33 0
+ 248 00c2 802F      		mov r24,r16
+ 249 00c4 0E94 0000 		call byteTx
+ 250               	.LVL28:
+  34:steering.c    **** 	byteTx(lLo);
+ 251               		.loc 1 34 0
+ 252 00c8 812F      		mov r24,r17
+ 253 00ca 0E94 0000 		call byteTx
+ 254               	.LVL29:
+  36:steering.c    **** 	delayMs(theta);
+ 255               		.loc 1 36 0
+ 256 00ce C601      		movw r24,r12
+ 257 00d0 0E94 0000 		call delayMs
+ 258               	.LVL30:
+ 259               	/* epilogue start */
+  38:steering.c    **** }
+ 260               		.loc 1 38 0
+ 261 00d4 0F90      		pop __tmp_reg__
+ 262 00d6 DF91      		pop r29
+ 263 00d8 CF91      		pop r28
+ 264 00da 1F91      		pop r17
+ 265               	.LVL31:
+ 266 00dc 0F91      		pop r16
+ 267               	.LVL32:
+ 268 00de FF90      		pop r15
+ 269               	.LVL33:
+ 270 00e0 DF90      		pop r13
+ 271 00e2 CF90      		pop r12
+ 272               	.LVL34:
+  37:steering.c    **** 	stop();
+ 273               		.loc 1 37 0
+ 274 00e4 0C94 0000 		jmp stop
+ 275               	.LVL35:
+ 276               		.cfi_endproc
+ 277               	.LFE1:
+ 279               	.global	alignToWall
+ 281               	alignToWall:
+ 282               	.LFB5:
+  81:steering.c    **** }
+  82:steering.c    **** 
+  83:steering.c    **** //check bump sensors and act accordingly -- not used currently
+  84:steering.c    **** void alignToWall() {
+ 283               		.loc 1 84 0
+ 284               		.cfi_startproc
+ 285               	/* prologue: function */
+ 286               	/* frame size = 0 */
+ 287               	/* stack size = 0 */
+ 288               	.L__stack_usage = 0
+  85:steering.c    **** 	if (bumpLeft && bumpRight) { //both bumps -- clear history after bump
+ 289               		.loc 1 85 0
+ 290 00e8 9091 0000 		lds r25,bumpLeft
+ 291 00ec 8091 0000 		lds r24,bumpRight
+ 292 00f0 9923      		tst r25
+ 293 00f2 01F0      		breq .L9
+ 294               		.loc 1 85 0 is_stmt 0 discriminator 1
+ 295 00f4 8823      		tst r24
+ 296 00f6 01F0      		breq .L10
+  86:steering.c    **** 		turn(TURN_60_DEGREES);
+ 297               		.loc 1 86 0 is_stmt 1
+ 298 00f8 87E1      		ldi r24,lo8(23)
+ 299 00fa 94E0      		ldi r25,lo8(4)
+ 300 00fc 00C0      		rjmp .L15
+ 301               	.L10:
+  87:steering.c    **** 	} else if (bumpLeft) {
+  88:steering.c    **** 		turn(TURN_90_DEGREES);
+ 302               		.loc 1 88 0
+ 303 00fe 82E2      		ldi r24,lo8(34)
+ 304 0100 96E0      		ldi r25,lo8(6)
+ 305 0102 00C0      		rjmp .L15
+ 306               	.L9:
+  89:steering.c    **** 	} else if (bumpRight) {
+ 307               		.loc 1 89 0
+ 308 0104 8823      		tst r24
+ 309 0106 01F0      		breq .L11
+  90:steering.c    **** 		turn(TURN_30_DEGREES);
+ 310               		.loc 1 90 0
+ 311 0108 88E0      		ldi r24,lo8(8)
+ 312 010a 92E0      		ldi r25,lo8(2)
+ 313               	.L15:
+ 314 010c 0E94 0000 		call turn
+ 315               	.LVL36:
+ 316               	.L11:
+  91:steering.c    **** 	}
+  92:steering.c    **** 	clearHistory();
+ 317               		.loc 1 92 0
+ 318 0110 0C94 0000 		jmp clearHistory
+ 319               	.LVL37:
+ 320               		.cfi_endproc
+ 321               	.LFE5:
+ 323               	.global	forceField
+ 324               		.section .bss
+ 327               	forceField:
+ 328 0000 0000      		.zero	2
+ 329               	.global	green
+ 332               	green:
+ 333 0002 0000      		.zero	2
+ 334               	.global	red
+ 337               	red:
+ 338 0004 0000      		.zero	2
+ 339               		.comm	wall,2,1
+ 340               		.comm	irSensor,1,1
+ 341               		.comm	bumpRight,1,1
+ 342               		.comm	bumpLeft,1,1
+ 343               		.text
+ 344               	.Letext0:
+ 345               		.file 2 "/usr/lib/avr/include/stdint.h"
+ 346               		.file 3 "sensors.h"
+ 347               		.file 4 "cmod.h"
+ 348               		.file 5 "timer.h"
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 steering.c
+     /tmp/ccvJ6xV7.s:2      *ABS*:000000000000003e __SP_H__
+     /tmp/ccvJ6xV7.s:3      *ABS*:000000000000003d __SP_L__
+     /tmp/ccvJ6xV7.s:4      *ABS*:000000000000003f __SREG__
+     /tmp/ccvJ6xV7.s:5      *ABS*:0000000000000000 __tmp_reg__
+     /tmp/ccvJ6xV7.s:6      *ABS*:0000000000000001 __zero_reg__
+     /tmp/ccvJ6xV7.s:12     .text:0000000000000000 drive
+     /tmp/ccvJ6xV7.s:65     .text:0000000000000028 driveLR
+     /tmp/ccvJ6xV7.s:138    .text:000000000000006e stop
+     /tmp/ccvJ6xV7.s:156    .text:0000000000000076 turn
+     /tmp/ccvJ6xV7.s:281    .text:00000000000000e8 alignToWall
+                            *COM*:0000000000000001 bumpLeft
+                            *COM*:0000000000000001 bumpRight
+     /tmp/ccvJ6xV7.s:327    .bss:0000000000000000 forceField
+     /tmp/ccvJ6xV7.s:332    .bss:0000000000000002 green
+     /tmp/ccvJ6xV7.s:337    .bss:0000000000000004 red
+                            *COM*:0000000000000002 wall
+                            *COM*:0000000000000001 irSensor
+
+UNDEFINED SYMBOLS
+byteTx
+delayMs
+clearHistory
+__do_clear_bss

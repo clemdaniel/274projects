@@ -1,0 +1,493 @@
+   1               		.file	"sensors.c"
+   2               	__SP_H__ = 0x3e
+   3               	__SP_L__ = 0x3d
+   4               	__SREG__ = 0x3f
+   5               	__tmp_reg__ = 0
+   6               	__zero_reg__ = 1
+   7               		.text
+   8               	.Ltext0:
+   9               		.cfi_sections	.debug_frame
+  10               	.global	getWallDistance
+  12               	getWallDistance:
+  13               	.LFB2:
+  14               		.file 1 "sensors.c"
+   1:sensors.c     **** #include "cmod.h"
+   2:sensors.c     **** #include "timer.h"
+   3:sensors.c     **** #include "oi.h"
+   4:sensors.c     **** #include "sensors.h"
+   5:sensors.c     **** 
+   6:sensors.c     **** //drive straight until you hit something
+   7:sensors.c     **** void findWall(void) {
+   8:sensors.c     **** 	drive(100);
+   9:sensors.c     **** 	for (;;) {
+  10:sensors.c     **** 		delayMs(100);
+  11:sensors.c     **** 		getBumps();
+  12:sensors.c     **** 		if (bumpLeft || bumpRight) {
+  13:sensors.c     **** 			stop();			
+  14:sensors.c     **** 			break; //escape for loop
+  15:sensors.c     **** 		}
+  16:sensors.c     **** 	}
+  17:sensors.c     **** }
+  18:sensors.c     **** 
+  19:sensors.c     **** //determines the wall sensor strength
+  20:sensors.c     **** // value from 0-4095,
+  21:sensors.c     **** // 4095 => as close to wall as possible 
+  22:sensors.c     **** uint16_t getWallDistance(void) {
+  15               		.loc 1 22 0
+  16               		.cfi_startproc
+  17 0000 CF93      		push r28
+  18               	.LCFI0:
+  19               		.cfi_def_cfa_offset 3
+  20               		.cfi_offset 28, -2
+  21               	/* prologue: function */
+  22               	/* frame size = 0 */
+  23               	/* stack size = 1 */
+  24               	.L__stack_usage = 1
+  23:sensors.c     ****     uint8_t hi, lo;
+  24:sensors.c     ****     byteTx(CmdSensors);
+  25               		.loc 1 24 0
+  26 0002 8EE8      		ldi r24,lo8(-114)
+  27 0004 0E94 0000 		call byteTx
+  28               	.LVL0:
+  25:sensors.c     ****     byteTx(WallPID);
+  29               		.loc 1 25 0
+  30 0008 8BE1      		ldi r24,lo8(27)
+  31 000a 0E94 0000 		call byteTx
+  32               	.LVL1:
+  26:sensors.c     ****     hi = byteRx();
+  33               		.loc 1 26 0
+  34 000e 0E94 0000 		call byteRx
+  35               	.LVL2:
+  36 0012 C82F      		mov r28,r24
+  37               	.LVL3:
+  27:sensors.c     ****     lo = byteRx();
+  38               		.loc 1 27 0
+  39 0014 0E94 0000 		call byteRx
+  40               	.LVL4:
+  28:sensors.c     ****     return (hi << 8) | lo;
+  41               		.loc 1 28 0
+  42 0018 2C2F      		mov r18,r28
+  43 001a 30E0      		ldi r19,0
+  44 001c 322F      		mov r19,r18
+  45 001e 2227      		clr r18
+  29:sensors.c     **** }
+  46               		.loc 1 29 0
+  47 0020 A901      		movw r20,r18
+  48 0022 482B      		or r20,r24
+  49 0024 CA01      		movw r24,r20
+  50               	.LVL5:
+  51               	/* epilogue start */
+  52 0026 CF91      		pop r28
+  53               	.LVL6:
+  54 0028 0895      		ret
+  55               		.cfi_endproc
+  56               	.LFE2:
+  58               	.global	getBumps
+  60               	getBumps:
+  61               	.LFB3:
+  30:sensors.c     **** 
+  31:sensors.c     **** //determines whether bump sensors are active
+  32:sensors.c     **** void getBumps(void) {
+  62               		.loc 1 32 0
+  63               		.cfi_startproc
+  64               	/* prologue: function */
+  65               	/* frame size = 0 */
+  66               	/* stack size = 0 */
+  67               	.L__stack_usage = 0
+  33:sensors.c     ****     uint8_t bumps;
+  34:sensors.c     **** 		byteTx(CmdSensors);
+  68               		.loc 1 34 0
+  69 002a 8EE8      		ldi r24,lo8(-114)
+  70 002c 0E94 0000 		call byteTx
+  71               	.LVL7:
+  35:sensors.c     ****     byteTx(BumpAndWheeldropPID);
+  72               		.loc 1 35 0
+  73 0030 87E0      		ldi r24,lo8(7)
+  74 0032 0E94 0000 		call byteTx
+  75               	.LVL8:
+  36:sensors.c     ****     bumps = byteRx(); 
+  76               		.loc 1 36 0
+  77 0036 0E94 0000 		call byteRx
+  78               	.LVL9:
+  37:sensors.c     ****     bumpLeft = bumps & (1 << 1);
+  79               		.loc 1 37 0
+  80 003a 982F      		mov r25,r24
+  81 003c 9270      		andi r25,lo8(2)
+  82 003e 9093 0000 		sts bumpLeft,r25
+  38:sensors.c     ****     bumpRight = bumps & (1 << 0);
+  83               		.loc 1 38 0
+  84 0042 8170      		andi r24,lo8(1)
+  85               	.LVL10:
+  86 0044 8093 0000 		sts bumpRight,r24
+  87 0048 0895      		ret
+  88               		.cfi_endproc
+  89               	.LFE3:
+  91               	.global	findWall
+  93               	findWall:
+  94               	.LFB1:
+   7:sensors.c     **** void findWall(void) {
+  95               		.loc 1 7 0
+  96               		.cfi_startproc
+  97               	/* prologue: function */
+  98               	/* frame size = 0 */
+  99               	/* stack size = 0 */
+ 100               	.L__stack_usage = 0
+   8:sensors.c     **** 	drive(100);
+ 101               		.loc 1 8 0
+ 102 004a 84E6      		ldi r24,lo8(100)
+ 103 004c 90E0      		ldi r25,0
+ 104 004e 0E94 0000 		call drive
+ 105               	.LVL11:
+ 106               	.L5:
+  10:sensors.c     **** 		delayMs(100);
+ 107               		.loc 1 10 0
+ 108 0052 84E6      		ldi r24,lo8(100)
+ 109 0054 90E0      		ldi r25,0
+ 110 0056 0E94 0000 		call delayMs
+ 111               	.LVL12:
+  11:sensors.c     **** 		getBumps();
+ 112               		.loc 1 11 0
+ 113 005a 0E94 0000 		call getBumps
+ 114               	.LVL13:
+  12:sensors.c     **** 		if (bumpLeft || bumpRight) {
+ 115               		.loc 1 12 0
+ 116 005e 8091 0000 		lds r24,bumpLeft
+ 117 0062 8111      		cpse r24,__zero_reg__
+ 118 0064 00C0      		rjmp .L4
+  12:sensors.c     **** 		if (bumpLeft || bumpRight) {
+ 119               		.loc 1 12 0 is_stmt 0 discriminator 1
+ 120 0066 8091 0000 		lds r24,bumpRight
+ 121 006a 8823      		tst r24
+ 122 006c 01F0      		breq .L5
+ 123               	.L4:
+ 124               	.LBB2:
+  13:sensors.c     **** 			stop();			
+ 125               		.loc 1 13 0 is_stmt 1
+ 126 006e 0C94 0000 		jmp stop
+ 127               	.LVL14:
+ 128               	.LBE2:
+ 129               		.cfi_endproc
+ 130               	.LFE1:
+ 132               	.global	transmit
+ 134               	transmit:
+ 135               	.LFB4:
+  39:sensors.c     **** }
+  40:sensors.c     **** 
+  41:sensors.c     **** //print characters containing in char array 
+  42:sensors.c     **** //to serial - returns length of string
+  43:sensors.c     **** //  -useful for debugging
+  44:sensors.c     **** int transmit(char* string) {
+ 136               		.loc 1 44 0
+ 137               		.cfi_startproc
+ 138               	.LVL15:
+ 139 0072 EF92      		push r14
+ 140               	.LCFI1:
+ 141               		.cfi_def_cfa_offset 3
+ 142               		.cfi_offset 14, -2
+ 143 0074 FF92      		push r15
+ 144               	.LCFI2:
+ 145               		.cfi_def_cfa_offset 4
+ 146               		.cfi_offset 15, -3
+ 147 0076 0F93      		push r16
+ 148               	.LCFI3:
+ 149               		.cfi_def_cfa_offset 5
+ 150               		.cfi_offset 16, -4
+ 151 0078 1F93      		push r17
+ 152               	.LCFI4:
+ 153               		.cfi_def_cfa_offset 6
+ 154               		.cfi_offset 17, -5
+ 155 007a CF93      		push r28
+ 156               	.LCFI5:
+ 157               		.cfi_def_cfa_offset 7
+ 158               		.cfi_offset 28, -6
+ 159 007c DF93      		push r29
+ 160               	.LCFI6:
+ 161               		.cfi_def_cfa_offset 8
+ 162               		.cfi_offset 29, -7
+ 163               	/* prologue: function */
+ 164               	/* frame size = 0 */
+ 165               	/* stack size = 6 */
+ 166               	.L__stack_usage = 6
+ 167 007e 8C01      		movw r16,r24
+  45:sensors.c     ****     int i;
+  46:sensors.c     ****     int length = strlen(string);
+ 168               		.loc 1 46 0
+ 169 0080 EC01      		movw r28,r24
+ 170               		0:
+ 171 0082 0990      		ld __tmp_reg__,Y+
+ 172 0084 0020      		tst __tmp_reg__
+ 173 0086 01F4      		brne 0b
+ 174 0088 2197      		sbiw r28,1
+ 175 008a C81B      		sub r28,r24
+ 176 008c D90B      		sbc r29,r25
+ 177               	.LVL16:
+  47:sensors.c     ****     //point to serial monitor
+  48:sensors.c     ****     setSerialDestination(SERIAL_USB);
+ 178               		.loc 1 48 0
+ 179 008e 82E0      		ldi r24,lo8(2)
+ 180               	.LVL17:
+ 181 0090 0E94 0000 		call setSerialDestination
+ 182               	.LVL18:
+  49:sensors.c     ****     //send data to USB
+  50:sensors.c     ****     for (i=0; i<length; i++) {
+ 183               		.loc 1 50 0
+ 184 0094 7801      		movw r14,r16
+ 185               	.LVL19:
+ 186               	.L8:
+ 187 0096 C701      		movw r24,r14
+ 188 0098 801B      		sub r24,r16
+ 189 009a 910B      		sbc r25,r17
+ 190               		.loc 1 50 0 is_stmt 0 discriminator 1
+ 191 009c 8C17      		cp r24,r28
+ 192 009e 9D07      		cpc r25,r29
+ 193 00a0 04F4      		brge .L10
+  51:sensors.c     ****         byteTx(string[i]);
+ 194               		.loc 1 51 0 is_stmt 1 discriminator 2
+ 195 00a2 F701      		movw r30,r14
+ 196 00a4 8191      		ld r24,Z+
+ 197 00a6 7F01      		movw r14,r30
+ 198               	.LVL20:
+ 199 00a8 0E94 0000 		call byteTx
+ 200               	.LVL21:
+ 201 00ac 00C0      		rjmp .L8
+ 202               	.L10:
+  52:sensors.c     ****     }
+  53:sensors.c     ****     //point back to create
+  54:sensors.c     ****     setSerialDestination(SERIAL_CREATE);
+ 203               		.loc 1 54 0
+ 204 00ae 81E0      		ldi r24,lo8(1)
+ 205 00b0 0E94 0000 		call setSerialDestination
+ 206               	.LVL22:
+  55:sensors.c     ****     return length;
+  56:sensors.c     **** }
+ 207               		.loc 1 56 0
+ 208 00b4 CE01      		movw r24,r28
+ 209               	/* epilogue start */
+ 210 00b6 DF91      		pop r29
+ 211 00b8 CF91      		pop r28
+ 212               	.LVL23:
+ 213 00ba 1F91      		pop r17
+ 214 00bc 0F91      		pop r16
+ 215               	.LVL24:
+ 216 00be FF90      		pop r15
+ 217 00c0 EF90      		pop r14
+ 218               	.LVL25:
+ 219 00c2 0895      		ret
+ 220               		.cfi_endproc
+ 221               	.LFE4:
+ 223               	.global	getDockSenses
+ 225               	getDockSenses:
+ 226               	.LFB5:
+  57:sensors.c     **** 
+  58:sensors.c     **** void getDockSenses(void) {
+ 227               		.loc 1 58 0
+ 228               		.cfi_startproc
+ 229               	/* prologue: function */
+ 230               	/* frame size = 0 */
+ 231               	/* stack size = 0 */
+ 232               	.L__stack_usage = 0
+  59:sensors.c     ****     byteTx(CmdSensors);
+ 233               		.loc 1 59 0
+ 234 00c4 8EE8      		ldi r24,lo8(-114)
+ 235 00c6 0E94 0000 		call byteTx
+ 236               	.LVL26:
+  60:sensors.c     ****     byteTx(IRsensorPacket); //packet for IR control
+ 237               		.loc 1 60 0
+ 238 00ca 81E1      		ldi r24,lo8(17)
+ 239 00cc 0E94 0000 		call byteTx
+ 240               	.LVL27:
+  61:sensors.c     ****     irSensor = byteRx();
+ 241               		.loc 1 61 0
+ 242 00d0 0E94 0000 		call byteRx
+ 243               	.LVL28:
+ 244 00d4 8093 0000 		sts irSensor,r24
+  62:sensors.c     ****     if (irSensor == RED_BUOY) {
+ 245               		.loc 1 62 0
+ 246 00d8 883F      		cpi r24,lo8(-8)
+ 247 00da 01F4      		brne .L12
+  63:sensors.c     ****         red = 1;
+ 248               		.loc 1 63 0
+ 249 00dc 81E0      		ldi r24,lo8(1)
+ 250 00de 90E0      		ldi r25,0
+ 251 00e0 9093 0000 		sts red+1,r25
+ 252 00e4 8093 0000 		sts red,r24
+ 253 00e8 00C0      		rjmp .L20
+ 254               	.L12:
+  64:sensors.c     ****         green = 0;
+  65:sensors.c     ****         forceField = 0;
+  66:sensors.c     ****     } else if (irSensor == GREEN_BUOY) {
+ 255               		.loc 1 66 0
+ 256 00ea 843F      		cpi r24,lo8(-12)
+ 257 00ec 01F4      		brne .L14
+  67:sensors.c     ****         red = 0;
+ 258               		.loc 1 67 0
+ 259 00ee 1092 0000 		sts red+1,__zero_reg__
+ 260 00f2 1092 0000 		sts red,__zero_reg__
+  68:sensors.c     ****         green = 1;
+ 261               		.loc 1 68 0
+ 262 00f6 81E0      		ldi r24,lo8(1)
+ 263 00f8 90E0      		ldi r25,0
+ 264 00fa 00C0      		rjmp .L24
+ 265               	.L14:
+  69:sensors.c     ****         forceField = 0;
+  70:sensors.c     ****     } else if (irSensor == FORCE_FIELD) {
+ 266               		.loc 1 70 0
+ 267 00fc 823F      		cpi r24,lo8(-14)
+ 268 00fe 01F4      		brne .L15
+  71:sensors.c     ****         red = 0;
+ 269               		.loc 1 71 0
+ 270 0100 1092 0000 		sts red+1,__zero_reg__
+ 271 0104 1092 0000 		sts red,__zero_reg__
+  72:sensors.c     ****         green = 0;
+ 272               		.loc 1 72 0
+ 273 0108 1092 0000 		sts green+1,__zero_reg__
+ 274 010c 1092 0000 		sts green,__zero_reg__
+  73:sensors.c     ****         forceField = 1;
+ 275               		.loc 1 73 0
+ 276 0110 81E0      		ldi r24,lo8(1)
+ 277 0112 90E0      		ldi r25,0
+ 278 0114 00C0      		rjmp .L23
+ 279               	.L15:
+  74:sensors.c     ****     } else if (irSensor == R_AND_G) {
+ 280               		.loc 1 74 0
+ 281 0116 8C3F      		cpi r24,lo8(-4)
+ 282 0118 01F4      		brne .L16
+  75:sensors.c     ****         red = 1;
+ 283               		.loc 1 75 0
+ 284 011a 81E0      		ldi r24,lo8(1)
+ 285 011c 90E0      		ldi r25,0
+ 286 011e 9093 0000 		sts red+1,r25
+ 287 0122 8093 0000 		sts red,r24
+ 288               	.L24:
+  76:sensors.c     ****         green = 1;
+ 289               		.loc 1 76 0
+ 290 0126 9093 0000 		sts green+1,r25
+ 291 012a 8093 0000 		sts green,r24
+ 292 012e 00C0      		rjmp .L21
+ 293               	.L16:
+  77:sensors.c     ****         forceField = 0;
+  78:sensors.c     ****     } else if (irSensor == R_AND_F) {
+ 294               		.loc 1 78 0
+ 295 0130 8A3F      		cpi r24,lo8(-6)
+ 296 0132 01F4      		brne .L17
+  79:sensors.c     ****         red = 1;
+ 297               		.loc 1 79 0
+ 298 0134 81E0      		ldi r24,lo8(1)
+ 299 0136 90E0      		ldi r25,0
+ 300 0138 9093 0000 		sts red+1,r25
+ 301 013c 8093 0000 		sts red,r24
+  80:sensors.c     ****         green = 0;
+ 302               		.loc 1 80 0
+ 303 0140 1092 0000 		sts green+1,__zero_reg__
+ 304 0144 1092 0000 		sts green,__zero_reg__
+ 305 0148 00C0      		rjmp .L23
+ 306               	.L17:
+  81:sensors.c     ****         forceField = 1;
+  82:sensors.c     ****     } else if (irSensor == G_AND_F) {
+ 307               		.loc 1 82 0
+ 308 014a 863F      		cpi r24,lo8(-10)
+ 309 014c 01F4      		brne .L18
+  83:sensors.c     ****         red = 0;
+ 310               		.loc 1 83 0
+ 311 014e 1092 0000 		sts red+1,__zero_reg__
+ 312 0152 1092 0000 		sts red,__zero_reg__
+  84:sensors.c     ****         green = 1;
+ 313               		.loc 1 84 0
+ 314 0156 81E0      		ldi r24,lo8(1)
+ 315 0158 90E0      		ldi r25,0
+ 316 015a 00C0      		rjmp .L22
+ 317               	.L18:
+  85:sensors.c     ****         forceField = 1;
+  86:sensors.c     ****     } else if (irSensor == ALL_THREE) {
+ 318               		.loc 1 86 0
+ 319 015c 8E3F      		cpi r24,lo8(-2)
+ 320 015e 01F4      		brne .L19
+  87:sensors.c     ****         red = 1;
+ 321               		.loc 1 87 0
+ 322 0160 81E0      		ldi r24,lo8(1)
+ 323 0162 90E0      		ldi r25,0
+ 324 0164 9093 0000 		sts red+1,r25
+ 325 0168 8093 0000 		sts red,r24
+ 326               	.L22:
+  88:sensors.c     ****         green = 1;
+ 327               		.loc 1 88 0
+ 328 016c 9093 0000 		sts green+1,r25
+ 329 0170 8093 0000 		sts green,r24
+ 330               	.L23:
+  89:sensors.c     ****         forceField = 1;
+ 331               		.loc 1 89 0
+ 332 0174 9093 0000 		sts forceField+1,r25
+ 333 0178 8093 0000 		sts forceField,r24
+ 334 017c 0895      		ret
+ 335               	.L19:
+  90:sensors.c     ****     } else if (irSensor == NO_SIGNAL) {
+ 336               		.loc 1 90 0
+ 337 017e 8F3F      		cpi r24,lo8(-1)
+ 338 0180 01F4      		brne .L11
+  91:sensors.c     ****         red = 0;
+ 339               		.loc 1 91 0
+ 340 0182 1092 0000 		sts red+1,__zero_reg__
+ 341 0186 1092 0000 		sts red,__zero_reg__
+ 342               	.L20:
+  92:sensors.c     ****         green = 0;
+ 343               		.loc 1 92 0
+ 344 018a 1092 0000 		sts green+1,__zero_reg__
+ 345 018e 1092 0000 		sts green,__zero_reg__
+ 346               	.L21:
+  93:sensors.c     ****         forceField = 0;
+ 347               		.loc 1 93 0
+ 348 0192 1092 0000 		sts forceField+1,__zero_reg__
+ 349 0196 1092 0000 		sts forceField,__zero_reg__
+ 350               	.L11:
+ 351 019a 0895      		ret
+ 352               		.cfi_endproc
+ 353               	.LFE5:
+ 355               	.global	forceField
+ 356               		.section .bss
+ 359               	forceField:
+ 360 0000 0000      		.zero	2
+ 361               	.global	green
+ 364               	green:
+ 365 0002 0000      		.zero	2
+ 366               	.global	red
+ 369               	red:
+ 370 0004 0000      		.zero	2
+ 371               		.comm	wall,2,1
+ 372               		.comm	irSensor,1,1
+ 373               		.comm	bumpRight,1,1
+ 374               		.comm	bumpLeft,1,1
+ 375               		.text
+ 376               	.Letext0:
+ 377               		.file 2 "/usr/lib/avr/include/stdint.h"
+ 378               		.file 3 "sensors.h"
+ 379               		.file 4 "cmod.h"
+ 380               		.file 5 "timer.h"
+ 381               		.file 6 "<built-in>"
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 sensors.c
+     /tmp/ccMKKQ75.s:2      *ABS*:000000000000003e __SP_H__
+     /tmp/ccMKKQ75.s:3      *ABS*:000000000000003d __SP_L__
+     /tmp/ccMKKQ75.s:4      *ABS*:000000000000003f __SREG__
+     /tmp/ccMKKQ75.s:5      *ABS*:0000000000000000 __tmp_reg__
+     /tmp/ccMKKQ75.s:6      *ABS*:0000000000000001 __zero_reg__
+     /tmp/ccMKKQ75.s:12     .text:0000000000000000 getWallDistance
+     /tmp/ccMKKQ75.s:60     .text:000000000000002a getBumps
+                            *COM*:0000000000000001 bumpLeft
+                            *COM*:0000000000000001 bumpRight
+     /tmp/ccMKKQ75.s:93     .text:000000000000004a findWall
+     /tmp/ccMKKQ75.s:134    .text:0000000000000072 transmit
+     /tmp/ccMKKQ75.s:225    .text:00000000000000c4 getDockSenses
+                            *COM*:0000000000000001 irSensor
+     /tmp/ccMKKQ75.s:369    .bss:0000000000000004 red
+     /tmp/ccMKKQ75.s:364    .bss:0000000000000002 green
+     /tmp/ccMKKQ75.s:359    .bss:0000000000000000 forceField
+                            *COM*:0000000000000002 wall
+
+UNDEFINED SYMBOLS
+byteTx
+byteRx
+drive
+delayMs
+stop
+setSerialDestination
+__do_clear_bss

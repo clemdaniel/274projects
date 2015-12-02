@@ -1,0 +1,787 @@
+Archive member included because of file (symbol)
+
+/usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_divmodhi4.o)
+                              history.o (__divmodhi4)
+/usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_exit.o)
+                              /usr/lib/gcc/avr/4.8.2/../../../avr/lib/avr5/crtm168.o (exit)
+/usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_copy_data.o)
+                              timer.o (__do_copy_data)
+/usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_clear_bss.o)
+                              proj4.o (__do_clear_bss)
+/usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_udivmodhi4.o)
+                              /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_divmodhi4.o) (__udivmodhi4)
+
+Allocating common symbols
+Common symbol       size              file
+
+irSensor            0x1               proj4.o
+bumpRight           0x1               proj4.o
+bumpLeft            0x1               proj4.o
+wall                0x2               proj4.o
+historyArray        0x14              proj4.o
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+text             0x0000000000000000 0x0000000000020000 xr
+data             0x0000000000800060 0x000000000000ffa0 rw !x
+eeprom           0x0000000000810000 0x0000000000010000 rw !x
+fuse             0x0000000000820000 0x0000000000000400 rw !x
+lock             0x0000000000830000 0x0000000000000400 rw !x
+signature        0x0000000000840000 0x0000000000000400 rw !x
+user_signatures  0x0000000000850000 0x0000000000000400 rw !x
+*default*        0x0000000000000000 0xffffffffffffffff
+
+Linker script and memory map
+
+Address of section .data set to 0x800100
+LOAD /usr/lib/gcc/avr/4.8.2/../../../avr/lib/avr5/crtm168.o
+LOAD proj4.o
+LOAD iroblib.o
+LOAD timer.o
+LOAD cmod.o
+LOAD steering.o
+LOAD lights.o
+LOAD sensors.o
+LOAD history.o
+LOAD /usr/lib/gcc/avr/4.8.2/../../../avr/lib/avr5/libm.a
+START GROUP
+LOAD /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a
+LOAD /usr/lib/gcc/avr/4.8.2/../../../avr/lib/avr5/libm.a
+LOAD /usr/lib/gcc/avr/4.8.2/../../../avr/lib/avr5/libc.a
+END GROUP
+
+.hash
+ *(.hash)
+
+.dynsym
+ *(.dynsym)
+
+.dynstr
+ *(.dynstr)
+
+.gnu.version
+ *(.gnu.version)
+
+.gnu.version_d
+ *(.gnu.version_d)
+
+.gnu.version_r
+ *(.gnu.version_r)
+
+.rel.init
+ *(.rel.init)
+
+.rela.init
+ *(.rela.init)
+
+.rel.text
+ *(.rel.text)
+ *(.rel.text.*)
+ *(.rel.gnu.linkonce.t*)
+
+.rela.text
+ *(.rela.text)
+ *(.rela.text.*)
+ *(.rela.gnu.linkonce.t*)
+
+.rel.fini
+ *(.rel.fini)
+
+.rela.fini
+ *(.rela.fini)
+
+.rel.rodata
+ *(.rel.rodata)
+ *(.rel.rodata.*)
+ *(.rel.gnu.linkonce.r*)
+
+.rela.rodata
+ *(.rela.rodata)
+ *(.rela.rodata.*)
+ *(.rela.gnu.linkonce.r*)
+
+.rel.data
+ *(.rel.data)
+ *(.rel.data.*)
+ *(.rel.gnu.linkonce.d*)
+
+.rela.data
+ *(.rela.data)
+ *(.rela.data.*)
+ *(.rela.gnu.linkonce.d*)
+
+.rel.ctors
+ *(.rel.ctors)
+
+.rela.ctors
+ *(.rela.ctors)
+
+.rel.dtors
+ *(.rel.dtors)
+
+.rela.dtors
+ *(.rela.dtors)
+
+.rel.got
+ *(.rel.got)
+
+.rela.got
+ *(.rela.got)
+
+.rel.bss
+ *(.rel.bss)
+
+.rela.bss
+ *(.rela.bss)
+
+.rel.plt
+ *(.rel.plt)
+
+.rela.plt
+ *(.rela.plt)
+
+.text           0x0000000000000000      0x908
+ *(.vectors)
+ .vectors       0x0000000000000000       0x68 /usr/lib/gcc/avr/4.8.2/../../../avr/lib/avr5/crtm168.o
+                0x0000000000000000                __vectors
+                0x0000000000000000                __vector_default
+ *(.vectors)
+ *(.progmem.gcc*)
+ *(.progmem*)
+                0x0000000000000068                . = ALIGN (0x2)
+                0x0000000000000068                __trampolines_start = .
+ *(.trampolines)
+ .trampolines   0x0000000000000068        0x0 linker stubs
+ *(.trampolines*)
+                0x0000000000000068                __trampolines_end = .
+ *(.jumptables)
+ *(.jumptables*)
+ *(.lowtext)
+ *(.lowtext*)
+                0x0000000000000068                __ctors_start = .
+ *(.ctors)
+                0x0000000000000068                __ctors_end = .
+                0x0000000000000068                __dtors_start = .
+ *(.dtors)
+                0x0000000000000068                __dtors_end = .
+ SORT(*)(.ctors)
+ SORT(*)(.dtors)
+ *(.init0)
+ .init0         0x0000000000000068        0x0 /usr/lib/gcc/avr/4.8.2/../../../avr/lib/avr5/crtm168.o
+                0x0000000000000068                __init
+ *(.init0)
+ *(.init1)
+ *(.init1)
+ *(.init2)
+ .init2         0x0000000000000068        0xc /usr/lib/gcc/avr/4.8.2/../../../avr/lib/avr5/crtm168.o
+ *(.init2)
+ *(.init3)
+ *(.init3)
+ *(.init4)
+ .init4         0x0000000000000074       0x16 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_copy_data.o)
+                0x0000000000000074                __do_copy_data
+ .init4         0x000000000000008a       0x10 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_clear_bss.o)
+                0x000000000000008a                __do_clear_bss
+ *(.init4)
+ *(.init5)
+ *(.init5)
+ *(.init6)
+ *(.init6)
+ *(.init7)
+ *(.init7)
+ *(.init8)
+ *(.init8)
+ *(.init9)
+ .init9         0x000000000000009a        0x8 /usr/lib/gcc/avr/4.8.2/../../../avr/lib/avr5/crtm168.o
+ *(.init9)
+ *(.text)
+ .text          0x00000000000000a2        0x4 /usr/lib/gcc/avr/4.8.2/../../../avr/lib/avr5/crtm168.o
+                0x00000000000000a2                __vector_22
+                0x00000000000000a2                __vector_1
+                0x00000000000000a2                __vector_24
+                0x00000000000000a2                __vector_12
+                0x00000000000000a2                __bad_interrupt
+                0x00000000000000a2                __vector_6
+                0x00000000000000a2                __vector_3
+                0x00000000000000a2                __vector_23
+                0x00000000000000a2                __vector_25
+                0x00000000000000a2                __vector_13
+                0x00000000000000a2                __vector_17
+                0x00000000000000a2                __vector_19
+                0x00000000000000a2                __vector_7
+                0x00000000000000a2                __vector_5
+                0x00000000000000a2                __vector_4
+                0x00000000000000a2                __vector_9
+                0x00000000000000a2                __vector_2
+                0x00000000000000a2                __vector_21
+                0x00000000000000a2                __vector_15
+                0x00000000000000a2                __vector_8
+                0x00000000000000a2                __vector_10
+                0x00000000000000a2                __vector_16
+                0x00000000000000a2                __vector_20
+ .text          0x00000000000000a6        0x0 proj4.o
+ .text          0x00000000000000a6       0xf8 iroblib.o
+                0x00000000000000a6                defineSongs
+                0x0000000000000142                powerOnRobot
+                0x000000000000017c                powerOffRobot
+ .text          0x000000000000019e       0xf2 timer.o
+                0x000000000000019e                __vector_18
+                0x00000000000001b2                __vector_14
+                0x0000000000000226                __vector_11
+                0x0000000000000244                setupTimer
+                0x0000000000000270                delayMs
+ .text          0x0000000000000290      0x146 cmod.o
+                0x0000000000000290                setupIOPins
+                0x00000000000002a8                setupSerialPort
+                0x00000000000002c4                initializeCommandModule
+                0x00000000000002d6                setSerialDestination
+                0x00000000000002f6                flushRx
+                0x0000000000000306                byteTx
+                0x0000000000000314                byteRx
+                0x0000000000000322                baud
+ .text          0x00000000000003d6      0x114 steering.o
+                0x00000000000003d6                drive
+                0x00000000000003fe                driveLR
+                0x0000000000000444                stop
+                0x000000000000044c                turn
+                0x00000000000004be                alignToWall
+ .text          0x00000000000004ea       0x38 lights.o
+                0x00000000000004ea                setupRightLED
+                0x00000000000004ee                rightLEDon
+                0x00000000000004f2                rightLEDoff
+                0x00000000000004f6                setupLeftLED
+                0x00000000000004fa                leftLEDon
+                0x00000000000004fe                leftLEDoff
+                0x0000000000000502                changePowerLightRed
+ .text          0x0000000000000522      0x19c sensors.o
+                0x0000000000000522                getWallDistance
+                0x000000000000054c                getBumps
+                0x000000000000056c                findWall
+                0x0000000000000594                transmit
+                0x00000000000005e6                getDockSenses
+ .text          0x00000000000006be       0xe2 history.o
+                0x00000000000006be                addElement
+                0x000000000000071a                sum
+                0x0000000000000752                slope
+                0x000000000000078e                clearHistory
+ .text          0x00000000000007a0        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_divmodhi4.o)
+ .text          0x00000000000007a0        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_exit.o)
+ .text          0x00000000000007a0        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_copy_data.o)
+ .text          0x00000000000007a0        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_clear_bss.o)
+ .text          0x00000000000007a0        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_udivmodhi4.o)
+                0x00000000000007a0                . = ALIGN (0x2)
+ *(.text.*)
+ .text.startup  0x00000000000007a0      0x114 proj4.o
+                0x00000000000007a0                main
+ .text.libgcc.mul
+                0x00000000000008b4        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_divmodhi4.o)
+ .text.libgcc.div
+                0x00000000000008b4       0x28 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_divmodhi4.o)
+                0x00000000000008b4                __divmodhi4
+                0x00000000000008b4                _div
+ .text.libgcc   0x00000000000008dc        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_divmodhi4.o)
+ .text.libgcc.prologue
+                0x00000000000008dc        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_divmodhi4.o)
+ .text.libgcc.builtins
+                0x00000000000008dc        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_divmodhi4.o)
+ .text.libgcc.fmul
+                0x00000000000008dc        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_divmodhi4.o)
+ .text.libgcc.fixed
+                0x00000000000008dc        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_divmodhi4.o)
+ .text.libgcc.mul
+                0x00000000000008dc        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_exit.o)
+ .text.libgcc.div
+                0x00000000000008dc        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_exit.o)
+ .text.libgcc   0x00000000000008dc        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_exit.o)
+ .text.libgcc.prologue
+                0x00000000000008dc        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_exit.o)
+ .text.libgcc.builtins
+                0x00000000000008dc        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_exit.o)
+ .text.libgcc.fmul
+                0x00000000000008dc        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_exit.o)
+ .text.libgcc.fixed
+                0x00000000000008dc        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_exit.o)
+ .text.libgcc.mul
+                0x00000000000008dc        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_copy_data.o)
+ .text.libgcc.div
+                0x00000000000008dc        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_copy_data.o)
+ .text.libgcc   0x00000000000008dc        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_copy_data.o)
+ .text.libgcc.prologue
+                0x00000000000008dc        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_copy_data.o)
+ .text.libgcc.builtins
+                0x00000000000008dc        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_copy_data.o)
+ .text.libgcc.fmul
+                0x00000000000008dc        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_copy_data.o)
+ .text.libgcc.fixed
+                0x00000000000008dc        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_copy_data.o)
+ .text.libgcc.mul
+                0x00000000000008dc        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_clear_bss.o)
+ .text.libgcc.div
+                0x00000000000008dc        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_clear_bss.o)
+ .text.libgcc   0x00000000000008dc        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_clear_bss.o)
+ .text.libgcc.prologue
+                0x00000000000008dc        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_clear_bss.o)
+ .text.libgcc.builtins
+                0x00000000000008dc        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_clear_bss.o)
+ .text.libgcc.fmul
+                0x00000000000008dc        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_clear_bss.o)
+ .text.libgcc.fixed
+                0x00000000000008dc        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_clear_bss.o)
+ .text.libgcc.mul
+                0x00000000000008dc        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_udivmodhi4.o)
+ .text.libgcc.div
+                0x00000000000008dc       0x28 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_udivmodhi4.o)
+                0x00000000000008dc                __udivmodhi4
+ .text.libgcc   0x0000000000000904        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_udivmodhi4.o)
+ .text.libgcc.prologue
+                0x0000000000000904        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_udivmodhi4.o)
+ .text.libgcc.builtins
+                0x0000000000000904        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_udivmodhi4.o)
+ .text.libgcc.fmul
+                0x0000000000000904        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_udivmodhi4.o)
+ .text.libgcc.fixed
+                0x0000000000000904        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_udivmodhi4.o)
+                0x0000000000000904                . = ALIGN (0x2)
+ *(.fini9)
+ .fini9         0x0000000000000904        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_exit.o)
+                0x0000000000000904                exit
+                0x0000000000000904                _exit
+ *(.fini9)
+ *(.fini8)
+ *(.fini8)
+ *(.fini7)
+ *(.fini7)
+ *(.fini6)
+ *(.fini6)
+ *(.fini5)
+ *(.fini5)
+ *(.fini4)
+ *(.fini4)
+ *(.fini3)
+ *(.fini3)
+ *(.fini2)
+ *(.fini2)
+ *(.fini1)
+ *(.fini1)
+ *(.fini0)
+ .fini0         0x0000000000000904        0x4 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_exit.o)
+ *(.fini0)
+                0x0000000000000908                _etext = .
+
+.data           0x0000000000800100        0x2 load address 0x0000000000000908
+                0x0000000000800100                PROVIDE (__data_start, .)
+ *(.data)
+ .data          0x0000000000800100        0x0 /usr/lib/gcc/avr/4.8.2/../../../avr/lib/avr5/crtm168.o
+ .data          0x0000000000800100        0x0 proj4.o
+ .data          0x0000000000800100        0x0 iroblib.o
+ .data          0x0000000000800100        0x2 timer.o
+                0x0000000000800100                PIDCount
+                0x0000000000800101                senseCount
+ .data          0x0000000000800102        0x0 cmod.o
+ .data          0x0000000000800102        0x0 steering.o
+ .data          0x0000000000800102        0x0 lights.o
+ .data          0x0000000000800102        0x0 sensors.o
+ .data          0x0000000000800102        0x0 history.o
+ .data          0x0000000000800102        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_divmodhi4.o)
+ .data          0x0000000000800102        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_exit.o)
+ .data          0x0000000000800102        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_copy_data.o)
+ .data          0x0000000000800102        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_clear_bss.o)
+ .data          0x0000000000800102        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_udivmodhi4.o)
+ *(.data*)
+ *(.rodata)
+ *(.rodata*)
+ *(.gnu.linkonce.d*)
+                0x0000000000800102                . = ALIGN (0x2)
+                0x0000000000800102                _edata = .
+                0x0000000000800102                PROVIDE (__data_end, .)
+
+.bss            0x0000000000800102       0x3b
+                0x0000000000800102                PROVIDE (__bss_start, .)
+ *(.bss)
+ .bss           0x0000000000800102        0x0 /usr/lib/gcc/avr/4.8.2/../../../avr/lib/avr5/crtm168.o
+ .bss           0x0000000000800102        0x6 proj4.o
+                0x0000000000800102                forceField
+                0x0000000000800104                green
+                0x0000000000800106                red
+ .bss           0x0000000000800108        0x0 iroblib.o
+ .bss           0x0000000000800108        0xc timer.o
+                0x0000000000800108                canPID
+                0x0000000000800109                canPrint
+                0x000000000080010a                canSense
+                0x000000000080010b                delayTimerRunning
+                0x000000000080010c                delayTimerCount
+ .bss           0x0000000000800114        0x0 cmod.o
+ .bss           0x0000000000800114        0x6 steering.o
+ .bss           0x000000000080011a        0x0 lights.o
+ .bss           0x000000000080011a        0x6 sensors.o
+ .bss           0x0000000000800120        0x4 history.o
+                0x0000000000800120                currentSize
+                0x0000000000800122                currentElement
+ .bss           0x0000000000800124        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_divmodhi4.o)
+ .bss           0x0000000000800124        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_exit.o)
+ .bss           0x0000000000800124        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_copy_data.o)
+ .bss           0x0000000000800124        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_clear_bss.o)
+ .bss           0x0000000000800124        0x0 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_udivmodhi4.o)
+ *(.bss*)
+ *(COMMON)
+ COMMON         0x0000000000800124       0x19 proj4.o
+                0x0000000000800124                irSensor
+                0x0000000000800125                bumpRight
+                0x0000000000800126                bumpLeft
+                0x0000000000800127                wall
+                0x0000000000800129                historyArray
+                0x000000000080013d                PROVIDE (__bss_end, .)
+                0x0000000000000908                __data_load_start = LOADADDR (.data)
+                0x000000000000090a                __data_load_end = (__data_load_start + SIZEOF (.data))
+
+.noinit         0x000000000080013d        0x0
+                0x000000000080013d                PROVIDE (__noinit_start, .)
+ *(.noinit*)
+                0x000000000080013d                PROVIDE (__noinit_end, .)
+                0x000000000080013d                _end = .
+                0x000000000080013d                PROVIDE (__heap_start, .)
+
+.eeprom         0x0000000000810000        0x0
+ *(.eeprom*)
+                0x0000000000810000                __eeprom_end = .
+
+.fuse
+ *(.fuse)
+ *(.lfuse)
+ *(.hfuse)
+ *(.efuse)
+
+.lock
+ *(.lock*)
+
+.signature
+ *(.signature*)
+
+.user_signatures
+ *(.user_signatures*)
+
+.stab           0x0000000000000000      0x6cc
+ *(.stab)
+ .stab          0x0000000000000000      0x6cc /usr/lib/gcc/avr/4.8.2/../../../avr/lib/avr5/crtm168.o
+
+.stabstr        0x0000000000000000       0x54
+ *(.stabstr)
+ .stabstr       0x0000000000000000       0x54 /usr/lib/gcc/avr/4.8.2/../../../avr/lib/avr5/crtm168.o
+
+.stab.excl
+ *(.stab.excl)
+
+.stab.exclstr
+ *(.stab.exclstr)
+
+.stab.index
+ *(.stab.index)
+
+.stab.indexstr
+ *(.stab.indexstr)
+
+.comment        0x0000000000000000       0x11
+ *(.comment)
+ .comment       0x0000000000000000       0x11 proj4.o
+                                         0x12 (size before relaxing)
+ .comment       0x0000000000000000       0x12 iroblib.o
+ .comment       0x0000000000000000       0x12 timer.o
+ .comment       0x0000000000000000       0x12 cmod.o
+ .comment       0x0000000000000000       0x12 steering.o
+ .comment       0x0000000000000000       0x12 lights.o
+ .comment       0x0000000000000000       0x12 sensors.o
+ .comment       0x0000000000000000       0x12 history.o
+
+.debug
+ *(.debug)
+
+.line
+ *(.line)
+
+.debug_srcinfo
+ *(.debug_srcinfo)
+
+.debug_sfnames
+ *(.debug_sfnames)
+
+.debug_aranges  0x0000000000000000      0x100
+ *(.debug_aranges)
+ .debug_aranges
+                0x0000000000000000       0x20 proj4.o
+ .debug_aranges
+                0x0000000000000020       0x20 iroblib.o
+ .debug_aranges
+                0x0000000000000040       0x20 timer.o
+ .debug_aranges
+                0x0000000000000060       0x20 cmod.o
+ .debug_aranges
+                0x0000000000000080       0x20 steering.o
+ .debug_aranges
+                0x00000000000000a0       0x20 lights.o
+ .debug_aranges
+                0x00000000000000c0       0x20 sensors.o
+ .debug_aranges
+                0x00000000000000e0       0x20 history.o
+
+.debug_pubnames
+ *(.debug_pubnames)
+
+.debug_info     0x0000000000000000     0x1717
+ *(.debug_info)
+ .debug_info    0x0000000000000000      0x48e proj4.o
+ .debug_info    0x000000000000048e      0x3a3 iroblib.o
+ .debug_info    0x0000000000000831      0x203 timer.o
+ .debug_info    0x0000000000000a34      0x217 cmod.o
+ .debug_info    0x0000000000000c4b      0x3d0 steering.o
+ .debug_info    0x000000000000101b      0x18a lights.o
+ .debug_info    0x00000000000011a5      0x3b0 sensors.o
+ .debug_info    0x0000000000001555      0x1c2 history.o
+ *(.gnu.linkonce.wi.*)
+
+.debug_abbrev   0x0000000000000000      0x8f2
+ *(.debug_abbrev)
+ .debug_abbrev  0x0000000000000000      0x19f proj4.o
+ .debug_abbrev  0x000000000000019f       0xda iroblib.o
+ .debug_abbrev  0x0000000000000279       0xb9 timer.o
+ .debug_abbrev  0x0000000000000332      0x125 cmod.o
+ .debug_abbrev  0x0000000000000457      0x146 steering.o
+ .debug_abbrev  0x000000000000059d       0xb9 lights.o
+ .debug_abbrev  0x0000000000000656      0x17f sensors.o
+ .debug_abbrev  0x00000000000007d5      0x11d history.o
+
+.debug_line     0x0000000000000000      0x53a
+ *(.debug_line)
+ .debug_line    0x0000000000000000       0xe6 proj4.o
+ .debug_line    0x00000000000000e6       0x9e iroblib.o
+ .debug_line    0x0000000000000184       0x86 timer.o
+ .debug_line    0x000000000000020a       0xba cmod.o
+ .debug_line    0x00000000000002c4       0xb7 steering.o
+ .debug_line    0x000000000000037b       0x64 lights.o
+ .debug_line    0x00000000000003df       0xd4 sensors.o
+ .debug_line    0x00000000000004b3       0x87 history.o
+
+.debug_frame    0x0000000000000000      0x3c8
+ *(.debug_frame)
+ .debug_frame   0x0000000000000000       0x24 proj4.o
+ .debug_frame   0x0000000000000024       0x44 iroblib.o
+ .debug_frame   0x0000000000000068       0x9c timer.o
+ .debug_frame   0x0000000000000104       0xa4 cmod.o
+ .debug_frame   0x00000000000001a8       0xb8 steering.o
+ .debug_frame   0x0000000000000260       0x84 lights.o
+ .debug_frame   0x00000000000002e4       0x90 sensors.o
+ .debug_frame   0x0000000000000374       0x54 history.o
+
+.debug_str      0x0000000000000000      0x472
+ *(.debug_str)
+ .debug_str     0x0000000000000000      0x283 proj4.o
+                                        0x2bc (size before relaxing)
+ .debug_str     0x0000000000000283        0xa iroblib.o
+                                        0x150 (size before relaxing)
+ .debug_str     0x000000000000028d       0x7e timer.o
+                                        0x1e6 (size before relaxing)
+ .debug_str     0x000000000000030b       0x5c cmod.o
+                                        0x1ac (size before relaxing)
+ .debug_str     0x0000000000000367       0x41 steering.o
+                                        0x1b9 (size before relaxing)
+ .debug_str     0x00000000000003a8       0x50 lights.o
+                                        0x17b (size before relaxing)
+ .debug_str     0x00000000000003f8       0x2e sensors.o
+                                        0x1e4 (size before relaxing)
+ .debug_str     0x0000000000000426       0x4c history.o
+                                        0x1b2 (size before relaxing)
+
+.debug_loc      0x0000000000000000      0x87c
+ *(.debug_loc)
+ .debug_loc     0x0000000000000000      0x149 proj4.o
+ .debug_loc     0x0000000000000149       0xdb timer.o
+ .debug_loc     0x0000000000000224       0xa7 cmod.o
+ .debug_loc     0x00000000000002cb      0x2be steering.o
+ .debug_loc     0x0000000000000589      0x17d sensors.o
+ .debug_loc     0x0000000000000706      0x176 history.o
+
+.debug_macinfo
+ *(.debug_macinfo)
+
+.debug_pubtypes
+ *(.debug_pubtypes)
+
+.debug_ranges   0x0000000000000000       0x28
+ *(.debug_ranges)
+ .debug_ranges  0x0000000000000000       0x10 proj4.o
+ .debug_ranges  0x0000000000000010       0x18 history.o
+
+.debug_macro
+ *(.debug_macro)
+OUTPUT(proj4.elf elf32-avr)
+LOAD linker stubs
+
+Cross Reference Table
+
+Symbol                                            File
+PIDCount                                          timer.o
+                                                  proj4.o
+__bad_interrupt                                   /usr/lib/gcc/avr/4.8.2/../../../avr/lib/avr5/crtm168.o
+__bss_end                                         /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_clear_bss.o)
+__bss_start                                       /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_clear_bss.o)
+__data_end                                        /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_copy_data.o)
+__data_load_start                                 /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_copy_data.o)
+__data_start                                      /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_copy_data.o)
+__divmodhi4                                       /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_divmodhi4.o)
+                                                  history.o
+__do_clear_bss                                    /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_clear_bss.o)
+                                                  history.o
+                                                  sensors.o
+                                                  steering.o
+                                                  timer.o
+                                                  proj4.o
+__do_copy_data                                    /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_copy_data.o)
+                                                  timer.o
+__heap_end                                        /usr/lib/gcc/avr/4.8.2/../../../avr/lib/avr5/crtm168.o
+__init                                            /usr/lib/gcc/avr/4.8.2/../../../avr/lib/avr5/crtm168.o
+__stack                                           /usr/lib/gcc/avr/4.8.2/../../../avr/lib/avr5/crtm168.o
+__udivmodhi4                                      /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_udivmodhi4.o)
+                                                  /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_divmodhi4.o)
+__vector_1                                        /usr/lib/gcc/avr/4.8.2/../../../avr/lib/avr5/crtm168.o
+__vector_10                                       /usr/lib/gcc/avr/4.8.2/../../../avr/lib/avr5/crtm168.o
+__vector_11                                       timer.o
+                                                  /usr/lib/gcc/avr/4.8.2/../../../avr/lib/avr5/crtm168.o
+__vector_12                                       /usr/lib/gcc/avr/4.8.2/../../../avr/lib/avr5/crtm168.o
+__vector_13                                       /usr/lib/gcc/avr/4.8.2/../../../avr/lib/avr5/crtm168.o
+__vector_14                                       timer.o
+                                                  /usr/lib/gcc/avr/4.8.2/../../../avr/lib/avr5/crtm168.o
+__vector_15                                       /usr/lib/gcc/avr/4.8.2/../../../avr/lib/avr5/crtm168.o
+__vector_16                                       /usr/lib/gcc/avr/4.8.2/../../../avr/lib/avr5/crtm168.o
+__vector_17                                       /usr/lib/gcc/avr/4.8.2/../../../avr/lib/avr5/crtm168.o
+__vector_18                                       timer.o
+                                                  /usr/lib/gcc/avr/4.8.2/../../../avr/lib/avr5/crtm168.o
+__vector_19                                       /usr/lib/gcc/avr/4.8.2/../../../avr/lib/avr5/crtm168.o
+__vector_2                                        /usr/lib/gcc/avr/4.8.2/../../../avr/lib/avr5/crtm168.o
+__vector_20                                       /usr/lib/gcc/avr/4.8.2/../../../avr/lib/avr5/crtm168.o
+__vector_21                                       /usr/lib/gcc/avr/4.8.2/../../../avr/lib/avr5/crtm168.o
+__vector_22                                       /usr/lib/gcc/avr/4.8.2/../../../avr/lib/avr5/crtm168.o
+__vector_23                                       /usr/lib/gcc/avr/4.8.2/../../../avr/lib/avr5/crtm168.o
+__vector_24                                       /usr/lib/gcc/avr/4.8.2/../../../avr/lib/avr5/crtm168.o
+__vector_25                                       /usr/lib/gcc/avr/4.8.2/../../../avr/lib/avr5/crtm168.o
+__vector_3                                        /usr/lib/gcc/avr/4.8.2/../../../avr/lib/avr5/crtm168.o
+__vector_4                                        /usr/lib/gcc/avr/4.8.2/../../../avr/lib/avr5/crtm168.o
+__vector_5                                        /usr/lib/gcc/avr/4.8.2/../../../avr/lib/avr5/crtm168.o
+__vector_6                                        /usr/lib/gcc/avr/4.8.2/../../../avr/lib/avr5/crtm168.o
+__vector_7                                        /usr/lib/gcc/avr/4.8.2/../../../avr/lib/avr5/crtm168.o
+__vector_8                                        /usr/lib/gcc/avr/4.8.2/../../../avr/lib/avr5/crtm168.o
+__vector_9                                        /usr/lib/gcc/avr/4.8.2/../../../avr/lib/avr5/crtm168.o
+__vector_default                                  /usr/lib/gcc/avr/4.8.2/../../../avr/lib/avr5/crtm168.o
+__vectors                                         /usr/lib/gcc/avr/4.8.2/../../../avr/lib/avr5/crtm168.o
+_div                                              /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_divmodhi4.o)
+_exit                                             /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_exit.o)
+addElement                                        history.o
+                                                  proj4.o
+alignToWall                                       steering.o
+                                                  proj4.o
+baud                                              cmod.o
+                                                  proj4.o
+bumpLeft                                          sensors.o
+                                                  steering.o
+                                                  timer.o
+                                                  proj4.o
+bumpRight                                         sensors.o
+                                                  steering.o
+                                                  timer.o
+                                                  proj4.o
+byteRx                                            cmod.o
+                                                  sensors.o
+byteTx                                            cmod.o
+                                                  sensors.o
+                                                  lights.o
+                                                  steering.o
+                                                  iroblib.o
+                                                  proj4.o
+canPID                                            timer.o
+                                                  proj4.o
+canPrint                                          timer.o
+canSense                                          timer.o
+changePowerLightRed                               lights.o
+                                                  proj4.o
+clearHistory                                      history.o
+                                                  steering.o
+currentElement                                    history.o
+                                                  proj4.o
+currentSize                                       history.o
+defineSongs                                       iroblib.o
+                                                  proj4.o
+delayMs                                           timer.o
+                                                  sensors.o
+                                                  steering.o
+                                                  cmod.o
+                                                  iroblib.o
+                                                  proj4.o
+delayTimerCount                                   timer.o
+delayTimerRunning                                 timer.o
+drive                                             steering.o
+                                                  sensors.o
+driveLR                                           steering.o
+                                                  proj4.o
+exit                                              /usr/lib/gcc/avr/4.8.2/avr5/libgcc.a(_exit.o)
+                                                  proj4.o
+                                                  /usr/lib/gcc/avr/4.8.2/../../../avr/lib/avr5/crtm168.o
+findWall                                          sensors.o
+                                                  proj4.o
+flushRx                                           cmod.o
+forceField                                        sensors.o
+                                                  steering.o
+                                                  timer.o
+                                                  proj4.o
+getBumps                                          sensors.o
+                                                  proj4.o
+getDockSenses                                     sensors.o
+                                                  proj4.o
+getWallDistance                                   sensors.o
+                                                  proj4.o
+green                                             sensors.o
+                                                  steering.o
+                                                  timer.o
+                                                  proj4.o
+historyArray                                      history.o
+                                                  proj4.o
+initializeCommandModule                           cmod.o
+                                                  proj4.o
+irSensor                                          sensors.o
+                                                  steering.o
+                                                  timer.o
+                                                  proj4.o
+leftLEDoff                                        lights.o
+leftLEDon                                         lights.o
+main                                              proj4.o
+                                                  /usr/lib/gcc/avr/4.8.2/../../../avr/lib/avr5/crtm168.o
+powerOffRobot                                     iroblib.o
+                                                  proj4.o
+powerOnRobot                                      iroblib.o
+                                                  proj4.o
+red                                               sensors.o
+                                                  steering.o
+                                                  timer.o
+                                                  proj4.o
+rightLEDoff                                       lights.o
+rightLEDon                                        lights.o
+senseCount                                        timer.o
+setSerialDestination                              cmod.o
+                                                  sensors.o
+setupIOPins                                       cmod.o
+setupLeftLED                                      lights.o
+setupRightLED                                     lights.o
+setupSerialPort                                   cmod.o
+setupTimer                                        timer.o
+                                                  cmod.o
+slope                                             history.o
+                                                  proj4.o
+stop                                              steering.o
+                                                  sensors.o
+                                                  proj4.o
+sum                                               history.o
+                                                  proj4.o
+transmit                                          sensors.o
+turn                                              steering.o
+wall                                              sensors.o
+                                                  steering.o
+                                                  timer.o
+                                                  proj4.o

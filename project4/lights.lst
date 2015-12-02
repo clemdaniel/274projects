@@ -1,0 +1,190 @@
+   1               		.file	"lights.c"
+   2               	__SP_H__ = 0x3e
+   3               	__SP_L__ = 0x3d
+   4               	__SREG__ = 0x3f
+   5               	__tmp_reg__ = 0
+   6               	__zero_reg__ = 1
+   7               		.text
+   8               	.Ltext0:
+   9               		.cfi_sections	.debug_frame
+  10               	.global	setupRightLED
+  12               	setupRightLED:
+  13               	.LFB0:
+  14               		.file 1 "lights.c"
+   1:lights.c      **** #include "lights.h"
+   2:lights.c      **** 
+   3:lights.c      **** /*
+   4:lights.c      ****  * This function sets up the right LED.
+   5:lights.c      ****  */
+   6:lights.c      **** void setupRightLED(void) {
+  15               		.loc 1 6 0
+  16               		.cfi_startproc
+  17               	/* prologue: function */
+  18               	/* frame size = 0 */
+  19               	/* stack size = 0 */
+  20               	.L__stack_usage = 0
+   7:lights.c      **** 	DDRD |= (1 << 5);
+  21               		.loc 1 7 0
+  22 0000 559A      		sbi 0xa,5
+  23 0002 0895      		ret
+  24               		.cfi_endproc
+  25               	.LFE0:
+  27               	.global	rightLEDon
+  29               	rightLEDon:
+  30               	.LFB1:
+   8:lights.c      **** }
+   9:lights.c      **** /*
+  10:lights.c      ****  * This function turns on the right LED.
+  11:lights.c      ****  */
+  12:lights.c      **** void rightLEDon(void) {
+  31               		.loc 1 12 0
+  32               		.cfi_startproc
+  33               	/* prologue: function */
+  34               	/* frame size = 0 */
+  35               	/* stack size = 0 */
+  36               	.L__stack_usage = 0
+  13:lights.c      **** 	PORTD &= ~(1 << 5);
+  37               		.loc 1 13 0
+  38 0004 5D98      		cbi 0xb,5
+  39 0006 0895      		ret
+  40               		.cfi_endproc
+  41               	.LFE1:
+  43               	.global	rightLEDoff
+  45               	rightLEDoff:
+  46               	.LFB2:
+  14:lights.c      **** } 
+  15:lights.c      **** /*
+  16:lights.c      ****  * This function turns off the right LED.
+  17:lights.c      ****  */
+  18:lights.c      **** void rightLEDoff(void) {
+  47               		.loc 1 18 0
+  48               		.cfi_startproc
+  49               	/* prologue: function */
+  50               	/* frame size = 0 */
+  51               	/* stack size = 0 */
+  52               	.L__stack_usage = 0
+  19:lights.c      **** 	PORTD |= (1 << 5);
+  53               		.loc 1 19 0
+  54 0008 5D9A      		sbi 0xb,5
+  55 000a 0895      		ret
+  56               		.cfi_endproc
+  57               	.LFE2:
+  59               	.global	setupLeftLED
+  61               	setupLeftLED:
+  62               	.LFB3:
+  20:lights.c      **** }
+  21:lights.c      **** /*
+  22:lights.c      ****  * This function sets up the left LED.
+  23:lights.c      ****  */
+  24:lights.c      **** void setupLeftLED(void) {
+  63               		.loc 1 24 0
+  64               		.cfi_startproc
+  65               	/* prologue: function */
+  66               	/* frame size = 0 */
+  67               	/* stack size = 0 */
+  68               	.L__stack_usage = 0
+  25:lights.c      **** 	DDRD |= (1 << 6);
+  69               		.loc 1 25 0
+  70 000c 569A      		sbi 0xa,6
+  71 000e 0895      		ret
+  72               		.cfi_endproc
+  73               	.LFE3:
+  75               	.global	leftLEDon
+  77               	leftLEDon:
+  78               	.LFB4:
+  26:lights.c      **** }
+  27:lights.c      **** /*
+  28:lights.c      ****  * This function turns on the left LED. 
+  29:lights.c      ****  */
+  30:lights.c      **** void leftLEDon(void) {
+  79               		.loc 1 30 0
+  80               		.cfi_startproc
+  81               	/* prologue: function */
+  82               	/* frame size = 0 */
+  83               	/* stack size = 0 */
+  84               	.L__stack_usage = 0
+  31:lights.c      **** 	PORTD &= ~(1 << 6);
+  85               		.loc 1 31 0
+  86 0010 5E98      		cbi 0xb,6
+  87 0012 0895      		ret
+  88               		.cfi_endproc
+  89               	.LFE4:
+  91               	.global	leftLEDoff
+  93               	leftLEDoff:
+  94               	.LFB5:
+  32:lights.c      **** } 
+  33:lights.c      **** /*
+  34:lights.c      ****  * This function turns off the left LED.
+  35:lights.c      ****  */
+  36:lights.c      **** void leftLEDoff(void) {
+  95               		.loc 1 36 0
+  96               		.cfi_startproc
+  97               	/* prologue: function */
+  98               	/* frame size = 0 */
+  99               	/* stack size = 0 */
+ 100               	.L__stack_usage = 0
+  37:lights.c      **** 	PORTD |= (1 << 6);
+ 101               		.loc 1 37 0
+ 102 0014 5E9A      		sbi 0xb,6
+ 103 0016 0895      		ret
+ 104               		.cfi_endproc
+ 105               	.LFE5:
+ 107               	.global	changePowerLightRed
+ 109               	changePowerLightRed:
+ 110               	.LFB6:
+  38:lights.c      **** }
+  39:lights.c      **** /*
+  40:lights.c      ****  * This function changes the power light to red. 
+  41:lights.c      ****  */
+  42:lights.c      **** void changePowerLightRed(void) {
+ 111               		.loc 1 42 0
+ 112               		.cfi_startproc
+ 113               	/* prologue: function */
+ 114               	/* frame size = 0 */
+ 115               	/* stack size = 0 */
+ 116               	.L__stack_usage = 0
+  43:lights.c      **** 	byteTx(CmdLeds);
+ 117               		.loc 1 43 0
+ 118 0018 8BE8      		ldi r24,lo8(-117)
+ 119 001a 90E0      		ldi r25,0
+ 120 001c 0E94 0000 		call byteTx
+ 121               	.LVL0:
+  44:lights.c      ****   byteTx(0x00);
+ 122               		.loc 1 44 0
+ 123 0020 80E0      		ldi r24,0
+ 124 0022 90E0      		ldi r25,0
+ 125 0024 0E94 0000 		call byteTx
+ 126               	.LVL1:
+  45:lights.c      ****   byteTx(255);
+ 127               		.loc 1 45 0
+ 128 0028 8FEF      		ldi r24,lo8(-1)
+ 129 002a 90E0      		ldi r25,0
+ 130 002c 0E94 0000 		call byteTx
+ 131               	.LVL2:
+  46:lights.c      ****   byteTx(255);
+ 132               		.loc 1 46 0
+ 133 0030 8FEF      		ldi r24,lo8(-1)
+ 134 0032 90E0      		ldi r25,0
+ 135 0034 0C94 0000 		jmp byteTx
+ 136               	.LVL3:
+ 137               		.cfi_endproc
+ 138               	.LFE6:
+ 140               	.Letext0:
+ 141               		.file 2 "/usr/lib/avr/include/stdint.h"
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 lights.c
+     /tmp/cc8up2Z8.s:2      *ABS*:000000000000003e __SP_H__
+     /tmp/cc8up2Z8.s:3      *ABS*:000000000000003d __SP_L__
+     /tmp/cc8up2Z8.s:4      *ABS*:000000000000003f __SREG__
+     /tmp/cc8up2Z8.s:5      *ABS*:0000000000000000 __tmp_reg__
+     /tmp/cc8up2Z8.s:6      *ABS*:0000000000000001 __zero_reg__
+     /tmp/cc8up2Z8.s:12     .text:0000000000000000 setupRightLED
+     /tmp/cc8up2Z8.s:29     .text:0000000000000004 rightLEDon
+     /tmp/cc8up2Z8.s:45     .text:0000000000000008 rightLEDoff
+     /tmp/cc8up2Z8.s:61     .text:000000000000000c setupLeftLED
+     /tmp/cc8up2Z8.s:77     .text:0000000000000010 leftLEDon
+     /tmp/cc8up2Z8.s:93     .text:0000000000000014 leftLEDoff
+     /tmp/cc8up2Z8.s:109    .text:0000000000000018 changePowerLightRed
+
+UNDEFINED SYMBOLS
+byteTx

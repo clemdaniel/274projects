@@ -1,0 +1,261 @@
+   1               		.file	"history.c"
+   2               	__SP_H__ = 0x3e
+   3               	__SP_L__ = 0x3d
+   4               	__SREG__ = 0x3f
+   5               	__tmp_reg__ = 0
+   6               	__zero_reg__ = 1
+   7               		.text
+   8               	.Ltext0:
+   9               		.cfi_sections	.debug_frame
+  10               	.global	addElement
+  12               	addElement:
+  13               	.LFB1:
+  14               		.file 1 "history.c"
+   1:history.c     **** #include "cmod.h"
+   2:history.c     **** #include "timer.h"
+   3:history.c     **** #include "oi.h"
+   4:history.c     **** #include "history.h"
+   5:history.c     **** 
+   6:history.c     **** volatile int currentSize = 0;
+   7:history.c     **** currentElement = 0;
+   8:history.c     **** 
+   9:history.c     **** void addElement(uint16_t currentError) {
+  15               		.loc 1 9 0
+  16               		.cfi_startproc
+  17               	.LVL0:
+  18               	/* prologue: function */
+  19               	/* frame size = 0 */
+  20               	/* stack size = 0 */
+  21               	.L__stack_usage = 0
+  10:history.c     **** 	if (currentSize != MAX_SIZE) {
+  22               		.loc 1 10 0
+  23 0000 2091 0000 		lds r18,currentSize
+  24 0004 3091 0000 		lds r19,currentSize+1
+  25 0008 2A30      		cpi r18,10
+  26 000a 3105      		cpc r19,__zero_reg__
+  27 000c 01F0      		breq .L2
+  11:history.c     **** 		currentSize++;
+  28               		.loc 1 11 0
+  29 000e 2091 0000 		lds r18,currentSize
+  30 0012 3091 0000 		lds r19,currentSize+1
+  31 0016 2F5F      		subi r18,-1
+  32 0018 3F4F      		sbci r19,-1
+  33 001a 3093 0000 		sts currentSize+1,r19
+  34 001e 2093 0000 		sts currentSize,r18
+  35               	.L2:
+  12:history.c     **** 	}
+  13:history.c     **** 	if (currentElement == MAX_SIZE) {
+  36               		.loc 1 13 0
+  37 0022 2091 0000 		lds r18,currentElement
+  38 0026 3091 0000 		lds r19,currentElement+1
+  39 002a 2A30      		cpi r18,10
+  40 002c 3105      		cpc r19,__zero_reg__
+  41 002e 01F4      		brne .L3
+  14:history.c     **** 		currentElement = 0;
+  42               		.loc 1 14 0
+  43 0030 1092 0000 		sts currentElement+1,__zero_reg__
+  44 0034 1092 0000 		sts currentElement,__zero_reg__
+  45               	.L3:
+  15:history.c     **** 	}
+  16:history.c     **** 	historyArray[currentElement] = currentError;
+  46               		.loc 1 16 0
+  47 0038 2091 0000 		lds r18,currentElement
+  48 003c 3091 0000 		lds r19,currentElement+1
+  49 0040 F901      		movw r30,r18
+  50 0042 EE0F      		lsl r30
+  51 0044 FF1F      		rol r31
+  52 0046 E050      		subi r30,lo8(-(historyArray))
+  53 0048 F040      		sbci r31,hi8(-(historyArray))
+  54 004a 9183      		std Z+1,r25
+  55 004c 8083      		st Z,r24
+  17:history.c     **** 	currentElement++;
+  56               		.loc 1 17 0
+  57 004e 2F5F      		subi r18,-1
+  58 0050 3F4F      		sbci r19,-1
+  59 0052 3093 0000 		sts currentElement+1,r19
+  60 0056 2093 0000 		sts currentElement,r18
+  61 005a 0895      		ret
+  62               		.cfi_endproc
+  63               	.LFE1:
+  65               	.global	sum
+  67               	sum:
+  68               	.LFB2:
+  18:history.c     **** }
+  19:history.c     **** 
+  20:history.c     **** int sum(void) {
+  69               		.loc 1 20 0
+  70               		.cfi_startproc
+  71               	/* prologue: function */
+  72               	/* frame size = 0 */
+  73               	/* stack size = 0 */
+  74               	.L__stack_usage = 0
+  75               	.LVL1:
+  76 005c E0E0      		ldi r30,lo8(historyArray)
+  77 005e F0E0      		ldi r31,hi8(historyArray)
+  78               	.LBB2:
+  21:history.c     **** 	int sum = 0;
+  22:history.c     **** 	int average = 0;	
+  23:history.c     **** 	for (int i = 0; i < currentSize; i++) {
+  79               		.loc 1 23 0
+  80 0060 20E0      		ldi r18,0
+  81 0062 30E0      		ldi r19,0
+  82               	.LBE2:
+  21:history.c     **** 	int sum = 0;
+  83               		.loc 1 21 0
+  84 0064 80E0      		ldi r24,0
+  85 0066 90E0      		ldi r25,0
+  86               	.LVL2:
+  87               	.L9:
+  88               	.LBB3:
+  89               		.loc 1 23 0 discriminator 1
+  90 0068 4091 0000 		lds r20,currentSize
+  91 006c 5091 0000 		lds r21,currentSize+1
+  92 0070 2417      		cp r18,r20
+  93 0072 3507      		cpc r19,r21
+  94 0074 04F4      		brge .L11
+  24:history.c     **** 		sum = sum + historyArray[i];
+  95               		.loc 1 24 0 discriminator 2
+  96 0076 4191      		ld r20,Z+
+  97 0078 5191      		ld r21,Z+
+  98 007a 840F      		add r24,r20
+  99 007c 951F      		adc r25,r21
+ 100               	.LVL3:
+  23:history.c     **** 	for (int i = 0; i < currentSize; i++) {
+ 101               		.loc 1 23 0 discriminator 2
+ 102 007e 2F5F      		subi r18,-1
+ 103 0080 3F4F      		sbci r19,-1
+ 104               	.LVL4:
+ 105 0082 00C0      		rjmp .L9
+ 106               	.L11:
+ 107               	.LBE3:
+  25:history.c     **** 	}
+  26:history.c     **** 	average = (int) (sum / currentSize);
+ 108               		.loc 1 26 0
+ 109 0084 6091 0000 		lds r22,currentSize
+ 110 0088 7091 0000 		lds r23,currentSize+1
+ 111               	.LVL5:
+ 112 008c 0E94 0000 		call __divmodhi4
+ 113               	.LVL6:
+ 114 0090 CB01      		movw r24,r22
+  27:history.c     **** 	return average;
+  28:history.c     **** }
+ 115               		.loc 1 28 0
+ 116 0092 0895      		ret
+ 117               		.cfi_endproc
+ 118               	.LFE2:
+ 120               	.global	slope
+ 122               	slope:
+ 123               	.LFB3:
+  29:history.c     **** 
+  30:history.c     **** int slope(int currentTime) {
+ 124               		.loc 1 30 0
+ 125               		.cfi_startproc
+ 126               	.LVL7:
+ 127               	/* prologue: function */
+ 128               	/* frame size = 0 */
+ 129               	/* stack size = 0 */
+ 130               	.L__stack_usage = 0
+ 131 0094 BC01      		movw r22,r24
+  31:history.c     **** 	uint16_t current = historyArray[currentElement];
+ 132               		.loc 1 31 0
+ 133 0096 E091 0000 		lds r30,currentElement
+ 134 009a F091 0000 		lds r31,currentElement+1
+ 135 009e DF01      		movw r26,r30
+ 136 00a0 AA0F      		lsl r26
+ 137 00a2 BB1F      		rol r27
+ 138               	.LVL8:
+ 139 00a4 A050      		subi r26,lo8(-(historyArray))
+ 140 00a6 B040      		sbci r27,hi8(-(historyArray))
+ 141 00a8 8D91      		ld r24,X+
+ 142 00aa 9C91      		ld r25,X
+ 143               	.LVL9:
+  32:history.c     **** 	uint16_t previous;
+  33:history.c     **** 	//account for window going back to beginning
+  34:history.c     **** 	if (currentElement == 0) {
+ 144               		.loc 1 34 0
+ 145 00ac 3097      		sbiw r30,0
+ 146 00ae 01F4      		brne .L13
+  35:history.c     **** 		previous = historyArray[currentSize - 1];
+ 147               		.loc 1 35 0
+ 148 00b0 E091 0000 		lds r30,currentSize
+ 149 00b4 F091 0000 		lds r31,currentSize+1
+ 150               	.L13:
+  36:history.c     **** 	}	else {
+  37:history.c     **** 		previous = historyArray[currentElement - 1];
+ 151               		.loc 1 37 0
+ 152 00b8 EE0F      		lsl r30
+ 153 00ba FF1F      		rol r31
+ 154 00bc E050      		subi r30,lo8(-(historyArray-2))
+ 155 00be F040      		sbci r31,hi8(-(historyArray-2))
+ 156 00c0 2081      		ld r18,Z
+ 157 00c2 3181      		ldd r19,Z+1
+ 158               	.LVL10:
+  38:history.c     **** 	}
+  39:history.c     **** 	int difference = current - previous;
+ 159               		.loc 1 39 0
+ 160 00c4 821B      		sub r24,r18
+ 161 00c6 930B      		sbc r25,r19
+ 162               	.LVL11:
+  40:history.c     **** 	int final = difference / currentTime;
+ 163               		.loc 1 40 0
+ 164 00c8 0E94 0000 		call __divmodhi4
+ 165               	.LVL12:
+ 166 00cc CB01      		movw r24,r22
+  41:history.c     **** 	return final;
+  42:history.c     **** }
+ 167               		.loc 1 42 0
+ 168 00ce 0895      		ret
+ 169               		.cfi_endproc
+ 170               	.LFE3:
+ 172               	.global	clearHistory
+ 174               	clearHistory:
+ 175               	.LFB4:
+  43:history.c     **** 
+  44:history.c     **** void clearHistory(void) {
+ 176               		.loc 1 44 0
+ 177               		.cfi_startproc
+ 178               	/* prologue: function */
+ 179               	/* frame size = 0 */
+ 180               	/* stack size = 0 */
+ 181               	.L__stack_usage = 0
+  45:history.c     **** 	currentSize = 0;
+ 182               		.loc 1 45 0
+ 183 00d0 1092 0000 		sts currentSize+1,__zero_reg__
+ 184 00d4 1092 0000 		sts currentSize,__zero_reg__
+  46:history.c     **** 	currentElement = 0;
+ 185               		.loc 1 46 0
+ 186 00d8 1092 0000 		sts currentElement+1,__zero_reg__
+ 187 00dc 1092 0000 		sts currentElement,__zero_reg__
+ 188 00e0 0895      		ret
+ 189               		.cfi_endproc
+ 190               	.LFE4:
+ 192               	.global	currentSize
+ 193               		.section .bss
+ 196               	currentSize:
+ 197 0000 0000      		.zero	2
+ 198               	.global	currentElement
+ 201               	currentElement:
+ 202 0002 0000      		.zero	2
+ 203               		.comm	historyArray,20,1
+ 204               		.text
+ 205               	.Letext0:
+ 206               		.file 2 "history.h"
+ 207               		.file 3 "/usr/lib/avr/include/stdint.h"
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 history.c
+     /tmp/cc5DIDvb.s:2      *ABS*:000000000000003e __SP_H__
+     /tmp/cc5DIDvb.s:3      *ABS*:000000000000003d __SP_L__
+     /tmp/cc5DIDvb.s:4      *ABS*:000000000000003f __SREG__
+     /tmp/cc5DIDvb.s:5      *ABS*:0000000000000000 __tmp_reg__
+     /tmp/cc5DIDvb.s:6      *ABS*:0000000000000001 __zero_reg__
+     /tmp/cc5DIDvb.s:12     .text:0000000000000000 addElement
+     /tmp/cc5DIDvb.s:196    .bss:0000000000000000 currentSize
+     /tmp/cc5DIDvb.s:201    .bss:0000000000000002 currentElement
+                            *COM*:0000000000000014 historyArray
+     /tmp/cc5DIDvb.s:67     .text:000000000000005c sum
+     /tmp/cc5DIDvb.s:122    .text:0000000000000094 slope
+     /tmp/cc5DIDvb.s:174    .text:00000000000000d0 clearHistory
+
+UNDEFINED SYMBOLS
+__divmodhi4
+__do_clear_bss
