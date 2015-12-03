@@ -58,9 +58,19 @@ int main() {
 	int defaultVel = 100;
 	int maxVel = 200;
 	int wallZeros = 0;
+	int docking = 0;
 	
 	//go straight until you hit something
-	findWall();	
+	//findWall();	
+	uint8_t isCharging;
+	for (;;) {
+		byteTx(CmdSensors);
+		byteTx(21);
+		isCharging = byteRx();
+		if (isCharging) {
+			changePowerLightGreen();
+		}
+	}
 
 	// Infinite operation loop
 	for(;;) {
@@ -73,49 +83,52 @@ int main() {
 		getBumps();		
 	
 		//if bump occurs -- align back to wall
-		alignToWall();
+		if (!docking) alignToWall();
 
 		//if time to calculate PID output
-		if (canPID) {
-			//update sensor 
+		if (canPID && !docking) {
+		  //update sensor 
 			getDockSenses();
 			//check wall distance
 			wall = getWallDistance();
 				
-		//PID Controller 
-		//calculate error
-		currentError = wall - SET_POINT;
+			//PID Controller 
+			//calculate error
+			currentError = wall - SET_POINT;
 
-		//add error to history
-		addElement(currentError);
+			//add error to history
+			addElement(currentError);
 
-		//calculate integral and derivative of error
-		ki_error = sum() * CHANGE_TIME;
-		kd_error = slope(CHANGE_TIME);
+			//calculate integral and derivative of error
+			ki_error = sum() * CHANGE_TIME;
+			kd_error = slope(CHANGE_TIME);
 
-		//calculate uk i.e. PID output
-		uk = ((kp_gain * (currentError >> 2)) + (ki_gain * (ki_error >> 6)) + 
-				(kd_gain * (kd_error >> 2))) >> 2;
-		//set wheel velocities based on uk
-		// (Make sure to check velocities for validity before setting) 
-		rightVel = defaultVel + uk;
-		leftVel = defaultVel - uk;
+			//calculate uk i.e. PID output
+			uk = ((kp_gain * (currentError >> 2)) + (ki_gain * (ki_error >> 6)) + 
+					(kd_gain * (kd_error >> 2))) >> 2;
+			//set wheel velocities based on uk
+			// (Make sure to check velocities for validity before setting) 
+			rightVel = defaultVel + uk;
+			leftVel = defaultVel - uk;
 
-			//check for negative or max velocities
-		if (rightVel < 0) {
-			rightVel = 0;
-		} else if (rightVel > maxVel) {
-			rightVel = maxVel;
-		} 
-		if (leftVel < 0) {
-			leftVel = 0;
-		} else if (leftVel > maxVel) {
-			leftVel = maxVel;
-		} 
-
-		driveLR(leftVel, rightVel);
-
-			//reset PID timer
+				//check for negative or max velocities
+			if (rightVel < 0) {
+				rightVel = 0;
+			} else if (rightVel > maxVel) {
+				rightVel = maxVel;
+			} 
+			if (leftVel < 0) {
+				leftVel = 0;
+			} else if (leftVel > maxVel) {
+				leftVel = maxVel;
+			} 
+			if (red) {
+				docking = 1;
+				dock();
+			} else {
+				driveLR(leftVel, rightVel);
+			}
+				//reset PID timer
 			PIDCount = CHANGE_TIME;
 			canPID = 0;
 		}

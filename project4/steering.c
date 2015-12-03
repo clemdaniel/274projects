@@ -2,6 +2,7 @@
 #include "cmod.h"
 #include "oi.h"
 #include "steering.h"
+#include "lights.h"
 
 /**	Turn the robot angle theta
  *		theta in radians (theta * 1000)
@@ -55,8 +56,8 @@ void drive(int rate) {
 	byteTx(lo);
 }
 
-/**  Specify velocities of wheels separately
- *          rate in mm/s 
+/** Specify velocities of wheels separately
+ *    rate in mm/s 
  */
 void driveLR(int rateLeft, int rateRight) {
 	//rates to hi/lo
@@ -91,3 +92,120 @@ void alignToWall() {
 	}
 	clearHistory();
 } 
+
+void dock() {
+	//while (!green)
+	//scan left until no red (1)
+	//scan right until red (2)
+	//move forward, then center (3)
+	//drive to the dock (4)
+	//make sure we're charging (5)
+	
+	//drive(100);
+	//delayMs(1700);
+
+	while (!(green && red)) {
+		//scan left
+		driveLR(-50, 50);
+		while (red) {
+			getDockSenses();
+			delayMs(50);
+		}
+		stop(); //stop when red is lost
+		//forward 5cm
+		drive(100);
+		delayMs(500);
+
+		if (green && red) {
+			stop();
+			break;
+		}
+
+		//scan right
+		driveLR(50, -50);
+		while (!red) {
+			getDockSenses();
+			delayMs(50);
+		}
+		stop();
+		//forward 5cm
+		drive(100);
+		delayMs(500);
+		stop();
+	}
+
+	//CENTER
+	//scan left
+	driveLR(-50, 50);
+	while (red) {
+		getDockSenses();
+		delayMs(50);
+	}
+	stop();
+	startTimer = 1;
+	//scan right
+	driveLR(50, -50);
+	while (green) {
+		getDockSenses();
+		delayMs(50);
+	}
+	startTimer = 0;
+	timerVal += 100;
+	//center
+	driveLR(-50, 50);
+	delayMs((uint16_t) (timerVal / 2));
+	stop();
+
+	drive(100);
+	while (!bumpLeft || !bumpRight) {
+		getBumps();
+		delayMs(50);
+	}
+	stop();
+
+	//Docking
+	int i;
+	//uint8_t isCharging;
+	//for (i=0; i<3; i++) {
+		//left 
+	for(;;) {
+		driveLR(25, -25);
+		delayMs(500);
+		stop();
+		delayMs(1500);
+		byteTx(CmdSensors);
+		byteTx(21);
+		//isCharging = byteRx();
+		//if (isCharging != 0) {
+		//	changePowerLightGreen();
+		//	break;
+		//}
+		//right
+	}
+
+	//static perpendicular scenario
+	// turn(-TURN_90_DEGREES);
+	// reverse();
+	// delayMs(1000);
+	// stop();
+	// turn(TURN_90_DEGREES);
+	// drive(100);
+	// while(!green) {
+	// 	getDockSenses();
+	// 	delayMs(50);
+	// }
+	// stop();
+	// drive(100);
+	// delayMs(1700);
+	// turn(-TURN_90_DEGREES);
+	// drive(100);
+	// while(!(bumpRight || bumpLeft)) {
+	// 	getBumps();
+	// 	delayMs(50);
+	// }
+	// stop();
+	// reverse();
+	// delayMs(100);
+	// stop();
+
+}

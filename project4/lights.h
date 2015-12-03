@@ -19,5 +19,6 @@ void leftLEDoff(void);
 
 void changePowerLightRed(void);
 
+void changePowerLightGreen(void);
 
 #endif

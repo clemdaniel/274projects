@@ -29,4 +29,6 @@ void stop(void);
 
 void alignToWall();
 
+void dock(void);
+
 #endif

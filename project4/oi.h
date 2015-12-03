@@ -172,7 +172,7 @@
  #define DRIVE_SPEED		    150
  #define TURN_30_DEGREES	  520
  #define TURN_60_DEGREES    1047
- #define TURN_90_DEGREES    1570
+ #define TURN_90_DEGREES    1300 // 1570
 
  //PID VALUES
  #define SET_POINT		  80	//50 -- Depends on sensor

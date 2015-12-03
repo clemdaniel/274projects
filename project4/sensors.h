@@ -9,9 +9,7 @@
 
 uint8_t bumpLeft, bumpRight, irSensor;
 uint16_t wall;
-int red = 0;
-int green = 0;
-int forceField = 0;
+int red, green, forceField;
 
 void findWall(void);
 uint16_t getWallDistance(void);

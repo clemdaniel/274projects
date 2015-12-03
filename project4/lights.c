@@ -45,3 +45,12 @@ void changePowerLightRed(void) {
   byteTx(255);
   byteTx(255);
 }
+/*
+ * This function changes the power light to green. 
+ */
+void changePowerLightGreen(void) {
+	byteTx(CmdLeds);
+  byteTx(0x00);
+  byteTx(0);
+  byteTx(255);
+}

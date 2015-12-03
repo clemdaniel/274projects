@@ -59,38 +59,29 @@ void getDockSenses(void) {
 	byteTx(CmdSensors);
 	byteTx(IRsensorPacket); //packet for IR control
 	irSensor = byteRx();
+	red = 0;
+	green = 0;
+	forceField = 0;
 	if (irSensor == RED_BUOY) {
 		red = 1;
-		green = 0;
-		forceField = 0;
 	} else if (irSensor == GREEN_BUOY) {
-		red = 0;
 		green = 1;
-		forceField = 0;
 	} else if (irSensor == FORCE_FIELD) {
-		red = 0;
-		green = 0;
 		forceField = 1;
 	} else if (irSensor == R_AND_G) {
 		red = 1;
 		green = 1;
-		forceField = 0;
 	} else if (irSensor == R_AND_F) {
 		red = 1;
-		green = 0;
 		forceField = 1;
 	} else if (irSensor == G_AND_F) {
-		red = 0;
 		green = 1;
 		forceField = 1;
 	} else if (irSensor == ALL_THREE) {
 		red = 1;
 		green = 1;
 		forceField = 1;
-	} else if (irSensor == NO_SIGNAL) {
-		red = 0;
-		green = 0;
-		forceField = 0;
 	}
 }
+
 

@@ -23,4 +23,6 @@
   extern volatile uint8_t canPrint;
   extern volatile uint8_t canPID;
   extern volatile uint8_t PIDCount;
+  extern volatile uint8_t startTimer;
+  extern volatile uint16_t timerVal;
 #endif

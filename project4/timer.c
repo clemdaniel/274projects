@@ -11,6 +11,9 @@ volatile uint8_t canPrint = 0;
 //PID controller
 volatile uint8_t PIDCount = 1;
 volatile uint8_t canPID = 0;
+//timer
+volatile uint8_t startTimer = 0;
+volatile uint16_t timerVal = 0;
 
 ISR(USART_RX_vect) {  //SIGNAL(SIG_USART_RECV)
   // Serial receive interrupt to store sensor values
@@ -42,6 +45,10 @@ ISR(TIMER0_COMPA_vect) {
     } else {
         //go calc PID
         canPID = 1;
+    }
+
+    if (startTimer == 1) {
+      timerVal++;
     }
 }
 
