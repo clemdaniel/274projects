@@ -61,16 +61,7 @@ int main() {
 	int docking = 0;
 	
 	//go straight until you hit something
-	//findWall();	
-	uint8_t isCharging;
-	for (;;) {
-		byteTx(CmdSensors);
-		byteTx(21);
-		isCharging = byteRx();
-		if (isCharging) {
-			changePowerLightGreen();
-		}
-	}
+	findWall();	
 
 	// Infinite operation loop
 	for(;;) {
