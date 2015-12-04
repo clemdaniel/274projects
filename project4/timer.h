@@ -25,4 +25,5 @@
   extern volatile uint8_t PIDCount;
   extern volatile uint8_t startTimer;
   extern volatile uint16_t timerVal;
+  extern volatile uint16_t lookForDock;
 #endif

@@ -84,4 +84,15 @@ void getDockSenses(void) {
 	}
 }
 
+int isDocked(void) {
+	byteTx(CmdSensors);
+	byteTx(DOCK);
+	uint8_t chargingSources = byteRx();
+	if (chargingSources == 2) {
+		docked = 1;
+	} else {
+		docked = 0;
+	}
+}
+
 

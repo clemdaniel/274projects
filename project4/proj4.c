@@ -40,13 +40,11 @@ int main() {
 	// As a precaution for the robot and your grade.
 	stop();
 
-	// Play the reset song and wait while it plays.
-	byteTx(CmdPlay);
-	byteTx(RESET_SONG);
-	delayMs(750);
+	// Play Hotline Bling and wait while it plays.
+	BLINGBLING();
 	// Turn power light on
 	changePowerLightRed();
-
+	
 	uint16_t wall;
 	int currentError; 
 	uint8_t kp_gain = 30; //30; //70; 
@@ -113,7 +111,7 @@ int main() {
 			} else if (leftVel > maxVel) {
 				leftVel = maxVel;
 			} 
-			if (red) {
+			if (red || green) {
 				docking = 1;
 				dock();
 			} else {

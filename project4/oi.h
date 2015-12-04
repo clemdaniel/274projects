@@ -66,6 +66,7 @@
 #define SenCliffFRSig1  32
 #define SenCliffFRSig0  33
 #define SenCliffRSig1   34
+#define DOCK            34
 #define SenCliffRSig0   35
 #define SenInputs       36
 #define SenAInput1      37
@@ -173,6 +174,7 @@
  #define TURN_30_DEGREES	  520
  #define TURN_60_DEGREES    1047
  #define TURN_90_DEGREES    1300 // 1570
+ #define TURN_180_DEGREES	2600
 
  //PID VALUES
  #define SET_POINT		  80	//50 -- Depends on sensor

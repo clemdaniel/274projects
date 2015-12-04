@@ -14,6 +14,8 @@ volatile uint8_t canPID = 0;
 //timer
 volatile uint8_t startTimer = 0;
 volatile uint16_t timerVal = 0;
+//dock
+volatile uint16_t lookForDock = 0;
 
 ISR(USART_RX_vect) {  //SIGNAL(SIG_USART_RECV)
   // Serial receive interrupt to store sensor values
@@ -54,8 +56,10 @@ ISR(TIMER0_COMPA_vect) {
 
 //SIGNAL(SIG_OUTPUT_COMPARE1A)
 ISR(TIMER1_COMPA_vect) {
-    //go print
-    canPrint = 1;
+    //update dock sensor
+	if (lookForDock) {
+		isDocked();
+	}
 }
 
 void setupTimer(void) {

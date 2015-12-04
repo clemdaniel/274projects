@@ -7,6 +7,7 @@
 // Constants
 #define RESET_SONG 0
 #define START_SONG 1
+#define HOTLINE_BLING 2
 
 void defineSongs(void);
   // Songs

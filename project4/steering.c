@@ -3,6 +3,7 @@
 #include "oi.h"
 #include "steering.h"
 #include "lights.h"
+#include "iroblib.h"
 
 /**	Turn the robot angle theta
  *		theta in radians (theta * 1000)
@@ -94,17 +95,34 @@ void alignToWall() {
 } 
 
 void dock() {
-	//while (!green)
-	//scan left until no red (1)
-	//scan right until red (2)
-	//move forward, then center (3)
-	//drive to the dock (4)
-	//make sure we're charging (5)
-	
-	//drive(100);
-	//delayMs(1700);
+	//follow boundary
+	int tempRed = red;
+   	int tempGreen = green;	
+	if (tempRed) {
+		followRed();
+	} else {
+		followGreen();
+	}
+	//follow overlap
+	followOverlap();
+	//approach
+	if (tempRed) {
+		approachFromRed();
+	} else {
+		approachFromGreen();
+	}
+	//find dock
+	findDock(tempRed);	
+}
 
-	while (!(green && red)) {
+void followRed(void) {
+	do {
+		getBumps();
+		if (bumpLeft || bumpRight) {
+			turn(-TURN_90_DEGREES);
+			drive(100);
+			delayMs(1500);
+		}
 		//scan left
 		driveLR(-50, 50);
 		while (red) {
@@ -118,7 +136,14 @@ void dock() {
 
 		if (green && red) {
 			stop();
-			break;
+			return;
+		}
+		
+		getBumps();
+		if (bumpLeft || bumpRight) {
+			turn(-TURN_90_DEGREES);
+			drive(100);
+			delayMs(1500);
 		}
 
 		//scan right
@@ -132,8 +157,75 @@ void dock() {
 		drive(100);
 		delayMs(500);
 		stop();
-	}
+	} while (!(green && red)); 
+}
 
+void followGreen(void) {
+	do {
+		getBumps();
+		if (bumpLeft || bumpRight) {
+			turn(TURN_90_DEGREES);
+			drive(100);
+			delayMs(1500);
+		}
+		//scan right
+		driveLR(50, -50);
+		while (green) {
+			getDockSenses();
+			delayMs(50);
+		}
+		stop(); //stop when green is lost
+		//forward 5cm
+		drive(100);
+		delayMs(500);
+
+		if (green && red) {
+			stop();
+			return;
+		}
+		
+		getBumps();
+		if (bumpLeft || bumpRight) {
+			turn(TURN_90_DEGREES);
+			drive(100);
+			delayMs(1500);
+		}
+		
+		//scan left
+		driveLR(-50, 50);
+		while (!green) {
+			getDockSenses();
+			delayMs(50);
+		}
+		stop();
+		//forward 5cm
+		drive(100);
+		delayMs(500);
+		stop();
+	} while (!(green && red)); 
+}
+
+void followOverlap(void) {
+	do {
+		if (forceField) {
+			stop();
+			return;
+		}
+		if (green && red) {
+			drive(50);
+		} else if (!green) {
+			driveLR(-50, 50);
+		} else if (!red) {
+			driveLR(50, -50);
+		}
+		getBumps();
+		getDockSenses();
+		delayMs(50);
+	} while (!bumpLeft || !bumpRight);
+	stop();
+}
+
+void approachFromRed(void) {
 	//CENTER
 	//scan left
 	driveLR(-50, 50);
@@ -157,55 +249,124 @@ void dock() {
 	stop();
 
 	drive(100);
-	while (!bumpLeft || !bumpRight) {
+	do {
 		getBumps();
+		delayMs(50);
+	} while (!bumpLeft && !bumpRight);	
+	stop();
+}
+
+void approachFromGreen(void) {
+	//CENTER
+	//scan right
+	driveLR(50, -50);
+	while (green) {
+		getDockSenses();
 		delayMs(50);
 	}
 	stop();
+	startTimer = 1;
+	//scan left
+	driveLR(-50, 50);
+	while (red) {
+		getDockSenses();
+		delayMs(50);
+	}
+	startTimer = 0;
+	timerVal += 100;
+	//center
+	driveLR(50, -50);
+	delayMs((uint16_t) (timerVal / 2));
+	stop();
 
+	drive(100);
+	do {
+		getBumps();
+		delayMs(50);
+	} while (!bumpLeft && !bumpRight);
+	stop();
+}
+
+void findDock(uint8_t isRed) {
 	//Docking
-	int i;
-	//uint8_t isCharging;
-	//for (i=0; i<3; i++) {
-		//left 
-	for(;;) {
-		driveLR(25, -25);
-		delayMs(500);
+	lookForDock = 1;
+	delayMs(1500);
+	if (docked == 1) {
+		BLINGBLING();
+		changePowerLightGreen();
 		stop();
-		delayMs(1500);
-		byteTx(CmdSensors);
-		byteTx(21);
-		//isCharging = byteRx();
-		//if (isCharging != 0) {
-		//	changePowerLightGreen();
-		//	break;
-		//}
-		//right
+		return;
+	}
+	drive(-100);
+	delayMs(100);
+	stop();
+	delayMs(1500);
+	if (docked == 1) {
+		BLINGBLING();
+		changePowerLightGreen();
+		stop();
+		return;
 	}
 
-	//static perpendicular scenario
-	// turn(-TURN_90_DEGREES);
-	// reverse();
-	// delayMs(1000);
-	// stop();
-	// turn(TURN_90_DEGREES);
-	// drive(100);
-	// while(!green) {
-	// 	getDockSenses();
-	// 	delayMs(50);
-	// }
-	// stop();
-	// drive(100);
-	// delayMs(1700);
-	// turn(-TURN_90_DEGREES);
-	// drive(100);
-	// while(!(bumpRight || bumpLeft)) {
-	// 	getBumps();
-	// 	delayMs(50);
-	// }
-	// stop();
-	// reverse();
-	// delayMs(100);
-	// stop();
+	int i,j;
+	for (i=0; i<3; i++) {
+		int bound;
+		if (i == 0) {
+			bound = 2500; 
+		} else {
+			bound = 4500;
+		}
+		//right if approach from red, left if approach from green
+	 	for (j=0; j<bound; j+=500) {
+		 	if (isRed) {
+				driveLR(25, -25);
+			} else {
+				driveLR(-25, 25);
+			}
+			delayMs(750); //500
+			stop();
+			delayMs(1500);
+			byteTx(CmdSensors);
+			byteTx(21);
+			if (docked == 1) {
+				BLINGBLING();
+				changePowerLightGreen();
+				stop();
+				return;
+			}
+		}
+		//left if approach from red, right if approach from green
+		for (j=0; j<bound; j+=500) {
+		 	if (isRed) {
+				driveLR(-25, 25);
+			} else {
+				driveLR(25, -25);
+			}
+			delayMs(750); //500
+			stop();
+			delayMs(1500);
+			byteTx(CmdSensors);
+			byteTx(21);
+			if (docked == 1) {
+				BLINGBLING();
+				changePowerLightGreen();
+				stop();
+				return;
+			}
+		}
+	}
 
+	turn(TURN_180_DEGREES);
+	drive(100);
+	delayMs(3000);
+	getBumps();
+	getDockSenses();
+	dock();
+}
+
+//play hotline bling
+void BLINGBLING(void) {
+	byteTx(CmdPlay);
+	byteTx(HOTLINE_BLING);
+	delayMs(750);
 }
