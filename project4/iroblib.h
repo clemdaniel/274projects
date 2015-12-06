@@ -12,7 +12,6 @@
 void defineSongs(void);
   // Songs
   // Indicator that the robot is Powered on and has reset.
-
 void powerOnRobot(void);
 void powerOffRobot(void);
   // Power the create On/Off.

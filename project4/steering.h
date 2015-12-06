@@ -31,12 +31,9 @@ void alignToWall();
 
 //Docking functions
 void dock(void); //full process
-
 void followRed(void);
 void followGreen(void);
 void followOverlap(void);
-void approachFromRed(void);
-void approachFromGreen(void);
 void findDock(uint8_t isRed);
 void BLINGBLING(void);
 

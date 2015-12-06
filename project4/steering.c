@@ -94,27 +94,27 @@ void alignToWall() {
 	clearHistory();
 } 
 
+/*
+This function will control and call other functions to succesfully
+	dock the irobot.	
+*/
 void dock() {
 	//follow boundary
 	int tempRed = red;
-   	int tempGreen = green;	
 	if (tempRed) {
 		followRed();
 	} else {
 		followGreen();
 	}
-	//follow overlap
 	followOverlap();
-	//approach
-	if (tempRed) {
-		approachFromRed();
-	} else {
-		approachFromGreen();
-	}
-	//find dock
 	findDock(tempRed);	
+	return;
 }
 
+/*
+This function will follow the red buoy boundry until 
+	it hits the overlap.
+*/
 void followRed(void) {
 	do {
 		getBumps();
@@ -133,19 +133,16 @@ void followRed(void) {
 		//forward 5cm
 		drive(100);
 		delayMs(500);
-
 		if (green && red) {
 			stop();
 			return;
 		}
-		
 		getBumps();
 		if (bumpLeft || bumpRight) {
 			turn(-TURN_90_DEGREES);
 			drive(100);
 			delayMs(1500);
 		}
-
 		//scan right
 		driveLR(50, -50);
 		while (!red) {
@@ -160,6 +157,10 @@ void followRed(void) {
 	} while (!(green && red)); 
 }
 
+/*
+This function will follow the green buoy boundry until 
+	it hits the overlap.
+*/
 void followGreen(void) {
 	do {
 		getBumps();
@@ -178,19 +179,16 @@ void followGreen(void) {
 		//forward 5cm
 		drive(100);
 		delayMs(500);
-
 		if (green && red) {
 			stop();
 			return;
 		}
-		
 		getBumps();
 		if (bumpLeft || bumpRight) {
 			turn(TURN_90_DEGREES);
 			drive(100);
 			delayMs(1500);
 		}
-		
 		//scan left
 		driveLR(-50, 50);
 		while (!green) {
@@ -205,18 +203,30 @@ void followGreen(void) {
 	} while (!(green && red)); 
 }
 
+/*
+This function will follow the overlap of red and green until
+	both bumps are detected.
+*/
 void followOverlap(void) {
+	//do until bump
 	do {
-		if (forceField) {
-			stop();
-			return;
-		}
+		//if sensing both, drive
 		if (green && red) {
-			drive(50);
-		} else if (!green) {
-			driveLR(-50, 50);
-		} else if (!red) {
-			driveLR(50, -50);
+			rightLEDon();
+			leftLEDon();
+			drive(35);
+		} else if (!green && red) { //only red, turn left
+			leftLEDoff();
+			rightLEDon();
+			driveLR(-25, 25);
+		} else if (!red && green) { //only green, turn right
+			leftLEDon();
+			rightLEDoff();
+			driveLR(25, -25);
+		} else { //no signal, drive (means close to dock)
+			rightLEDoff();
+			leftLEDoff();
+			drive(35);
 		}
 		getBumps();
 		getDockSenses();
@@ -225,78 +235,24 @@ void followOverlap(void) {
 	stop();
 }
 
-void approachFromRed(void) {
-	//CENTER
-	//scan left
-	driveLR(-50, 50);
-	while (red) {
-		getDockSenses();
-		delayMs(50);
-	}
-	stop();
-	startTimer = 1;
-	//scan right
-	driveLR(50, -50);
-	while (green) {
-		getDockSenses();
-		delayMs(50);
-	}
-	startTimer = 0;
-	timerVal += 100;
-	//center
-	driveLR(-50, 50);
-	delayMs((uint16_t) (timerVal / 2));
-	stop();
-
-	drive(100);
-	do {
-		getBumps();
-		delayMs(50);
-	} while (!bumpLeft && !bumpRight);	
-	stop();
-}
-
-void approachFromGreen(void) {
-	//CENTER
-	//scan right
-	driveLR(50, -50);
-	while (green) {
-		getDockSenses();
-		delayMs(50);
-	}
-	stop();
-	startTimer = 1;
-	//scan left
-	driveLR(-50, 50);
-	while (red) {
-		getDockSenses();
-		delayMs(50);
-	}
-	startTimer = 0;
-	timerVal += 100;
-	//center
-	driveLR(50, -50);
-	delayMs((uint16_t) (timerVal / 2));
-	stop();
-
-	drive(100);
-	do {
-		getBumps();
-		delayMs(50);
-	} while (!bumpLeft && !bumpRight);
-	stop();
-}
-
+/*
+This function to keep turning left or right until a 
+	charge state is detected.
+		The parameter passed to this function decides if it will
+		turn left or right first.
+*/
 void findDock(uint8_t isRed) {
-	//Docking
+	//actively looking for dock
 	lookForDock = 1;
 	delayMs(1500);
 	if (docked == 1) {
 		BLINGBLING();
 		changePowerLightGreen();
 		stop();
+		exit(0);
 		return;
 	}
+	//drive backwords and check for dock
 	drive(-100);
 	delayMs(100);
 	stop();
@@ -305,9 +261,10 @@ void findDock(uint8_t isRed) {
 		BLINGBLING();
 		changePowerLightGreen();
 		stop();
+		exit(0);
 		return;
 	}
-
+	//begin the turning process
 	int i,j;
 	for (i=0; i<3; i++) {
 		int bound;
@@ -319,9 +276,9 @@ void findDock(uint8_t isRed) {
 		//right if approach from red, left if approach from green
 	 	for (j=0; j<bound; j+=500) {
 		 	if (isRed) {
-				driveLR(25, -25);
-			} else {
 				driveLR(-25, 25);
+			} else {
+				driveLR(25, -25);
 			}
 			delayMs(750); //500
 			stop();
@@ -332,15 +289,16 @@ void findDock(uint8_t isRed) {
 				BLINGBLING();
 				changePowerLightGreen();
 				stop();
+				exit(0);
 				return;
 			}
 		}
 		//left if approach from red, right if approach from green
 		for (j=0; j<bound; j+=500) {
 		 	if (isRed) {
-				driveLR(-25, 25);
-			} else {
 				driveLR(25, -25);
+			} else {
+				driveLR(-25, 25);
 			}
 			delayMs(750); //500
 			stop();
@@ -351,17 +309,22 @@ void findDock(uint8_t isRed) {
 				BLINGBLING();
 				changePowerLightGreen();
 				stop();
+				exit(0);
 				return;
 			}
 		}
 	}
-
-	turn(TURN_180_DEGREES);
-	drive(100);
-	delayMs(3000);
+	//if still no dock, turn around and reset
+	//turn(TURN_180_DEGREES);
+	drive(-100);
+	delayMs(2000);
+	stop();
+	//turn(TURN_180_DEGREES);
+	//stop();
 	getBumps();
 	getDockSenses();
-	dock();
+	//dock();
+	//return;
 }
 
 //play hotline bling

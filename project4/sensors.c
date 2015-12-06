@@ -55,6 +55,10 @@ int transmit(char* string) {
 	return length;
 }
 
+/*
+Function to get the IR senses of the robot
+	(Green, red and force field)
+*/
 void getDockSenses(void) {
 	byteTx(CmdSensors);
 	byteTx(IRsensorPacket); //packet for IR control
@@ -84,6 +88,9 @@ void getDockSenses(void) {
 	}
 }
 
+/*
+Check to see is the robot is docked
+*/
 int isDocked(void) {
 	byteTx(CmdSensors);
 	byteTx(DOCK);

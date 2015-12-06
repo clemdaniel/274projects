@@ -1,8 +1,9 @@
 /**
- * CSCE 274 Project 3
+ * CSCE 274 Project 4
  *		This program implements a PID controller with the objective  
  * following along a wall or other obstacle while maintaining a set distance
- * and correcting for any errors.
+ * and correcting for any errors. This also checks for an IR sensor of a dock
+ * near. If it does sense one, go dock in it.
  *
  *	Edited by: Daniel Clements, Conor Campbell, Cory Novotny
  */
@@ -41,7 +42,10 @@ int main() {
 	stop();
 
 	// Play Hotline Bling and wait while it plays.
-	BLINGBLING();
+	byteTx(CmdPlay);
+	byteTx(RESET_SONG);
+	delayMs(750);
+	//BLINGBLING();
 	// Turn power light on
 	changePowerLightRed();
 	
@@ -60,6 +64,10 @@ int main() {
 	
 	//go straight until you hit something
 	findWall();	
+
+	//setup lights for degugging
+	setupLeftLED();
+	setupRightLED();
 
 	// Infinite operation loop
 	for(;;) {
@@ -111,9 +119,15 @@ int main() {
 			} else if (leftVel > maxVel) {
 				leftVel = maxVel;
 			} 
+			//if in either IR signal, go dock
 			if (red || green) {
 				docking = 1;
 				dock();
+				if (docked == 1) {
+					return 0;
+				} else {
+					docking = 0;
+				}
 			} else {
 				driveLR(leftVel, rightVel);
 			}
